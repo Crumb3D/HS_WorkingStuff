@@ -497,3 +497,38 @@ hsStatLevel,UI,tooltip,,,K,"Set to {0} of {1} on {2} radiators (a radiator's own
 hsStatHeatingOn,UI,tooltip,,,K,Central heating: on
 hsStatHeatingOff,UI,tooltip,,,K,Central heating: off. Hold E to turn it on
 hsStatSocketOnly,UI,tooltip,,,K,"A thermostat is wired from a socket, not straight into the power"
+hsHifi,blocks,Block,,,,Hi-Fi Micro System
+hsHifiDesc,blocks,Block,,,,"A micro hi-fi that plays your own music. Wire it from a socket, then wire speakers out of it with the wire tool (up to 5, standing or on the wall): the music only comes out of the speakers, so with none wired it plays to itself. Hold E for power, play / pause, next and previous track, and volume up / down for every speaker. Put .mp3, .ogg or .wav files in %AppData%\7DaysToDie\HSWorkingStuff\Music."
+hsHifiSpeaker,blocks,Block,,,,Hi-Fi Speaker
+hsHifiSpeakerDesc,blocks,Block,,,,"A bookshelf speaker for the hi-fi. Wire it from the hi-fi with the wire tool and the music plays out of it. Hold E to turn this speaker up or down on its own; the hi-fi volume sets them all again."
+blockcommand_hshifipower,UI,Menu,,,K,Power
+blockcommand_hshifiplay,UI,Menu,,,K,Play
+blockcommand_hshifipause,UI,Menu,,,K,Pause
+blockcommand_hshifinext,UI,Menu,,,K,Next track
+blockcommand_hshifiprev,UI,Menu,,,K,Previous track
+blockcommand_hshifiup,UI,Menu,,,K,Volume up (all speakers)
+blockcommand_hshifidown,UI,Menu,,,K,Volume down (all speakers)
+blockcommand_hsspkup,UI,Menu,,,K,Volume up (this speaker)
+blockcommand_hsspkdown,UI,Menu,,,K,Volume down (this speaker)
+hsHifiNoSocket,UI,tooltip,,,K,Not plugged in: wire it from a socket
+hsHifiNoPower,UI,tooltip,,,K,No power at the socket
+hsHifiOff,UI,tooltip,,,K,Off
+hsHifiNoMusic,UI,tooltip,,,K,No music: put .mp3 .ogg or .wav files in {0}
+hsHifiPlaying,UI,tooltip,,,K,Playing track {0} of {1}: {2}
+hsHifiPaused,UI,tooltip,,,K,Paused on track {0} of {1}: {2}
+hsHifiCantPlay,UI,tooltip,,,K,"Can't play track {0}: {1}"
+hsHifiNoSpeakers,UI,tooltip,,,K,No speakers: wire speakers from the hi-fi to hear it
+hsHifiSpeakers,UI,tooltip,,,K,"Speakers: {0} wired, volume {1} of {2}"
+hsHifiSocketOnly,UI,tooltip,,,K,"A hi-fi plugs into a socket, not straight into the power"
+hsSpeakerHifiOnly,UI,tooltip,,,K,Speakers are wired from a hi-fi
+hsHifiSpeakersOnly,UI,tooltip,,,K,Only speakers wire out of a hi-fi
+hsHifiSpeakersFull,UI,tooltip,,,K,A hi-fi drives at most {0} speakers
+hsSpeakerNoHifi,UI,tooltip,,,K,Not wired: wire it from a hi-fi with the wire tool
+hsSpeakerHifiOff,UI,tooltip,,,K,The hi-fi is off
+hsSpeakerVolume,UI,tooltip,,,K,Volume {0} of {1}
+hsSpeakerVolumeSet,UI,tooltip,,,K,This speaker: volume {0} of {1}
+hsHifiVolumeSet,UI,tooltip,,,K,All {0} speakers: volume {1} of {2}
+hsHifiVolumeMin,UI,tooltip,,,K,The volume is already right down
+hsHifiVolumeMax,UI,tooltip,,,K,The volume is already at full
+hsHifiSpeakerWall,blocks,Block,,,,Hi-Fi Wall Speaker
+hsHifiSpeakerWallDesc,blocks,Block,,,,"The hi-fi speaker on a wall bracket: place it against a wall and it hangs at head height. Wire it from the hi-fi with the wire tool and the music plays out of it. Hold E to turn this speaker up or down on its own; the hi-fi volume sets them all again."

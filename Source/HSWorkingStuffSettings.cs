@@ -67,6 +67,8 @@ public static class HSWorkingStuffSettings
     public static float OverloadSeconds = 2f;
     public static int MaxSocketsPerRun = 10;
     public static int ThermostatRange = 8;
+    public static float HifiVolume = 0.8f;
+    public static float HifiHearRange = 20f;
     public static bool EnableNeeds = true;
     public static float BladderHours = 3f;
     public static float BowelHours = 8f;
@@ -143,6 +145,8 @@ public static class HSWorkingStuffSettings
         OverloadSeconds = 2f;
         MaxSocketsPerRun = 10;
         ThermostatRange = 8;
+        HifiVolume = 0.8f;
+        HifiHearRange = 20f;
         EnableNeeds = true;
         BladderHours = 3f;
         BowelHours = 8f;
@@ -242,6 +246,8 @@ public static class HSWorkingStuffSettings
         ReadFloat(text, "OverloadSeconds", ref OverloadSeconds);
         ReadInt(text, "MaxSocketsPerRun", ref MaxSocketsPerRun);
         ReadInt(text, "ThermostatRange", ref ThermostatRange);
+        ReadFloat(text, "HifiVolume", ref HifiVolume);
+        ReadFloat(text, "HifiHearRange", ref HifiHearRange);
         ReadBool(text, "EnableNeeds", ref EnableNeeds);
         ReadFloat(text, "BladderHours", ref BladderHours);
         ReadFloat(text, "BowelHours", ref BowelHours);

@@ -69,6 +69,8 @@
   "OverloadSeconds": 2,
   "MaxSocketsPerRun": 10,
   "ThermostatRange": 8,
+  "HifiVolume": 0.8,
+  "HifiHearRange": 20,
 
   "EnableNeeds": true,
   "BladderHours": 3,

@@ -39,3 +39,5 @@ HS_WorkingStuff-v*.zip
 Thumbs.db
 Desktop.ini
 .DS_Store
+Music/*
+!Music/README.txt

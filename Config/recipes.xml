@@ -345,6 +345,22 @@
 			<ingredient name="resourceScrapPolymers" count="8"/>
 			<ingredient name="resourceForgedIron" count="2"/>
 		</recipe>
+		<recipe name="hsHifi" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceElectricParts" count="4"/>
+			<ingredient name="resourceScrapPolymers" count="6"/>
+			<ingredient name="resourceMechanicalParts" count="1"/>
+		</recipe>
+		<recipe name="hsHifiSpeaker" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceWood" count="6"/>
+			<ingredient name="resourceElectricParts" count="1"/>
+			<ingredient name="resourceCloth" count="2"/>
+		</recipe>
+		<recipe name="hsHifiSpeakerWall" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceWood" count="6"/>
+			<ingredient name="resourceElectricParts" count="1"/>
+			<ingredient name="resourceCloth" count="2"/>
+			<ingredient name="resourceForgedIron" count="1"/>
+		</recipe>
 		<recipe name="hsTVWall" count="1" craft_area="workbench" tags="learnable">
 			<ingredient name="resourceElectricParts" count="4"/>
 			<ingredient name="resourceScrapPolymers" count="8"/>

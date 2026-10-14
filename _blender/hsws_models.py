@@ -44,6 +44,9 @@ MAT_COLORS = {
     "HS_Denim": (0.20, 0.27, 0.42, 1.0),
     "HS_Water": (0.25, 0.55, 0.82, 1.0),
     "HS_Soil": (0.32, 0.22, 0.10, 1.0),
+    "HS_Gloss": (0.012, 0.012, 0.014, 1.0),
+    "HS_Grille": (0.07, 0.07, 0.075, 1.0),
+    "HS_Ring": (1.0, 0.86, 0.62, 1.0),
     # icon-only colours (never exported to Unity)
     "HS_Bread": (1.0, 0.70, 0.30, 1.0),
     "HS_Crust": (0.62, 0.37, 0.15, 1.0),
@@ -983,6 +986,132 @@ def tv_wall():
     return p
 
 
+# ---------------------------------------------------------------- hi-fi
+# HSHifi_Display and HSHifi_Ring light while the set is on, HSHifi_Standby while it is off.
+
+def hifi():
+    """Micro hi-fi main unit: black case, gloss upper fascia with a blue display and a lit volume knob, CD slot below."""
+    p = Piece("HSHifi")
+    w, d, h = 0.22, 0.25, 0.15
+    z0 = 0.008
+    z1 = z0 + h
+    yf = -d / 2
+    for x in (-w / 2 + 0.025, w / 2 - 0.025):
+        for y in (yf + 0.03, -yf - 0.03):
+            p.rod("HS_Dark", (x, y, z0 / 2), 0.009, z0, "Z", 12)
+    p.box("HS_Dark", (0, 0, (z0 + z1) / 2), (w, d, h))
+    # gloss window across the top half
+    gz0, gz1 = z0 + 0.075, z1 - 0.006
+    gz = (gz0 + gz1) / 2
+    p.box("HS_Gloss", (0, yf - 0.003, gz), (w - 0.008, 0.006, gz1 - gz0))
+    p.box("HS_Grey", (0, yf - 0.002, gz0 - 0.002), (w - 0.008, 0.004, 0.003))
+    p.box("HS_Chrome", (-w / 2 + 0.035, yf - 0.0065, gz1 - 0.012), (0.034, 0.001, 0.006))
+    # display window, with the lit text on its own child
+    dx0, dx1 = -0.055, 0.025
+    dz0, dz1 = gz - 0.016, gz + 0.012
+    p.box("HS_Screen", ((dx0 + dx1) / 2, yf - 0.0065, (dz0 + dz1) / 2), (dx1 - dx0, 0.001, dz1 - dz0))
+    s = p.sub("Display")
+    rnd = random.Random(7)
+    for row, zr in enumerate((dz1 - 0.008, dz1 - 0.019)):
+        x = dx0 + 0.008
+        letters = 12 if row == 0 else 9
+        for i in range(letters):
+            if rnd.random() < 0.15 and i > 0:
+                x += 0.0055
+                continue
+            s.box("HS_Display", (x, yf - 0.0072, zr), (0.0042, 0.0006, 0.0065))
+            x += 0.0055
+    led = p.sub("Standby")
+    led.box("HS_Neon", (dx0 - 0.016, yf - 0.007, gz - 0.006), (0.004, 0.001, 0.004))
+    # volume knob with its light ring
+    kx = w / 2 - 0.05
+    p.rod("HS_Dark", (kx, yf - 0.007, gz), 0.034, 0.002, "Y", 32)
+    ring = p.sub("Ring")
+    ring.rod("HS_Ring", (kx, yf - 0.0085, gz), 0.0315, 0.002, "Y", 32)
+    p.rod("HS_Chrome", (kx, yf - 0.019, gz), 0.027, 0.022, "Y", 32)
+    p.rod("HS_Grey", (kx, yf - 0.0302, gz), 0.021, 0.001, "Y", 32)
+    # buttons and the power button
+    bz = gz0 - 0.017
+    for i in range(5):
+        p.rod("HS_Grey", (-0.075 + i * 0.024, yf - 0.003, bz), 0.0065, 0.006, "Y", 16)
+        p.box("HS_White", (-0.075 + i * 0.024, yf - 0.0005, bz - 0.011), (0.004, 0.001, 0.0025))
+    p.rod("HS_Red", (w / 2 - 0.025, yf - 0.002, bz), 0.0095, 0.004, "Y", 20)
+    p.rod("HS_Dark", (w / 2 - 0.025, yf - 0.0042, bz), 0.0075, 0.001, "Y", 20)
+    # CD slot, USB socket, headphone jack and badges
+    p.box("HS_Screen", (0.015, yf - 0.0005, z0 + 0.04), (0.15, 0.002, 0.0045))
+    p.box("HS_Grey", (0.015, yf - 0.0007, z0 + 0.0365), (0.15, 0.0015, 0.0012))
+    p.box("HS_Grey", (-w / 2 + 0.025, yf - 0.001, z0 + 0.016), (0.013, 0.002, 0.0055))
+    p.box("HS_Screen", (-w / 2 + 0.025, yf - 0.0015, z0 + 0.016), (0.009, 0.001, 0.0025))
+    p.rod("HS_Chrome", (-w / 2 + 0.05, yf - 0.001, z0 + 0.016), 0.004, 0.002, "Y", 12)
+    p.rod("HS_Dark", (-w / 2 + 0.05, yf - 0.0022, z0 + 0.016), 0.0022, 0.001, "Y", 12)
+    for i, bw in enumerate((0.012, 0.022, 0.01)):
+        p.box("HS_Grey", (w / 2 - 0.07 + i * 0.022, yf - 0.0005, z0 + 0.015), (bw, 0.001, 0.006))
+    # speaker terminals on the back
+    for x in (-0.04, -0.02, 0.02, 0.04):
+        p.rod("HS_Red" if x > 0 else "HS_Chrome", (x, -yf + 0.004, z0 + 0.04), 0.004, 0.008, "Y", 10)
+    p.collider((0, 0, (z0 + z1) / 2), (w, d, z1))
+    return p
+
+
+def _speaker_cabinet(p, yc, z0, feet):
+    """Black wood-grain cabinet with a cloth grille and a badge on the plinth; front faces -Y, back at yc + d/2."""
+    w, d, h = 0.17, 0.21, 0.28
+    z1 = z0 + h
+    yf = yc - d / 2
+    yb = yc + d / 2
+    if feet:
+        for x in (-w / 2 + 0.02, w / 2 - 0.02):
+            for y in (yf + 0.025, yb - 0.025):
+                p.rod("HS_Dark", (x, y, z0 / 2), 0.009, z0, "Z", 12)
+    p.box("HS_Dark", (0, yc, (z0 + z1) / 2), (w, d, h))
+    # wood-grain lines down the sides and over the top
+    rnd = random.Random(11)
+    for side in (-1, 1):
+        for i in range(7):
+            z = z0 + 0.02 + i * (h - 0.04) / 6 + rnd.uniform(-0.008, 0.008)
+            p.box("HS_Gloss", (side * (w / 2 + 0.0003), yc + rnd.uniform(-0.03, 0.03), z), (0.0006, d * rnd.uniform(0.55, 0.92), 0.0012))
+    for i in range(6):
+        p.box("HS_Gloss", (-w / 2 + 0.02 + i * (w - 0.04) / 5, yc + rnd.uniform(-0.02, 0.02), z1 + 0.0003), (0.0012, d * rnd.uniform(0.6, 0.9), 0.0006))
+    # plinth along the bottom of the front and the cloth grille above it
+    pz = z0 + 0.04
+    p.box("HS_Gloss", (0, yf - 0.003, (z0 + pz) / 2), (w - 0.002, 0.006, pz - z0))
+    p.box("HS_Grille", (0, yf - 0.006, (pz + z1) / 2 + 0.002), (w - 0.012, 0.012, z1 - pz - 0.01))
+    p.box("HS_Dark", (0, yf - 0.0125, pz + 0.003), (w - 0.012, 0.002, 0.004))
+    p.box("HS_Chrome", (0, yf - 0.0065, (z0 + pz) / 2 + 0.002), (0.034, 0.001, 0.007))
+    # terminals low on the back
+    p.box("HS_Grey", (0, yb + 0.002, z0 + 0.05), (0.05, 0.004, 0.035))
+    for x, mat in ((-0.012, "HS_Red"), (0.012, "HS_Chrome")):
+        p.rod(mat, (x, yb + 0.008, z0 + 0.05), 0.004, 0.01, "Y", 10)
+    return w, d, h
+
+
+def hifi_speaker():
+    """Bookshelf speaker for the micro hi-fi, standing on its feet on a unit, shelf or the floor."""
+    p = Piece("HSHifiSpeaker")
+    z0 = 0.008
+    w, d, h = _speaker_cabinet(p, 0.0, z0, True)
+    p.collider((0, 0, (z0 + h) / 2 + z0 / 2), (w, d, z0 + h))
+    return p
+
+
+def hifi_speaker_wall():
+    """The same speaker hung on a wall bracket, up at about head height."""
+    p = Piece("HSHifiSpeakerWall")
+    gap = 0.045
+    d = 0.21
+    yc = WALL - gap - d / 2
+    z0 = 0.5
+    w, d, h = _speaker_cabinet(p, yc, z0, False)
+    zc = z0 + h / 2
+    # wall plate, arm out to the cabinet and the clamp plate on the back of it
+    p.box("HS_Grey", (0, WALL - 0.004, zc), (0.07, 0.008, 0.11))
+    p.rod("HS_Grey", (0, WALL - gap / 2, zc + 0.02), 0.011, gap - 0.008, "Y", 16)
+    p.box("HS_Grey", (0, yc + d / 2 + 0.003, zc + 0.02), (0.06, 0.006, 0.08))
+    for dz in (-0.04, 0.04):
+        p.rod("HS_Chrome", (0, WALL - 0.009, zc + dz), 0.005, 0.003, "Y", 10)
+    p.collider((0, (yc - d / 2 + WALL) / 2, zc), (w, WALL - (yc - d / 2), h))
+    return p
+
 # ---------------------------------------------------------------- consumer unit / breaker panel
 # Each way i has hidden children the game picks between: W<i>Fuse, W<i>Blown (fuse fitted, good or blown),
 # W<i>On, W<i>Off (breaker fitted, closed or off/tripped). Nothing fitted shows the bare slot. MainOn / MainOff
@@ -1247,7 +1376,7 @@ def icon_pegs():
 PIECES = [combi_boiler, panel_radiator, chest_freezer, split_air_con, ceiling_air_con, wall_thermometer,
           washing_machine, tumble_dryer, fridge_freezer,
           socket_uk_single, socket_uk_double, socket_us_single, socket_us_double, light_switch_uk, light_switch_us, cooker_switch_uk, range_outlet_us,
-          kettle, toaster, wheat_1, wheat_2, wheat_3, tv_stand, tv_wall, consumer_unit_uk, breaker_panel_us,
+          kettle, toaster, wheat_1, wheat_2, wheat_3, tv_stand, tv_wall, hifi, hifi_speaker, hifi_speaker_wall, consumer_unit_uk, breaker_panel_us,
           washing_line, clothes_airer]
 
 ICON_PIECES = [icon_mug, icon_mug_tea_pj, icon_mug_tea_yorkie, icon_mug_coffee, icon_tea_pj, icon_tea_yorkie,

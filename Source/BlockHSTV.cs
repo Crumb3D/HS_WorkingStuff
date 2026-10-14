@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Video;
 
-// TV: block meta2 bit 7 = on, bits 0-6 = channel. Channels are the video files in the TV folders,
+// TV: block meta2and1 bit 7 = on, bits 0-6 = channel (meta and meta2 hold only 4 bits each). Channels are the video files in the TV folders,
 // sorted by name, so every client needs the same files to see the same channel.
 public class BlockHSTV : BlockPowered
 {
@@ -76,7 +76,7 @@ public class BlockHSTV : BlockPowered
             on = !on;
         else if (count > 0)
             ch = ((ch % count) + (_commandName == "hstvnext" ? 1 : count - 1)) % count;
-        _blockValue.meta2 = (byte)((on ? 0x80 : 0) | (ch & 0x7F));
+        _blockValue.meta2and1 = (byte)((on ? 0x80 : 0) | (ch & 0x7F));
         _world.SetBlockRPC(_blockPos, _blockValue);
         Audio.Manager.BroadcastPlay(_blockPos.ToVector3(), _commandName == "hstvpower" && !on ? "switch_down" : "switch_up");
         return true;
@@ -100,12 +100,12 @@ public static class HSTV
 
     public static bool IsOn(BlockValue bv)
     {
-        return (bv.meta2 & 0x80) != 0;
+        return (bv.meta2and1 & 0x80) != 0;
     }
 
     public static int Channel(BlockValue bv)
     {
-        return bv.meta2 & 0x7F;
+        return bv.meta2and1 & 0x7F;
     }
 
     public static void Track(Vector3i pos)

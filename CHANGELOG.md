@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.36
+
+- **Hi-fi and speakers.** A micro hi-fi that plugs into a socket, with separate speakers wired out of it (up to 5): standing speakers for a unit or shelf, and wall speakers on a bracket. Music only comes out of the speakers. Power, play / pause, next and previous track, and volume for every speaker from the hi-fi; each speaker can be turned up or down on its own. Plays .mp3, .ogg and .wav files from the Music folder, moving on to the next track when one ends. Made at a workbench; unlocked with the TVs. New settings: `HifiVolume`, `HifiHearRange`.
+- **TVs switch on now.** The on/off flag was saved in a part of the block that only holds 4 bits, so it was dropped every time and the TV only clicked. It now lives where all 8 bits are kept.
+
 ## 1.0.35
 
 - **Wall thermostat.** Wire it from a socket (it shares the socket and doesn't use a plug) and put it within 8 blocks of a radiator. Turn it up or down to set every radiator on that heating loop at once, and switch the central heating on or off from it. A radiator's own valve still overrides it until you turn the thermostat again. It shows the room temperature, its setting and how many radiators it runs. Made at a workbench; unlocked with the radiators. New setting: `ThermostatRange`.

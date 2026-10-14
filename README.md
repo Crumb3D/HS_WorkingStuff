@@ -61,6 +61,8 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `TVVolume` | 0.8 | TV sound volume (0 to 1) |
 | `TVHearRange` | 15 | How far away you can hear a TV (m) |
 | `TVViewRange` | 40 | TVs further away than this (m) stop playing |
+| `HifiVolume` | 0.8 | Hi-fi loudness at full volume (0 to 1) |
+| `HifiHearRange` | 20 | How far away you can hear a hi-fi speaker (m) |
 | `WattsPerAmp` | 5 | How many watts each amp of a fuse or breaker carries (a 15A fuse = 75W) |
 | `OverloadSeconds` | 2 | Seconds a circuit can be overloaded before its fuse blows or its breaker trips |
 | `MaxSocketsPerRun` | 10 | Most sockets one run (one circuit) can chain together; 0 = no limit |
@@ -138,6 +140,7 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 - **Kettle** — 10W only while boiling. Boils a jar of water (murky is fine) and makes a **mug of tea** from a mug, a tea bag (**PJ Tops** or **Yorkie Brew**) and a jar of water. Look at it to see what's boiling and the time left.
 - **Toaster** — 5W only while toasting. Turns a slice of bread into toast.
 - **TV (stand / wall)** — a 43 inch flat screen that plays your own videos. Wire it from a socket (the wire tool won't take anything else); it draws 15W only while on. Hold E for **On / Off**, **Next channel**, **Previous channel**. Every video file in `%AppData%\7DaysToDie\HSWorkingStuff\TV` (made the first time you look at a TV) or the mod's `TV` folder is a channel, in file name order, named after the file. `.mp4` (H.264 with AAC sound) works best. New files appear within a few seconds. Every TV on a channel shows the same moment. Each player's PC plays the video, so in multiplayer everyone needs the same files; the server needs none. TVs further than `TVViewRange` away stop playing to save your frame rate.
+- **Hi-fi and speakers** - a micro hi-fi with separate speakers. Wire the hi-fi from a socket (it uses a plug), then wire up to **5 speakers** out of the hi-fi with the wire tool. A speaker stands on a unit, shelf or the floor; the **wall speaker** goes against a wall on a bracket at head height. The music only comes out of the speakers: with none wired the hi-fi still plays (the display says so) but you hear nothing. Hold E on the hi-fi for **Power**, **Play / Pause**, **Next track**, **Previous track**, and **Volume up / down**, which sets every speaker to the same level. Hold E on a speaker to turn just that one up or down; the hi-fi volume sets them all again. When a track ends the next one starts, round to the first. Put `.mp3`, `.ogg` or `.wav` files in `%AppData%\7DaysToDie\HSWorkingStuff\Music` (made the first time you look at a hi-fi) or the mod's `Music` folder; they play in file name order, up to 64. Each player's PC plays the music, so in multiplayer everyone needs the same files; the server needs none. A black speaker cable runs from the hi-fi to each speaker.
 - **Wheat, bread and tea.** Plant wheat seed like corn: it grows short and green, then tall, then golden and ready to harvest. 5 wheat makes a seed, 3 wheat grinds into flour, 2 flour and a jar of water make dough, and dough bakes into a loaf in the campfire cooking pot. Cut a loaf into 8 slices for the toaster. Mugs are fired from clay on the campfire. Tea bags come from kitchen loot, coffee machines and the traders. The coffee maker also brews coffee in a mug. Drinking from a mug always gives the mug back.
 - **Gas grill / charcoal grill** — barbecue workstations with the vanilla grill menu (corn, grilled meat, steak and potato, wings, jerky, fish tacos) and no grill tool needed. They burn wood or coal like a campfire; a gas can lasts a minute in the gas grill. Same food unlocks as the campfire grill.
 
@@ -154,7 +157,7 @@ Every recipe in the mod needs **both** a magazine level and a perk rank. The cra
 
 | Magazine | Level | Perk | Unlocks |
 | --- | --- | --- | --- |
-| Electrician | 25 | Advanced Engineering 1 | Microwaves, coffee makers, kettle, toaster, TVs, electric cookers, sockets, UK and US light switches, cooker switch, range outlet, consumer unit, breaker panel, fuses |
+| Electrician | 25 | Advanced Engineering 1 | Microwaves, coffee makers, kettle, toaster, TVs, hi-fi and speakers, electric cookers, sockets, UK and US light switches, cooker switch, range outlet, consumer unit, breaker panel, fuses |
 | Electrician | 45 | Advanced Engineering 2 | Fridge, white fridge-freezer, chest freezer, combi boiler, wall and ceiling air conditioners, breakers |
 | Workstations | 16 | Advanced Engineering 1 | Pipe tool, pipes, intake, tank, sink, rain catch, water cooler, wall thermometer, clothes pegs, washing line, clothes airer |
 | Workstations | 26 | Advanced Engineering 2 | Radiators, wall thermostat, shower, bath, washing machines, tumble dryers, toilet, urinal |

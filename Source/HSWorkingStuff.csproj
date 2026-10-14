@@ -66,6 +66,14 @@
       <HintPath>$(ManagedDir)\UnityEngine.VideoModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>$(ManagedDir)\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>$(ManagedDir)\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HSGameVersion.cs" />
@@ -86,6 +94,7 @@
     <Compile Include="HSDrying.cs" />
     <Compile Include="HSToilet.cs" />
     <Compile Include="HSThermostat.cs" />
+    <Compile Include="HSHifi.cs" />
     <Compile Include="HSWater.cs" />
     <Compile Include="HSPickup.cs" />
     <Compile Include="HSPatches.cs" />

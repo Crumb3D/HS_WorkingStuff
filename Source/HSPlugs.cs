@@ -193,7 +193,7 @@ public static class HSPlugs
     }
 
     // The lead meets the appliance on the face nearest the plug (its back, or its top when the socket is higher), never inside it.
-    static Vector3 LeadEnd(Transform appliance, Vector3 plug)
+    public static Vector3 LeadEnd(Transform appliance, Vector3 plug)
     {
         Bounds box = default(Bounds);
         bool any = false;
@@ -431,8 +431,36 @@ public static class HSPatchSocketPlugs
                 HSPlugs.DenyReason(HSLoc.Get("hsStatSocketOnly", "A thermostat is wired from a socket, not straight into the power"));
                 return;
             }
+            if (limit <= 0 && __instance.blockValue.Block is BlockHSHifi)
+            {
+                __result = false;
+                HSPlugs.DenyReason(HSLoc.Get("hsHifiSocketOnly", "A hi-fi plugs into a socket, not straight into the power"));
+                return;
+            }
+            bool fromHifi = parent.blockValue.Block is BlockHSHifi;
+            if (__instance.blockValue.Block is BlockHSHifiSpeaker && !fromHifi)
+            {
+                __result = false;
+                HSPlugs.DenyReason(HSLoc.Get("hsSpeakerHifiOnly", "Speakers are wired from a hi-fi"));
+                return;
+            }
+            if (fromHifi && !(__instance.blockValue.Block is BlockHSHifiSpeaker))
+            {
+                __result = false;
+                HSPlugs.DenyReason(HSLoc.Get("hsHifiSpeakersOnly", "Only speakers wire out of a hi-fi"));
+                return;
+            }
             if (parent.wireDataList.Contains(__instance.ToWorldPos()))
                 return;
+            if (fromHifi)
+            {
+                if (HSHifi.Speakers(GameManager.Instance.World, parent.ToWorldPos()).Count >= HSHifi.MaxSpeakers)
+                {
+                    __result = false;
+                    HSPlugs.DenyReason(HSLoc.Format("hsHifiSpeakersFull", "A hi-fi drives at most {0} speakers", HSHifi.MaxSpeakers));
+                }
+                return;
+            }
             var panel = parent.blockValue.Block as BlockHSPanel;
             if (panel != null)
             {
