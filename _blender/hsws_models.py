@@ -548,6 +548,28 @@ def socket_us_double():
     return p
 
 
+def range_outlet_us():
+    """US 240V range outlet (NEMA 14-50): big round face, two hot slots, ground on top, flat neutral below.
+    The US has no cooker switch: the range plugs straight into this, always live."""
+    p = Piece("HSRangeOutletUS")
+    zc = 0.3
+    yf = _plate(p, 0.09, 0.12, zc, 0.006)
+    p.rod("HS_White", (0, yf - 0.004, zc), 0.028, 0.008, "Y", 24)
+    yr = yf - 0.0085
+    p.box("HS_Dark", (-0.012, yr, zc + 0.002), (0.0035, 0.002, 0.013))
+    p.box("HS_Dark", (0.012, yr, zc + 0.002), (0.0035, 0.002, 0.013))
+    p.rod("HS_Dark", (0, yr, zc + 0.016), 0.0035, 0.002, "Y", 12)
+    p.box("HS_Dark", (0, yr, zc - 0.015), (0.012, 0.002, 0.0035))
+    for z in (zc + 0.048, zc - 0.048):
+        p.rod("HS_Chrome", (0, yf - 0.001, z), 0.0035, 0.003, "Y", 10)
+    s = p.sub("Plug0")
+    s.rod("HS_Dark", (0, yr - 0.015, zc), 0.025, 0.028, "Y", 24)
+    s.rod("HS_Dark", (0, yr - 0.018, zc - 0.034), 0.008, 0.022, "Z", 12)
+    s.rod("HS_Dark", (0, yr - 0.018, zc - 0.056), 0.0055, 0.024, "Z", 10)
+    p.collider((0, WALL - 0.03, zc), (0.16, 0.06, 0.18))
+    return p
+
+
 def light_switch_uk():
     """Single gang UK rocker light switch."""
     p = Piece("HSLightSwitchUK")
@@ -592,7 +614,7 @@ def cooker_switch_uk():
 
 PIECES = [combi_boiler, panel_radiator, chest_freezer, split_air_con, ceiling_air_con, wall_thermometer,
           washing_machine, tumble_dryer, fridge_freezer,
-          socket_uk_single, socket_uk_double, socket_us_single, socket_us_double, light_switch_uk, light_switch_us, cooker_switch_uk]
+          socket_uk_single, socket_uk_double, socket_us_single, socket_us_double, light_switch_uk, light_switch_us, cooker_switch_uk, range_outlet_us]
 
 
 def clear_scene():

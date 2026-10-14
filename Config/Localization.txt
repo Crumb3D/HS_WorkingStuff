@@ -302,3 +302,5 @@ blockcommand_hsoutlet1,UI,commands,,,K,Switch the right socket
 hsOutletState,UI,tooltip,,,K,Left socket: {0}    Right socket: {1}
 hsOutletOn,UI,tooltip,,,K,On
 hsOutletOff,UI,tooltip,,,K,Off
+hsRangeOutletUS,blocks,Block,,,,US Range Outlet (240V)
+hsRangeOutletUSDesc,blocks,Block,,,,"The US way to power a cooker: a big 240V range outlet, always live with no switch. Wire power into it and from it to one cooker."

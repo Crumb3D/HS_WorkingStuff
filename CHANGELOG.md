@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.25
+
+- **US range outlet.** The US has no cooker switch: an electric range plugs into its own 240V outlet on the wall. New US Range Outlet (NEMA 14-50 style), always live, takes one plug and shows the big black plug and lead when a cooker is wired from it.
+- **Radiator gauge reads the room when cold.** A cold radiator now settles to the room temperature where it hangs (what the wall thermometer shows), instead of a fixed 15°C / 59°F. Every temperature the mod shows follows your °C/°F game option.
+
 ## 1.0.24
 
 - **Plugs show in the socket.** Wire an appliance from a socket and a plug appears in the outlet, with a black lead running to the appliance (vanilla wires only show with the wire tool out). A double socket shows one plug per appliance.

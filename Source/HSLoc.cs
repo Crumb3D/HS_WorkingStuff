@@ -258,6 +258,8 @@ public static class HSLoc
         { "hsOutletState", "Left socket: {0}    Right socket: {1}" },
         { "hsOutletOn", "On" },
         { "hsOutletOff", "Off" },
+        { "hsRangeOutletUS", "US Range Outlet (240V)" },
+        { "hsRangeOutletUSDesc", "The US way to power a cooker: a big 240V range outlet, always live with no switch. Wire power into it and from it to one cooker." },
         { "hsCookerSwitchUKDesc", "A UK 45A cooker switch with a red rocker and neon. Wire power into it and from it to one cooker." },
         { "hsPlugFullOne", "This socket takes one plug and it is already in use" },
         { "hsPlugFullMany", "This socket takes {0} plugs and both are in use" },

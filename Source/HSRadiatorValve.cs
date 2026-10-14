@@ -11,7 +11,6 @@ public static class HSRadiatorValve
     const float Tau = 25f;
     const int BarSlots = 10;
     const float BarTopC = 80f;
-    const float ColdC = 15f;
 
     class Gauge
     {
@@ -19,6 +18,8 @@ public static class HSRadiatorValve
         public float At;
         public bool Warm;
         public int Level;
+        // Room air where the radiator hangs: what a cold radiator settles to.
+        public float ColdF = 59f;
     }
 
     static readonly Dictionary<long, Gauge> gauges = new Dictionary<long, Gauge>();
@@ -54,8 +55,9 @@ public static class HSRadiatorValve
 
     static float TargetF(Gauge g)
     {
-        float c = g.Warm && g.Level > 0 ? FlowC(g.Level) : ColdC;
-        return c * 9f / 5f + 32f;
+        if (!(g.Warm && g.Level > 0))
+            return g.ColdF;
+        return FlowC(g.Level) * 9f / 5f + 32f;
     }
 
     static float Value(Gauge g, float now)
@@ -83,15 +85,18 @@ public static class HSRadiatorValve
     {
         long k = HSWater.Key(pos);
         float now = Time.time;
+        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+        float coldF = world != null ? HSRoomTemp.Room(world, pos.ToVector3() + new Vector3(0.5f, 0.5f, 0.5f)) : 59f;
         Gauge g;
         if (!gauges.TryGetValue(k, out g))
         {
-            g = new Gauge { At = now, Warm = warm, Level = level };
+            g = new Gauge { At = now, Warm = warm, Level = level, ColdF = coldF };
             g.FromF = TargetF(g);
             gauges[k] = g;
         }
         else if (g.Warm != warm || g.Level != level)
             Rebase(g, now, warm, level);
+        g.ColdF = coldF;
         return Value(g, now);
     }
 

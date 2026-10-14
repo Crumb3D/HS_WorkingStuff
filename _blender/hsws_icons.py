@@ -26,6 +26,7 @@ ICONS = [
     ("HSLightSwitchUK", "hsLightSwitchUK"),
     ("HSLightSwitchUS", "hsLightSwitchUS"),
     ("HSCookerSwitchUK", "hsCookerSwitchUK"),
+    ("HSRangeOutletUS", "hsRangeOutletUS"),
 ]
 
 scene = bpy.context.scene

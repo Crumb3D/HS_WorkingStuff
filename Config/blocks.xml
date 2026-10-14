@@ -564,6 +564,15 @@
 			<property name="CustomIcon" value="hsLightSwitchUS" />
 		</block>
 
+		<block name="hsRangeOutletUS">
+			<property name="Extends" value="hsSocketUSSingle" />
+			<property name="DescriptionKey" value="hsRangeOutletUSDesc" />
+			<property name="HSPlugs" value="1" />
+			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSRangeOutletUS" />
+			<property name="UnlockedBy" value="craftingElectrician,perkAdvancedEngineering" />
+			<property name="CustomIcon" value="hsRangeOutletUS" />
+		</block>
+
 		<block name="hsCookerSwitchUK">
 			<property name="Extends" value="hsSocketUKSingle" />
 			<property name="DescriptionKey" value="hsCookerSwitchUKDesc" />

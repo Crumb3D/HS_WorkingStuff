@@ -266,6 +266,11 @@
 			<ingredient name="resourceScrapPolymers" count="2"/>
 			<ingredient name="resourceElectricParts" count="1"/>
 		</recipe>
+		<recipe name="hsRangeOutletUS" count="1" tags="learnable">
+			<ingredient name="resourceScrapPolymers" count="3"/>
+			<ingredient name="resourceElectricParts" count="2"/>
+			<ingredient name="resourceScrapBrass" count="2"/>
+		</recipe>
 		<recipe name="hsCookerSwitchUK" count="1" tags="learnable">
 			<ingredient name="resourceScrapPolymers" count="3"/>
 			<ingredient name="resourceElectricParts" count="2"/>

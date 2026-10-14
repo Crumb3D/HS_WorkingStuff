@@ -14,4 +14,5 @@ HSSocketUSDouble verts=132 cols=3 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\M
 HSLightSwitchUK verts=24 cols=3 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSLightSwitchUK.fbx
 HSLightSwitchUS verts=72 cols=3 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSLightSwitchUS.fbx
 HSCookerSwitchUK verts=56 cols=4 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSCookerSwitchUK.fbx
+HSRangeOutletUS verts=152 cols=2 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSRangeOutletUS.fbx
 DONE

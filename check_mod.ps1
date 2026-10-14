@@ -45,7 +45,7 @@ foreach ($n in ([regex]::Matches($recipeXml, '<recipe name="([^"]+)"') | ForEach
 foreach ($n in ([regex]::Matches($recipeXml, '<ingredient name="([^"]+)"') | ForEach-Object { $_.Groups[1].Value })) {
     if (-not $known.ContainsKey($n)) { Fail "ingredient unknown '$n'" }
 }
-if ($names.Count -ne 63) { Fail "expected 63 recipes, found $($names.Count)" } else { Ok "63 recipes" }
+if ($names.Count -ne 64) { Fail "expected 64 recipes, found $($names.Count)" } else { Ok "64 recipes" }
 $grillRecipes = [regex]::Matches($recipeXml, 'craft_area="hsGrill"').Count
 if ($grillRecipes -ne 6) { Fail "expected 6 grill recipes, found $grillRecipes" } else { Ok "6 grill recipes" }
 if ([regex]::Matches($recipeXml, 'craft_area="hsGrill"[^>]*craft_tool').Count -gt 0) { Fail "grill recipe needs a tool" } else { Ok "grill recipes need no tool" }
@@ -123,21 +123,21 @@ foreach ($b in $newBlocks.Keys) {
     $def = [regex]::Match($blocksXml, "<block name=`"$b`">[\s\S]*?</block>").Value
     if ($def -notmatch "value=`"$($newBlocks[$b]), HSWorkingStuff`"") { Fail "$b is not class $($newBlocks[$b])" } else { Ok "$b class" }
 }
-foreach ($b in @("hsDryer", "hsSocketUKDouble", "hsSocketUSDouble", "hsLightSwitchUK", "hsLightSwitchUS", "hsCookerSwitchUK")) {
+foreach ($b in @("hsDryer", "hsSocketUKDouble", "hsSocketUSDouble", "hsLightSwitchUK", "hsLightSwitchUS", "hsCookerSwitchUK", "hsRangeOutletUS")) {
     if ($blocksXml -notmatch "<block name=`"$b`">") { Fail "missing block $b" } else { Ok "block $b" }
 }
-foreach ($p in @(@("hsSocketUKSingle", 1), @("hsSocketUKDouble", 2), @("hsSocketUSSingle", 1), @("hsSocketUSDouble", 2), @("hsCookerSwitchUK", 1))) {
+foreach ($p in @(@("hsSocketUKSingle", 1), @("hsSocketUKDouble", 2), @("hsSocketUSSingle", 1), @("hsSocketUSDouble", 2), @("hsCookerSwitchUK", 1), @("hsRangeOutletUS", 1))) {
     $def = [regex]::Match($blocksXml, "<block name=`"$($p[0])`">[\s\S]*?</block>").Value
     if ($def -notmatch "name=`"HSPlugs`" value=`"$($p[1])`"") { Fail "$($p[0]) should take $($p[1]) plugs" } else { Ok "$($p[0]) takes $($p[1]) plugs" }
 }
-foreach ($b in @("hsFridgeWhite", "hsWasher", "hsWasherVanilla", "hsDryer", "hsDryerVanilla", "hsThermometer", "hsSocketUKSingle", "hsSocketUKDouble", "hsSocketUSSingle", "hsSocketUSDouble", "hsLightSwitchUK", "hsLightSwitchUS", "hsCookerSwitchUK")) {
+foreach ($b in @("hsFridgeWhite", "hsWasher", "hsWasherVanilla", "hsDryer", "hsDryerVanilla", "hsThermometer", "hsSocketUKSingle", "hsSocketUKDouble", "hsSocketUSSingle", "hsSocketUSDouble", "hsLightSwitchUK", "hsLightSwitchUS", "hsCookerSwitchUK", "hsRangeOutletUS")) {
     if ($locTxt -notmatch "(?m)^$b,") { Fail "missing loc $b" }
     if ($progXml -notmatch "\b$b\b") { Fail "$b is not unlocked anywhere" } else { Ok "$b unlocked" }
 }
-foreach ($k in @("hsWasherDesc", "hsDryerDesc", "hsThermometerDesc", "hsFridgeWhiteDesc", "hsSocketUKDesc", "hsSocketUSDesc", "hsLightSwitchUKDesc", "hsCookerSwitchUKDesc", "blockcommand_hswash", "blockcommand_hsdry", "hsThermoRoom", "hsClothesDirt", "hsClothesWet", "hsWashed", "hsPlugFullOne", "hsPlugUsed", "buffHSSmellyName", "buffHSDirtyClothesName", "buffHSWetClothesName", "hsLightSwitchUSDesc", "blockcommand_washup", "hsLblWash", "hsSinkWashed", "hsWashLakeside", "hsWashTooSoon", "hsWashSoakStart", "hsWashSoakDone", "blockcommand_hsoutlet0", "blockcommand_hsoutlet1", "hsOutletState")) {
+foreach ($k in @("hsWasherDesc", "hsDryerDesc", "hsThermometerDesc", "hsFridgeWhiteDesc", "hsSocketUKDesc", "hsSocketUSDesc", "hsLightSwitchUKDesc", "hsCookerSwitchUKDesc", "blockcommand_hswash", "blockcommand_hsdry", "hsThermoRoom", "hsClothesDirt", "hsClothesWet", "hsWashed", "hsPlugFullOne", "hsPlugUsed", "buffHSSmellyName", "buffHSDirtyClothesName", "buffHSWetClothesName", "hsLightSwitchUSDesc", "blockcommand_washup", "hsLblWash", "hsSinkWashed", "hsWashLakeside", "hsWashTooSoon", "hsWashSoakStart", "hsWashSoakDone", "blockcommand_hsoutlet0", "blockcommand_hsoutlet1", "hsOutletState", "hsRangeOutletUSDesc")) {
     if ($locTxt -notmatch "(?m)^$k,") { Fail "missing loc $k" } else { Ok "loc $k" }
 }
-foreach ($c in @(@("HSSocketUKSingle", "HSSocketUKSingle_Plug0"), @("HSSocketUKDouble", "HSSocketUKDouble_Plug1"), @("HSSocketUKDouble", "HSSocketUKDouble_SwOn1"), @("HSSocketUSDouble", "HSSocketUSDouble_Plug1"), @("HSLightSwitchUS", "HSLightSwitchUS_SwOn"), @("HSLightSwitchUK", "HSLightSwitchUK_SwOff"), @("HSCookerSwitchUK", "HSCookerSwitchUK_Lamp"))) {
+foreach ($c in @(@("HSSocketUKSingle", "HSSocketUKSingle_Plug0"), @("HSSocketUKDouble", "HSSocketUKDouble_Plug1"), @("HSSocketUKDouble", "HSSocketUKDouble_SwOn1"), @("HSSocketUSDouble", "HSSocketUSDouble_Plug1"), @("HSLightSwitchUS", "HSLightSwitchUS_SwOn"), @("HSLightSwitchUK", "HSLightSwitchUK_SwOff"), @("HSCookerSwitchUK", "HSCookerSwitchUK_Lamp"), @("HSRangeOutletUS", "HSRangeOutletUS_Plug0"))) {
     $pf = Join-Path $Root "_unity\Assets\HSWorkingStuff\Prefabs\$($c[0]).prefab"
     if (-not (Test-Path $pf) -or -not (Select-String -Path $pf -Pattern "m_Name: $($c[1])" -SimpleMatch -Quiet)) { Fail "$($c[0]) is missing child $($c[1])" } else { Ok "$($c[0]) has $($c[1])" }
 }
