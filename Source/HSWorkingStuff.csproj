@@ -82,6 +82,7 @@
     <Compile Include="HSSpoil.cs" />
     <Compile Include="HSFrozen.cs" />
     <Compile Include="BlockHSTV.cs" />
+    <Compile Include="HSCircuits.cs" />
     <Compile Include="HSWater.cs" />
     <Compile Include="HSPickup.cs" />
     <Compile Include="HSPatches.cs" />

@@ -2,6 +2,16 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.30
+
+- **Consumer unit (UK) and breaker panel (US).** Wire one from the power, then wire one circuit out of it per way: 6 ways in the white UK consumer unit with its red main switch, 8 in the grey US panel with its main breaker. A circuit stays dead until you fit a fuse or a breaker for it.
+- **Fuses that blow.** 5A, 15A, 30A and 45A fuses (5W per amp). Put more on a circuit than its fuse carries and after 2 seconds it blows with a bang: the circuit goes dead and the fuse is useless (a **Blown Fuse**) until you take it out and fit a new one. Fuses are cheap and made by hand.
+- **Breakers that trip.** The same ratings as breakers. Overload trips the breaker instead of burning it out: reset it at the panel. A breaker also switches its circuit off and on. Breakers are made at a workbench and unlock with the fridge and boiler.
+- **Name your circuits.** Hold E on the panel, pick a circuit with **Next circuit**, then **Name circuit** and type `Kitchen sockets`, `Lights`, `Cooker` and so on. The panel lists every circuit with its name, fuse, load and whether it's blown, tripped or off, and every socket, switch and TV on a circuit shows `Circuit: <name>` when you look at it.
+- **Socket chains.** Each socket can now wire on to one more socket as well as its plugs. The onward link doesn't use up a plug and has no lead, so a whole kitchen of sockets can share one circuit and one fuse. Switching a UK socket off only kills its own plugs; sockets further along the chain stay live.
+- Switches and lights wired straight from a UK double socket now go off with that outlet's switch too.
+- New settings: `WattsPerAmp`, `OverloadSeconds`.
+
 ## 1.0.29
 
 - **TVs that play your videos.** A 43 inch flat-screen TV on a stand, and one for the wall. Every video file in the TV folder is a channel (`.mp4` works best), in file name order, and the channel name is the file name. Drop files into `%AppData%\7DaysToDie\HSWorkingStuff\TV` (made for you) or the mod's `TV` folder and they show up in game within a few seconds. Hold E for **On / Off**, **Next channel** and **Previous channel**. The sound comes from the set and fades with distance.

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
 
@@ -15,6 +16,57 @@ public static class HSPlugs
         if (block != null && block.Properties != null && block.Properties.Values.TryGetValue(Property, out v) && int.TryParse(v, out n))
             return n;
         return 0;
+    }
+
+    public static bool IsSocket(Block block)
+    {
+        return Limit(block) > 0;
+    }
+
+    public static bool IsSocketAt(Vector3i pos)
+    {
+        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+        return world != null && IsSocket(world.GetBlock(pos).Block);
+    }
+
+    // Plug leads out of a socket, in wire order. A wire on to the next socket in a chain is not a plug.
+    public static List<Vector3i> Leads(WorldBase world, TileEntityPowered te)
+    {
+        var list = new List<Vector3i>();
+        if (world == null || te == null || te.wireDataList == null)
+            return list;
+        for (int i = 0; i < te.wireDataList.Count; i++)
+            if (!IsSocket(world.GetBlock(te.wireDataList[i]).Block))
+                list.Add(te.wireDataList[i]);
+        return list;
+    }
+
+    public static bool Chained(WorldBase world, TileEntityPowered te)
+    {
+        if (world == null || te == null || te.wireDataList == null)
+            return false;
+        for (int i = 0; i < te.wireDataList.Count; i++)
+            if (IsSocket(world.GetBlock(te.wireDataList[i]).Block))
+                return true;
+        return false;
+    }
+
+    // Plug count, the onward socket link and the circuit it is on, for socket hover text.
+    public static string Usage(WorldBase world, Vector3i pos, int limit)
+    {
+        var te = world != null ? world.GetTileEntity(pos) as TileEntityPowered : null;
+        string text = "";
+        if (limit > 0)
+        {
+            int used = te != null ? Mathf.Min(Leads(world, te).Count, limit) : 0;
+            text = HSLoc.Format("hsPlugUsed", "Plugs: {0} of {1} in use", used, limit);
+            if (Chained(world, te))
+                text += "\n" + HSLoc.Get("hsSocketChained", "Linked on to the next socket");
+        }
+        string circuit = HSCircuits.CircuitLine(world, pos);
+        if (!string.IsNullOrEmpty(circuit))
+            text = text.Length > 0 ? text + "\n" + circuit : circuit;
+        return text;
     }
 
     public static void Deny(int limit)
@@ -44,10 +96,8 @@ public static class HSPlugs
         string power = te != null && te.IsPowered
             ? HSLoc.Get("hsPlugPowered", "Live")
             : HSLoc.Get("hsPlugNoPower", "No power: wire it from a generator, battery bank or solar bank");
-        if (limit <= 0)
-            return power;
-        int used = te != null ? Mathf.Min(te.ChildCount, limit) : 0;
-        return power + "\n" + HSLoc.Format("hsPlugUsed", "Plugs: {0} of {1} in use", used, limit);
+        string usage = Usage(world, pos, limit);
+        return string.IsNullOrEmpty(usage) ? power : power + "\n" + usage;
     }
 
     // Models carry hidden "<Model>_Plug0", "_Plug1" children: one shows per lead wired out of the socket.
@@ -70,7 +120,7 @@ public static class HSPlugs
     public static void ShowPlugs(WorldBase world, Vector3i pos, Transform model)
     {
         var te = world != null ? world.GetTileEntity(pos) as TileEntityPowered : null;
-        ShowPlugs(model, te != null ? te.ChildCount : 0);
+        ShowPlugs(model, Leads(world, te).Count);
         if (te != null)
             Cables(world, te, model);
     }
@@ -114,10 +164,11 @@ public static class HSPlugs
             if (at >= 0 && int.TryParse(t.name.Substring(at + 5), out i) && i >= 0 && i < plugs.Length)
                 plugs[i] = t;
         }
+        List<Vector3i> leads = Leads(world, te);
         for (int i = 0; i < plugs.Length; i++)
         {
             Transform old = model.Find("HSCable" + i);
-            bool want = plugs[i] != null && i < te.wireDataList.Count;
+            bool want = plugs[i] != null && i < leads.Count;
             if (!want)
             {
                 if (old != null)
@@ -129,7 +180,7 @@ public static class HSPlugs
                 continue;
             Bounds pb = r.bounds;
             Vector3 a = new Vector3(pb.center.x, pb.min.y, pb.center.z);
-            Vector3i childPos = te.wireDataList[i];
+            Vector3i childPos = leads[i];
             var child = world.GetTileEntity(childPos) as TileEntityPowered;
             Vector3 b = child != null && child.BlockTransform != null
                 ? LeadEnd(child.BlockTransform, a)
@@ -187,10 +238,28 @@ public static class HSOutlets
         if (world == null)
             return false;
         BlockValue bv = world.GetBlock(parent.Position);
+        if (bv.Block is BlockHSPanel)
+            return !HSCircuits.Live(parent.Position, item.Position, bv);
         if (!IsDouble(bv.Block))
             return false;
-        int i = parent.Children.IndexOf(item);
+        int i = LeadIndex(world, parent, item);
         return i >= 0 && i < 2 && !On(bv, i);
+    }
+
+    // Plug i is the i-th lead out of the socket; the onward socket link has no outlet (-1).
+    static int LeadIndex(World world, PowerItem parent, PowerItem item)
+    {
+        int n = 0;
+        for (int k = 0; k < parent.Children.Count; k++)
+        {
+            PowerItem ch = parent.Children[k];
+            bool socket = HSPlugs.IsSocket(world.GetBlock(ch.Position).Block);
+            if (ch == item)
+                return socket ? -1 : n;
+            if (!socket)
+                n++;
+        }
+        return -1;
     }
 
     // Re-run the power share so a flicked outlet takes effect without the main switch changing.
@@ -207,19 +276,15 @@ public static class HSOutlets
 [HarmonyPatch(typeof(PowerItem), "HandlePowerReceived")]
 public static class HSPatchOutletPower
 {
-    static bool Prefix(PowerItem __instance)
+    // A cut outlet or circuit takes everything wired beyond it down too, once, not on every power pass.
+    public static bool Prefix(PowerItem __instance)
     {
         try
         {
             if (!HSOutlets.Off(__instance))
                 return true;
             if (__instance.isPowered)
-            {
-                __instance.isPowered = false;
-                __instance.IsPoweredChanged(false);
-                if (__instance.TileEntity != null)
-                    __instance.TileEntity.SetModified();
-            }
+                __instance.HandleDisconnect();
             return false;
         }
         catch
@@ -293,11 +358,31 @@ public static class HSPatchSocketPlugs
                 HSPlugs.DenyReason(HSLoc.Get("hsTVSocketOnly", "A TV plugs into a socket, not straight into the power"));
                 return;
             }
-            if (limit <= 0)
-                return;
             if (parent.wireDataList.Contains(__instance.ToWorldPos()))
                 return;
-            if (parent.ChildCount >= limit)
+            var panel = parent.blockValue.Block as BlockHSPanel;
+            if (panel != null)
+            {
+                if (parent.ChildCount >= panel.Ways)
+                {
+                    __result = false;
+                    HSPlugs.DenyReason(HSLoc.Format("hsPanelFull", "This panel has {0} ways and every one has a circuit on it", panel.Ways));
+                }
+                return;
+            }
+            if (limit <= 0)
+                return;
+            World world = GameManager.Instance.World;
+            if (HSPlugs.IsSocket(__instance.blockValue.Block))
+            {
+                if (HSPlugs.Chained(world, parent))
+                {
+                    __result = false;
+                    HSPlugs.DenyReason(HSLoc.Get("hsChainFull", "This socket already links on to another socket: one onward link per socket"));
+                }
+                return;
+            }
+            if (HSPlugs.Leads(world, parent).Count >= limit)
             {
                 __result = false;
                 HSPlugs.Deny(limit);
@@ -414,19 +499,14 @@ public class BlockHSWallSwitch : BlockSwitch
         {
             string onText = HSLoc.Get("hsOutletOn", "On");
             string offText = HSLoc.Get("hsOutletOff", "Off");
-            var dte = _world.GetTileEntity(_blockPos) as TileEntityPowered;
-            int inUse = dte != null ? Mathf.Min(dte.ChildCount, 2) : 0;
             return GetLocalizedBlockName() + "\n"
                 + HSLoc.Format("hsOutletState", "Left socket: {0}    Right socket: {1}",
                     HSOutlets.On(_blockValue, 0) ? onText : offText, HSOutlets.On(_blockValue, 1) ? onText : offText) + "\n"
-                + HSLoc.Format("hsPlugUsed", "Plugs: {0} of {1} in use", inUse, 2);
+                + HSPlugs.Usage(_world, _blockPos, 2);
         }
         string text = base.GetActivationText(_world, _blockValue, _blockPos, _entityFocusing);
-        if (HSPlugs.Limit(this) <= 0)
-            return text;
-        var te = _world.GetTileEntity(_blockPos) as TileEntityPowered;
-        int used = te != null ? Mathf.Min(te.ChildCount, HSPlugs.Limit(this)) : 0;
-        return text + "\n" + HSLoc.Format("hsPlugUsed", "Plugs: {0} of {1} in use", used, HSPlugs.Limit(this));
+        string usage = HSPlugs.Usage(_world, _blockPos, HSPlugs.Limit(this));
+        return string.IsNullOrEmpty(usage) ? text : text + "\n" + usage;
     }
 }
 

@@ -391,5 +391,53 @@
 			<ingredient name="resourceCropCoffeeBeans" count="1"/>
 			<ingredient name="drinkJarRiverWater" count="1"/>
 		</recipe>
+
+		<!-- Consumer unit / breaker panel, fuses (by hand) and breakers (workbench) -->
+		<recipe name="hsConsumerUnitUK" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceElectricParts" count="4"/>
+			<ingredient name="resourceScrapPolymers" count="6"/>
+			<ingredient name="resourceForgedIron" count="2"/>
+		</recipe>
+		<recipe name="hsBreakerPanelUS" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceElectricParts" count="4"/>
+			<ingredient name="resourceForgedIron" count="6"/>
+			<ingredient name="resourceScrapPolymers" count="2"/>
+		</recipe>
+		<recipe name="hsFuse5" count="2" tags="learnable">
+			<ingredient name="resourceElectricParts" count="1"/>
+			<ingredient name="resourceScrapPolymers" count="1"/>
+		</recipe>
+		<recipe name="hsFuse15" count="2" tags="learnable">
+			<ingredient name="resourceElectricParts" count="1"/>
+			<ingredient name="resourceScrapPolymers" count="1"/>
+		</recipe>
+		<recipe name="hsFuse30" count="2" tags="learnable">
+			<ingredient name="resourceElectricParts" count="2"/>
+			<ingredient name="resourceScrapPolymers" count="1"/>
+		</recipe>
+		<recipe name="hsFuse45" count="2" tags="learnable">
+			<ingredient name="resourceElectricParts" count="2"/>
+			<ingredient name="resourceScrapPolymers" count="1"/>
+		</recipe>
+		<recipe name="hsBreaker5" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceElectricParts" count="3"/>
+			<ingredient name="resourceScrapPolymers" count="2"/>
+			<ingredient name="resourceForgedIron" count="1"/>
+		</recipe>
+		<recipe name="hsBreaker15" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceElectricParts" count="3"/>
+			<ingredient name="resourceScrapPolymers" count="2"/>
+			<ingredient name="resourceForgedIron" count="1"/>
+		</recipe>
+		<recipe name="hsBreaker30" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceElectricParts" count="4"/>
+			<ingredient name="resourceScrapPolymers" count="2"/>
+			<ingredient name="resourceForgedIron" count="1"/>
+		</recipe>
+		<recipe name="hsBreaker45" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceElectricParts" count="4"/>
+			<ingredient name="resourceScrapPolymers" count="2"/>
+			<ingredient name="resourceForgedIron" count="2"/>
+		</recipe>
 	</append>
 </configs>

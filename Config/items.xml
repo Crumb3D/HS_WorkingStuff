@@ -245,6 +245,74 @@
 				<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffExtinguishFire"/>
 			</effect_group>
 		</item>
+
+		<!-- Fuses and breakers for the consumer unit / breaker panel. The number is the rating in amps
+		     (WattsPerAmp in HSWorkingStuffSettings.json, 5 W per amp by default). Hold one and use the panel to fit it. -->
+		<item name="hsFuse5">
+			<property name="HoldType" value="45"/>
+			<property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+			<property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+			<property name="Material" value="MelectricParts"/>
+			<property name="Stacknumber" value="20"/>
+			<property name="EconomicValue" value="12"/>
+			<property name="DescriptionKey" value="hsFuseDesc"/>
+			<property name="CustomIcon" value="hsFuse"/>
+			<property name="CustomIconTint" value="ffffff"/>
+			<property name="UnlockedBy" value="craftingElectrician,perkAdvancedEngineering"/>
+			<property name="Group" value="Resources,Science"/>
+			<property name="SoundPickup" value="parts_grab"/>
+			<property name="SoundPlace" value="parts_place"/>
+		</item>
+		<item name="hsFuse15">
+			<property name="Extends" value="hsFuse5"/>
+			<property name="CustomIcon" value="hsFuse"/>
+			<property name="CustomIconTint" value="6f9fff"/>
+			<property name="UnlockedBy" value="craftingElectrician,perkAdvancedEngineering"/>
+		</item>
+		<item name="hsFuse30">
+			<property name="Extends" value="hsFuse5"/>
+			<property name="CustomIcon" value="hsFuse"/>
+			<property name="CustomIconTint" value="ff6a5a"/>
+			<property name="UnlockedBy" value="craftingElectrician,perkAdvancedEngineering"/>
+		</item>
+		<item name="hsFuse45">
+			<property name="Extends" value="hsFuse5"/>
+			<property name="CustomIcon" value="hsFuse"/>
+			<property name="CustomIconTint" value="7fe07f"/>
+			<property name="UnlockedBy" value="craftingElectrician,perkAdvancedEngineering"/>
+		</item>
+		<item name="hsFuseBlown">
+			<property name="Extends" value="hsFuse5"/>
+			<property name="DescriptionKey" value="hsFuseBlownDesc"/>
+			<property name="CustomIcon" value="hsFuseBlown"/>
+			<property name="EconomicValue" value="2"/>
+		</item>
+		<item name="hsBreaker5">
+			<property name="Extends" value="hsFuse5"/>
+			<property name="DescriptionKey" value="hsBreakerDesc"/>
+			<property name="CustomIcon" value="hsBreaker"/>
+			<property name="Stacknumber" value="10"/>
+			<property name="EconomicValue" value="45"/>
+			<property name="UnlockedBy" value="craftingElectrician,perkAdvancedEngineering"/>
+		</item>
+		<item name="hsBreaker15">
+			<property name="Extends" value="hsBreaker5"/>
+			<property name="CustomIcon" value="hsBreaker"/>
+			<property name="CustomIconTint" value="6f9fff"/>
+			<property name="UnlockedBy" value="craftingElectrician,perkAdvancedEngineering"/>
+		</item>
+		<item name="hsBreaker30">
+			<property name="Extends" value="hsBreaker5"/>
+			<property name="CustomIcon" value="hsBreaker"/>
+			<property name="CustomIconTint" value="ff6a5a"/>
+			<property name="UnlockedBy" value="craftingElectrician,perkAdvancedEngineering"/>
+		</item>
+		<item name="hsBreaker45">
+			<property name="Extends" value="hsBreaker5"/>
+			<property name="CustomIcon" value="hsBreaker"/>
+			<property name="CustomIconTint" value="7fe07f"/>
+			<property name="UnlockedBy" value="craftingElectrician,perkAdvancedEngineering"/>
+		</item>
 	</append>
 
 	<append xpath="/items/item[@name='foodRawMeat']">

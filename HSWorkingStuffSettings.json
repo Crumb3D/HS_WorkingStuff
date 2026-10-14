@@ -56,5 +56,8 @@
 
   "TVVolume": 0.8,
   "TVHearRange": 15,
-  "TVViewRange": 40
+  "TVViewRange": 40,
+
+  "WattsPerAmp": 5,
+  "OverloadSeconds": 2
 }

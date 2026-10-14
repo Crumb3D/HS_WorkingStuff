@@ -17,7 +17,7 @@ public class HSWorkingStuffMod : IModApi
         ModEvents.GameStartDone.RegisterHandler(OnStart);
         ModEvents.WorldShuttingDown.RegisterHandler(OnShutdown);
         ApplyHarmony();
-        Log.Out("[HSWorkingStuff] v1.0.29 TVs, fridge, fridge-freezer, chest freezer with frozen food, cooler, stove, microwave, coffee maker, kettle, toaster, wheat and bread, tea, grills, plumbing, water cooler, shower, bath, combi boiler, radiators, air con, washer, dryer, thermometer, sockets, room temperature, smell, laundry, pipe tool, and 7-day food. Install on the host and on every client.");
+        Log.Out("[HSWorkingStuff] v1.0.30 consumer units and breaker panels with fuses and breakers, chained sockets, TVs, fridge, fridge-freezer, chest freezer with frozen food, cooler, stove, microwave, coffee maker, kettle, toaster, wheat and bread, tea, grills, plumbing, water cooler, shower, bath, combi boiler, radiators, air con, washer, dryer, thermometer, sockets, room temperature, smell, laundry, pipe tool, and 7-day food. Install on the host and on every client.");
     }
 
     static void ApplyHarmony()
@@ -57,6 +57,7 @@ public class HSWorkingStuffMod : IModApi
             HSAirCon.ClientTick();
             HSLaundry.ClientTick();
             HSTV.ServerTick();
+            HSCircuits.ServerTick();
         }
         catch (Exception e)
         {
@@ -72,6 +73,7 @@ public class HSWorkingStuffMod : IModApi
         {
             HSBoiler.Load();
             HSPipeNet.Load();
+            HSCircuits.Load();
         }
         HSWorkingStuffNet.RegisterPackage();
         HSJoinHold.Tick();
@@ -84,6 +86,8 @@ public class HSWorkingStuffMod : IModApi
         HSBoiler.Clear();
         HSPipeNet.Save();
         HSPipeNet.Clear();
+        HSCircuits.Save();
+        HSCircuits.Clear();
         HSJoinHold.Clear();
         HSAirCon.Clear();
         HSTV.Clear();

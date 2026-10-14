@@ -42,6 +42,20 @@
 			</rect>
 		</window>
 
+		<window name="windowHSCircuitName" pos="400,83" width="420" height="132" cursor_area="true">
+			<rect name="header" height="43" depth="1">
+				<headerbg />
+				<sprite depth="2" name="windowIcon" style="icon32px" pos="4,-5" sprite="ui_game_symbol_electric_power"/>
+				<label style="header.name" text="NAME CIRCUIT" text_key="hsCircuitNameTitle" width="360" />
+			</rect>
+			<rect name="content" pos="0,-46" height="86" depth="1">
+				<sprite depth="8" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="420" height="86" color="[black]" type="sliced" fillcenter="false" />
+				<sprite color="[darkGrey]" type="sliced" />
+				<textfield name="nameInput" pos="6,-6" width="408" height="44" font_size="30" character_limit="32" virtual_keyboard_prompt="vkPromptSignText" open_vk_on_open="false" focus_on_open="true" close_group_on_tab="true" clear_button="true" />
+				<label depth="3" pos="8,-54" width="404" height="26" font_size="20" justify="left" upper_case="false" text="Enter saves. Shows on the panel and on everything on the circuit." text_key="hsCircuitNameHint" />
+			</rect>
+		</window>
+
 		<window name="HUDHSPipe" pos="-620,180" width="600" height="250" anchor="Right" depth="15" controller="HSPipeHud, HSWorkingStuff">
 			<rect width="600" height="250" visible="{show}">
 				<sprite depth="1" pos="0,0" width="600" height="250" sprite="menu_empty" color="0,0,0,160" type="sliced"/>

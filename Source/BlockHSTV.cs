@@ -84,7 +84,9 @@ public class BlockHSTV : BlockPowered
 
     public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
-        return _blockValue.Block.GetLocalizedBlockName() + "\n" + HSTV.Status(_world, _blockPos, _blockValue);
+        string circuit = HSCircuits.CircuitLine(_world, _blockPos);
+        return _blockValue.Block.GetLocalizedBlockName() + "\n" + HSTV.Status(_world, _blockPos, _blockValue)
+            + (string.IsNullOrEmpty(circuit) ? "" : "\n" + circuit);
     }
 }
 

@@ -56,6 +56,8 @@ public static class HSWorkingStuffSettings
     public static float TVVolume = 0.8f;
     public static float TVHearRange = 15f;
     public static float TVViewRange = 40f;
+    public static float WattsPerAmp = 5f;
+    public static float OverloadSeconds = 2f;
 
     public static void Load(string modPath)
     {
@@ -111,6 +113,8 @@ public static class HSWorkingStuffSettings
         TVVolume = 0.8f;
         TVHearRange = 15f;
         TVViewRange = 40f;
+        WattsPerAmp = 5f;
+        OverloadSeconds = 2f;
         if (!string.IsNullOrEmpty(modPath))
             TryRead(Path.Combine(modPath, "HSWorkingStuffSettings.json"));
         try
@@ -187,6 +191,8 @@ public static class HSWorkingStuffSettings
         ReadFloat(text, "TVVolume", ref TVVolume);
         ReadFloat(text, "TVHearRange", ref TVHearRange);
         ReadFloat(text, "TVViewRange", ref TVViewRange);
+        ReadFloat(text, "WattsPerAmp", ref WattsPerAmp);
+        ReadFloat(text, "OverloadSeconds", ref OverloadSeconds);
         Log.Out("[HSWorkingStuff] Read " + path);
     }
 

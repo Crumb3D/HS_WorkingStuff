@@ -973,13 +973,136 @@ def tv_wall():
     return p
 
 
+# ---------------------------------------------------------------- consumer unit / breaker panel
+# Each way i has hidden children the game picks between: W<i>Fuse, W<i>Blown (fuse fitted, good or blown),
+# W<i>On, W<i>Off (breaker fitted, closed or off/tripped). Nothing fitted shows the bare slot. MainOn / MainOff
+# are the main switch.
+
+def _uk_fuse_carrier(s, x, zc, yf, blown):
+    """BS 3036 rewireable fuse carrier: white body, grip ridges, coloured dot; blown ones are scorched."""
+    s.box("HS_White", (x, yf - 0.014, zc), (0.03, 0.028, 0.06))
+    for dz in (-0.018, 0.0, 0.018):
+        s.box("HS_Grey", (x, yf - 0.0285, zc + dz), (0.026, 0.002, 0.004))
+    if blown:
+        s.box("HS_Dark", (x + 0.004, yf - 0.0292, zc - 0.006), (0.016, 0.001, 0.03))
+    else:
+        s.rod("HS_Red", (x, yf - 0.029, zc + 0.024), 0.004, 0.002, "Y", 10)
+
+
+def _uk_mcb(s, x, zc, yf, up):
+    """DIN rail MCB: white module, dark toggle up for on, down for off/tripped."""
+    s.box("HS_White", (x, yf - 0.015, zc), (0.032, 0.03, 0.066))
+    s.box("HS_Grey", (x, yf - 0.0305, zc), (0.022, 0.001, 0.03))
+    s.box("HS_Dark", (x, yf - 0.036, zc + (0.009 if up else -0.009)), (0.012, 0.012, 0.016))
+    s.box("HS_Red" if up else "HS_Green", (x, yf - 0.0305, zc - 0.024), (0.014, 0.001, 0.006))
+
+
+def consumer_unit_uk():
+    """UK consumer unit: white metal-clad box, 6 ways on a DIN rail and a red double-pole main switch."""
+    p = Piece("HSConsumerUnitUK")
+    zc = 0.5
+    w, h, d = 0.4, 0.22, 0.1
+    yf = WALL - d
+    p.box("HS_White", (0, WALL - d / 2, zc), (w, d, h))
+    p.box("HS_Grey", (0, yf - 0.001, zc), (w - 0.03, 0.002, 0.09))
+    p.box("HS_White", (0, yf - 0.001, zc + 0.075), (w - 0.03, 0.002, 0.03))
+    p.box("HS_Dark", (0, yf - 0.0025, zc - 0.07), (w - 0.06, 0.001, 0.012))
+    for i in range(6):
+        x = -0.15 + i * 0.036
+        p.box("HS_Dark", (x, yf - 0.0025, zc), (0.03, 0.001, 0.06))
+        _uk_fuse_carrier(p.sub("W%dFuse" % i), x, zc, yf, False)
+        _uk_fuse_carrier(p.sub("W%dBlown" % i), x, zc, yf, True)
+        _uk_mcb(p.sub("W%dOn" % i), x, zc, yf, True)
+        _uk_mcb(p.sub("W%dOff" % i), x, zc, yf, False)
+    xm = 0.12
+    p.box("HS_White", (xm, yf - 0.015, zc), (0.07, 0.03, 0.066))
+    for state, up in (("MainOn", True), ("MainOff", False)):
+        s = p.sub(state)
+        s.box("HS_Red", (xm, yf - 0.037, zc + (0.01 if up else -0.01)), (0.05, 0.014, 0.018))
+    p.collider((0, WALL - d / 2, zc), (w, d, h))
+    return p
+
+
+def _us_breaker(s, x, zc, yf, left, on):
+    """Plug-in breaker: black body across the row, lever towards the middle of the panel when on."""
+    s.box("HS_Dark", (x, yf - 0.012, zc), (0.07, 0.024, 0.026))
+    inward = 1 if left else -1
+    lx = x + (0.01 * inward if on else -0.01 * inward)
+    s.box("HS_Dark", (lx, yf - 0.03, zc), (0.012, 0.014, 0.012))
+    s.box("HS_White", (x - 0.024 * inward, yf - 0.0245, zc), (0.012, 0.001, 0.008))
+
+
+def _us_plug_fuse(s, x, zc, yf, blown):
+    """Edison screw plug fuse: brass rim and a window, dark when blown."""
+    s.rod("HS_Copper", (x, yf - 0.006, zc), 0.014, 0.012, "Y", 16)
+    s.rod("HS_Chrome", (x, yf - 0.014, zc), 0.012, 0.006, "Y", 16)
+    s.rod("HS_Dark" if blown else "HS_Copper", (x, yf - 0.0175, zc), 0.008, 0.002, "Y", 12)
+
+
+def breaker_panel_us():
+    """US load center: grey steel box, dead front, main breaker on top and 8 ways in two columns."""
+    p = Piece("HSBreakerPanelUS")
+    zc = 0.5
+    w, h, d = 0.36, 0.56, 0.1
+    yf = WALL - d
+    p.box("HS_Grey", (0, WALL - d / 2, zc), (w, d, h))
+    p.box("HS_Chrome", (0, yf - 0.001, zc), (w - 0.04, 0.002, h - 0.04))
+    for i in range(8):
+        col, row = i % 2, i // 2
+        left = col == 0
+        x = -0.05 if left else 0.05
+        z = zc + 0.09 - row * 0.06
+        p.box("HS_Dark", (x, yf - 0.0025, z), (0.07, 0.001, 0.026))
+        _us_plug_fuse(p.sub("W%dFuse" % i), x, z, yf, False)
+        _us_plug_fuse(p.sub("W%dBlown" % i), x, z, yf, True)
+        _us_breaker(p.sub("W%dOn" % i), x, z, yf, left, True)
+        _us_breaker(p.sub("W%dOff" % i), x, z, yf, left, False)
+    zm = zc + 0.2
+    p.box("HS_Dark", (0, yf - 0.014, zm), (0.09, 0.028, 0.05))
+    for state, up in (("MainOn", True), ("MainOff", False)):
+        s = p.sub(state)
+        s.box("HS_Dark", (0, yf - 0.034, zm + (0.01 if up else -0.01)), (0.05, 0.014, 0.014))
+    p.box("HS_White", (0, yf - 0.0025, zc - 0.2), (0.2, 0.001, 0.05))
+    p.collider((0, WALL - d / 2, zc), (w, d, h))
+    return p
+
+
+def icon_fuse():
+    """Cartridge fuse: pale ceramic body and metal end caps (the item icon is tinted per rating)."""
+    p = Piece("HSIconFuse")
+    p.rod("HS_White", (0, 0, 0.1), 0.05, 0.16, "X", 24)
+    for x in (-0.095, 0.095):
+        p.rod("HS_Chrome", (x, 0, 0.1), 0.055, 0.04, "X", 24)
+    p.box("HS_Grey", (0, -0.05, 0.1), (0.08, 0.002, 0.03))
+    return p
+
+
+def icon_fuse_blown():
+    p = Piece("HSIconFuseBlown")
+    p.rod("HS_White", (0, 0, 0.1), 0.05, 0.16, "X", 24)
+    for x in (-0.095, 0.095):
+        p.rod("HS_Chrome", (x, 0, 0.1), 0.055, 0.04, "X", 24)
+    p.ball("HS_Dark", (0.01, -0.035, 0.11), 0.035, (1.4, 0.5, 1.0), 16)
+    return p
+
+
+def icon_breaker():
+    """DIN rail breaker module, pale so the icon tint shows the rating."""
+    p = Piece("HSIconBreaker")
+    p.box("HS_White", (0, 0, 0.1), (0.07, 0.11, 0.18))
+    p.box("HS_Grey", (0, -0.056, 0.1), (0.05, 0.002, 0.08))
+    p.box("HS_Dark", (0, -0.07, 0.13), (0.026, 0.03, 0.04))
+    return p
+
+
 PIECES = [combi_boiler, panel_radiator, chest_freezer, split_air_con, ceiling_air_con, wall_thermometer,
           washing_machine, tumble_dryer, fridge_freezer,
           socket_uk_single, socket_uk_double, socket_us_single, socket_us_double, light_switch_uk, light_switch_us, cooker_switch_uk, range_outlet_us,
-          kettle, toaster, wheat_1, wheat_2, wheat_3, tv_stand, tv_wall]
+          kettle, toaster, wheat_1, wheat_2, wheat_3, tv_stand, tv_wall, consumer_unit_uk, breaker_panel_us]
 
 ICON_PIECES = [icon_mug, icon_mug_tea_pj, icon_mug_tea_yorkie, icon_mug_coffee, icon_tea_pj, icon_tea_yorkie,
-               icon_wheat, icon_flour, icon_dough, icon_loaf, icon_slice, icon_toast, icon_wheat_seed]
+               icon_wheat, icon_flour, icon_dough, icon_loaf, icon_slice, icon_toast, icon_wheat_seed,
+               icon_fuse, icon_fuse_blown, icon_breaker]
 
 
 def clear_scene():

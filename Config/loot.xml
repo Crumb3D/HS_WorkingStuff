@@ -27,4 +27,12 @@
 		<item name="hsTeaBagsYorkie" count="2,6" loot_prob_template="low"/>
 		<item name="hsFlour" count="1,2" loot_prob_template="low"/>
 	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupElectricalDevices']">
+		<item name="hsFuse5" count="1,4" loot_prob_template="med"/>
+		<item name="hsFuse15" count="1,4" loot_prob_template="med"/>
+		<item name="hsFuse30" count="1,2" loot_prob_template="low"/>
+		<item name="hsFuse45" count="1,2" loot_prob_template="low"/>
+		<item name="hsBreaker15" count="1" loot_prob_template="low"/>
+		<item name="hsBreaker30" count="1" loot_prob_template="low"/>
+	</append>
 </configs>

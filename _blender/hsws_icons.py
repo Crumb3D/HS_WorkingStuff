@@ -2,6 +2,7 @@
 import bpy
 import math
 import os
+import re
 import sys
 from mathutils import Vector
 
@@ -31,6 +32,11 @@ ICONS = [
     ("HSToaster", "hsToaster"),
     ("HSTVStand", "hsTVStand"),
     ("HSTVWall", "hsTVWall"),
+    ("HSConsumerUnitUK", "hsConsumerUnitUK"),
+    ("HSBreakerPanelUS", "hsBreakerPanelUS"),
+    ("HSIconFuse", "hsFuse", 30),
+    ("HSIconFuseBlown", "hsFuseBlown", 30),
+    ("HSIconBreaker", "hsBreaker"),
     ("HSIconWheatSeed", "hsPlantedWheat1"),
     ("HSIconWheat", "hsCropWheat"),
     ("HSIconFlour", "hsFlour"),
@@ -79,7 +85,9 @@ def mesh_objects(root):
     stack = [root]
     while stack:
         ob = stack.pop()
-        if ob.type == "MESH" and not ob.name.startswith("COL_") and "_Plug" not in ob.name and "_SwOff" not in ob.name:
+        # Panels show every way with a closed breaker and the main switch on.
+        hidden = re.search(r"_(W\d+(Off|Fuse|Blown)|MainOff)$", ob.name)
+        if ob.type == "MESH" and not ob.name.startswith("COL_") and "_Plug" not in ob.name and "_SwOff" not in ob.name and not hidden:
             out.append(ob)
         stack.extend(list(ob.children))
     return out

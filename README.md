@@ -56,6 +56,8 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `TVVolume` | 0.8 | TV sound volume (0 to 1) |
 | `TVHearRange` | 15 | How far away you can hear a TV (m) |
 | `TVViewRange` | 40 | TVs further away than this (m) stop playing |
+| `WattsPerAmp` | 5 | How many watts each amp of a fuse or breaker carries (a 15A fuse = 75W) |
+| `OverloadSeconds` | 2 | Seconds a circuit can be overloaded before its fuse blows or its breaker trips |
 
 Set a bool to `false` to turn that feature off without removing the mod.
 
@@ -102,6 +104,15 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 - **Washing machine / tumble dryer** — white UK front-loaders (plus the old vanilla-model versions). Put worn clothes and armour in and pick **Wash**: it needs power (15W) and a cold water pipe from a tank like a sink, and uses 4 jars. Clothes come out clean but **wet**, which makes you colder while you wear them, until they dry on you (6 hours) or go through the tumble dryer (power only, 20W, **Dry**).
 - **Wall thermometer** — look at it for the room temperature, the temperature outside, and whether a radiator or air con is working on the room. Shows °F or °C to match your game options.
 - **Sockets and switches** — UK switched sockets (single and double), US outlets (single and duplex, always live, no switch), UK and US light switches, a UK 45A cooker switch and a US 240V range outlet (the US has no cooker switch: a range plugs straight into its own always-live outlet). Wire power into one, then wire from it to the appliance. A socket only takes as many plugs as it has outlets: one wire out of a single, two out of a double, one out of the cooker switch or range outlet; the wire tool says so when it's full. A plug shows in the outlet for each appliance, with a black lead to it. Each outlet of a UK double socket has its own switch (the first appliance wired is the left plug); a UK single socket and the switches turn everything wired from them off and on. The rockers flick up and down with the switch. Hang sockets in the cell above a floor or worktop and switches in the cell one up from the floor.
+- **Socket chains.** Besides its plugs, every socket can have one wire on to another socket, which doesn't use up a plug and has no lead. Chain a row of sockets round a kitchen and they all share one circuit. Switching a UK socket off only kills its own plugs; the sockets further along the chain stay live. Hover a socket to see if it links on.
+- **Consumer unit (UK) / breaker panel (US)** — the fuse box. Wire it from a generator, battery bank or solar bank, then wire one circuit out of it per way (6 in the UK unit, 8 in the US panel): a socket, a chain of sockets, a light switch or a light. **A circuit is dead until it has a fuse or breaker.** Look at the panel to see every circuit, its fuse and its load. Hold E for:
+  - **Next circuit** — picks which circuit the other options work on (marked `>`).
+  - **Fit fuse / breaker** — hold a fuse or breaker and fit it in the picked circuit. Whatever was in there comes back to you.
+  - **Take out** — gives back the fuse or breaker (a blown fuse comes out as a **Blown Fuse**).
+  - **Reset / switch breaker** — resets a tripped breaker, or switches a breaker's circuit off and on.
+  - **Name circuit** — type a name like `Kitchen sockets` and press Enter. The panel lists it by name, and every socket, switch and TV on that circuit says `Circuit: Kitchen sockets` when you look at it.
+  - **Main switch** — kills every circuit at once.
+- **Fuses and breakers** — 5A, 15A, 30A and 45A (5W per amp: 25W, 75W, 150W, 225W). The icon colour shows the rating: white 5A, blue 15A, red 30A, green 45A. A circuit that asks for more than its rating for 2 seconds **blows its fuse** (bang, and the fuse is useless: take it out and fit a new one) or **trips its breaker** (reset it at the panel once you've unplugged something). The load is everything switched on along the circuit, so an idle cooker or a switched-off TV costs nothing until it runs. Fuses are cheap and made by hand; breakers cost more, are made at a workbench and unlock later. Both turn up in electrical loot.
 - **Kettle** — 10W only while boiling. Boils a jar of water (murky is fine) and makes a **mug of tea** from a mug, a tea bag (**PJ Tops** or **Yorkie Brew**) and a jar of water. Look at it to see what's boiling and the time left.
 - **Toaster** — 5W only while toasting. Turns a slice of bread into toast.
 - **TV (stand / wall)** — a 43 inch flat screen that plays your own videos. Wire it from a socket (the wire tool won't take anything else); it draws 15W only while on. Hold E for **On / Off**, **Next channel**, **Previous channel**. Every video file in `%AppData%\7DaysToDie\HSWorkingStuff\TV` (made the first time you look at a TV) or the mod's `TV` folder is a channel, in file name order, named after the file. `.mp4` (H.264 with AAC sound) works best. New files appear within a few seconds. Every TV on a channel shows the same moment. Each player's PC plays the video, so in multiplayer everyone needs the same files; the server needs none. TVs further than `TVViewRange` away stop playing to save your frame rate.
@@ -120,8 +131,8 @@ Every recipe in the mod needs **both** a magazine level and a perk rank. The cra
 
 | Magazine | Level | Perk | Unlocks |
 | --- | --- | --- | --- |
-| Electrician | 25 | Advanced Engineering 1 | Microwaves, coffee makers, kettle, toaster, TVs, electric cookers, sockets, UK and US light switches, cooker switch, range outlet |
-| Electrician | 45 | Advanced Engineering 2 | Fridge, white fridge-freezer, chest freezer, combi boiler, wall and ceiling air conditioners |
+| Electrician | 25 | Advanced Engineering 1 | Microwaves, coffee makers, kettle, toaster, TVs, electric cookers, sockets, UK and US light switches, cooker switch, range outlet, consumer unit, breaker panel, fuses |
+| Electrician | 45 | Advanced Engineering 2 | Fridge, white fridge-freezer, chest freezer, combi boiler, wall and ceiling air conditioners, breakers |
 | Workstations | 16 | Advanced Engineering 1 | Pipe tool, pipes, intake, tank, sink, rain catch, water cooler, wall thermometer |
 | Workstations | 26 | Advanced Engineering 2 | Radiators, shower, bath, washing machines, tumble dryers |
 | Home Cooking | 6 | Master Chef 1 | Drying rack, dried meat, charcoal grill, flour, dough, bread, mugs |

@@ -368,3 +368,59 @@ hstvnext,UI,commands,,,K,Next channel
 blockcommand_hstvnext,UI,commands,,,K,Next channel
 hstvprev,UI,commands,,,K,Previous channel
 blockcommand_hstvprev,UI,commands,,,K,Previous channel
+hsConsumerUnitUK,blocks,Block,,,,Consumer Unit (UK)
+hsBreakerPanelUS,blocks,Block,,,,Breaker Panel (US)
+hsConsumerUnitUKDesc,blocks,Block,,,,"A UK consumer unit with 6 ways and a main switch. Wire it from a generator, battery bank or solar bank, then wire one circuit out of it per way: sockets, switches or lights. A circuit is dead until you fit a fuse or breaker for it: hold one and use the panel. Too much load on a circuit blows its fuse or trips its breaker. Sockets can link on to one more socket each, so a whole ring of sockets can share one circuit."
+hsBreakerPanelUSDesc,blocks,Block,,,,"A US breaker panel with 8 ways and a main breaker. Wire it from a generator, battery bank or solar bank, then wire one circuit out of it per way: outlets, switches or lights. A circuit is dead until you fit a fuse or breaker for it: hold one and use the panel. Too much load on a circuit blows its fuse or trips its breaker. Outlets can link on to one more outlet each, so a whole run of outlets can share one circuit."
+hsFuse5,items,Item,,,,5A Fuse
+hsFuse15,items,Item,,,,15A Fuse
+hsFuse30,items,Item,,,,30A Fuse
+hsFuse45,items,Item,,,,45A Fuse
+hsFuseBlown,items,Item,,,,Blown Fuse
+hsBreaker5,items,Item,,,,5A Breaker
+hsBreaker15,items,Item,,,,15A Breaker
+hsBreaker30,items,Item,,,,30A Breaker
+hsBreaker45,items,Item,,,,45A Breaker
+hsFuseDesc,items,Item,,,,"A fuse for a consumer unit or breaker panel. Each amp carries 5W: 5A for lights (25W), 15A for sockets (75W), 30A for a kitchen or a big run of sockets (150W), 45A for a cooker or shower (225W). Hold it and use the panel to fit it in the selected circuit. Too much load and it blows: then it is useless and needs replacing."
+hsFuseBlownDesc,items,Item,,,,"A blown fuse. Too much was drawn through it and the wire inside burnt out. Useless now: scrap it."
+hsBreakerDesc,items,Item,,,,"A circuit breaker for a consumer unit or breaker panel. Each amp carries 5W. Too much load trips it instead of burning out: reset it at the panel. You can also switch a circuit off at its breaker."
+hscircnext,UI,commands,,,K,Next circuit
+blockcommand_hscircnext,UI,commands,,,K,Select the next circuit
+hscircfit,UI,commands,,,K,Fit fuse / breaker
+blockcommand_hscircfit,UI,commands,,,K,Fit the fuse or breaker you are holding in the selected circuit
+hscircout,UI,commands,,,K,Take out
+blockcommand_hscircout,UI,commands,,,K,Take the fuse or breaker out of the selected circuit
+hscircswitch,UI,commands,,,K,Reset / switch breaker
+blockcommand_hscircswitch,UI,commands,,,K,Reset a tripped breaker or switch the circuit on or off
+hscircname,UI,commands,,,K,Name circuit
+blockcommand_hscircname,UI,commands,,,K,Name the selected circuit
+hspanelmain,UI,commands,,,K,Main switch
+blockcommand_hspanelmain,UI,commands,,,K,Main switch on or off
+hsPanelMainOn,UI,tooltip,,,K,Main switch: on
+hsPanelMainOff,UI,tooltip,,,K,"Main switch: OFF, every circuit is dead"
+hsPanelNoPower,UI,tooltip,,,K,"No power in: wire the panel from a generator, battery bank or solar bank"
+hsPanelNoCircuits,UI,tooltip,,,K,"No circuits: wire sockets, switches or lights out of the panel, one wire per circuit ({0} ways)"
+hsPanelWays,UI,tooltip,,,K,{0} of {1} ways in use. Hold a fuse or breaker to fit it in the selected circuit.
+hsPanelHoldFuse,UI,tooltip,,,K,Hold a fuse or a breaker to fit it
+hsPanelFitted,UI,tooltip,,,K,Fitted a {0} for {1}
+hsPanelFull,UI,tooltip,,,K,This panel has {0} ways and every one has a circuit on it
+hsBreakerRating,UI,tooltip,,,K,{0}A breaker
+hsFuseRating,UI,tooltip,,,K,{0}A fuse
+hsCircuitN,UI,tooltip,,,K,Circuit {0}
+hsCircuitEmpty,UI,tooltip,,,K,no fuse or breaker: dead
+hsCircuitTripped,UI,tooltip,,,K,TRIPPED: reset it
+hsCircuitBlown,UI,tooltip,,,K,BLOWN: take it out and fit a new fuse
+hsCircuitOff,UI,tooltip,,,K,switched OFF
+hsCircuitLoad,UI,tooltip,,,K,{0} of {1} W
+hsCircuitMainOff,UI,tooltip,,,K,(main switch off)
+hsCircuitLine,UI,tooltip,,,K,Circuit: {0}
+hsCircuitNoFuse,UI,tooltip,,,K,no fuse
+hsCircuitTrippedShort,UI,tooltip,,,K,breaker tripped
+hsCircuitBlownShort,UI,tooltip,,,K,fuse blown
+hsCircuitOffShort,UI,tooltip,,,K,off at the panel
+hsCircuitNameTitle,UI,XUI,,,K,NAME CIRCUIT
+hsCircuitNameHint,UI,XUI,,,K,Enter saves. Shows on the panel and on everything on the circuit.
+hsCircuitNamed,UI,tooltip,,,K,Circuit named {0}
+hsCircuitNameCleared,UI,tooltip,,,K,Circuit name cleared
+hsSocketChained,UI,tooltip,,,K,Linked on to the next socket
+hsChainFull,UI,tooltip,,,K,This socket already links on to another socket: one onward link per socket

@@ -30,6 +30,12 @@ public static class HSWorkingStuffNet
     public const byte Wash = 22;
     public const byte Laundry = 23;
     public const byte SinkWash = 24;
+    public const byte CircuitSync = 25;
+    public const byte CircuitFit = 26;
+    public const byte CircuitRemove = 27;
+    public const byte CircuitSwitch = 28;
+    public const byte CircuitName = 29;
+    public const byte CircuitAsk = 30;
 
     public static bool IsAuthority
     {
@@ -125,6 +131,35 @@ public static class HSWorkingStuffNet
             return;
         }
         ToServer(Pkg().OfWater(kind, player.entityId, pos, arg));
+    }
+
+    public static void SendCircuit(byte kind, Vector3i panel, EntityPlayer player, int arg, string text)
+    {
+        if (player == null)
+            return;
+        if (IsAuthority)
+        {
+            HSCircuits.Handle(kind, panel, player, arg, text);
+            return;
+        }
+        ToServer(Pkg().OfText(kind, player.entityId, panel, arg, text));
+    }
+
+    public static void BroadcastCircuit(Vector3i panel, int packed, string text)
+    {
+        if (!IsAuthority)
+            return;
+        ToClients(Pkg().OfText(CircuitSync, -1, panel, packed, text));
+    }
+
+    public static void SendCircuitTo(int entityId, Vector3i panel, int packed, string text)
+    {
+        if (!IsAuthority)
+            return;
+        var cm = ConnectionManager.Instance;
+        if (cm == null || !cm.IsServer)
+            return;
+        cm.SendPackage(Pkg().OfText(CircuitSync, -1, panel, packed, text), true, entityId);
     }
 
     public static void BroadcastTank(Vector3i pos)
@@ -432,6 +467,7 @@ public abstract class NetPackageHSWorkingStuffCore : NetPackage
     protected int z;
     protected int units;
     protected int quality;
+    protected string text;
 
     public override NetPackageDirection PackageDirection
     {
@@ -446,6 +482,7 @@ public abstract class NetPackageHSWorkingStuffCore : NetPackage
         y = pos.y;
         z = pos.z;
         units = arg;
+        text = null;
         return this;
     }
 
@@ -457,6 +494,7 @@ public abstract class NetPackageHSWorkingStuffCore : NetPackage
         z = pos.z;
         units = u;
         quality = q;
+        text = null;
         return this;
     }
 
@@ -467,6 +505,7 @@ public abstract class NetPackageHSWorkingStuffCore : NetPackage
         y = pos.y;
         z = pos.z;
         units = on ? 1 : 0;
+        text = null;
         return this;
     }
 
@@ -478,6 +517,20 @@ public abstract class NetPackageHSWorkingStuffCore : NetPackage
         z = pos.z;
         units = u;
         quality = q;
+        text = null;
+        return this;
+    }
+
+    public NetPackageHSWorkingStuffCore OfText(byte k, int eid, Vector3i pos, int u, string t)
+    {
+        kind = k;
+        entityId = eid;
+        x = pos.x;
+        y = pos.y;
+        z = pos.z;
+        units = u;
+        quality = 0;
+        text = t;
         return this;
     }
 
@@ -490,6 +543,7 @@ public abstract class NetPackageHSWorkingStuffCore : NetPackage
         z = br.ReadInt32();
         units = br.ReadInt32();
         quality = br.ReadInt32();
+        text = br.ReadString();
     }
 
     public override void write(PooledBinaryWriter bw)
@@ -502,6 +556,7 @@ public abstract class NetPackageHSWorkingStuffCore : NetPackage
         bw.Write(z);
         bw.Write(units);
         bw.Write(quality);
+        bw.Write(text ?? "");
     }
 
     public override void ProcessPackage(World world, GameManager callbacks)
@@ -535,6 +590,12 @@ public abstract class NetPackageHSWorkingStuffCore : NetPackage
                     HSPipeNet.SetCell(pos, units);
                 return;
             }
+            if (kind == HSWorkingStuffNet.CircuitSync)
+            {
+                if (!HSWorkingStuffNet.IsAuthority)
+                    HSCircuits.ApplySync(pos, units, text);
+                return;
+            }
             if (world == null)
                 return;
             EntityPlayer player = world.GetEntity(entityId) as EntityPlayer;
@@ -542,7 +603,11 @@ public abstract class NetPackageHSWorkingStuffCore : NetPackage
                 player = world.GetEntity(Sender.entityId) as EntityPlayer;
             if (player == null)
                 return;
-            if (HSWorkingStuffNet.IsAuthority)
+            if (!HSWorkingStuffNet.IsAuthority)
+                return;
+            if (HSCircuits.IsRequest(kind))
+                HSCircuits.Handle(kind, pos, player, units, text);
+            else
                 HSWorkingStuffNet.Handle(kind, pos, player, units);
         }
         catch (Exception e)
@@ -556,7 +621,7 @@ public sealed class NetPackageHSWorkingStuff : NetPackageHSWorkingStuffCore
 {
     public override int GetLength()
     {
-        return 29;
+        return 30 + (text != null ? System.Text.Encoding.UTF8.GetByteCount(text) + 4 : 0);
     }
 }
 
