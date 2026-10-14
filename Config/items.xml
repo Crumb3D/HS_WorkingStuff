@@ -1,0 +1,170 @@
+<configs>
+	<append xpath="/items">
+		<item name="hsSpoiledFood">
+			<property name="Extends" value="foodRottingFlesh" />
+			<property name="DescriptionKey" value="hsSpoiledFoodDesc" />
+			<property name="CustomIcon" value="foodRottingFlesh" />
+			<property name="CustomIconTint" value="6B4F2A" />
+		</item>
+		<item name="hsDriedMeat">
+			<property name="UnlockedBy" value="craftingFood,perkMasterChef" />
+			<property name="Extends" value="foodCharredMeat" />
+			<property name="DescriptionKey" value="hsDriedMeatDesc" />
+			<property name="CustomIcon" value="foodCharredMeat" />
+			<property name="SpoilDays" value="21" />
+		</item>
+		<item name="hsPipeTool">
+			<property name="UnlockedBy" value="craftingWorkstations,perkAdvancedEngineering" />
+			<property name="Tags" value="tool,noMods"/>
+			<property name="CreativeMode" value="Player"/>
+			<property name="HoldType" value="29"/>
+			<property name="Meshfile" value="@:Other/Items/Tools/wrenchPrefab.prefab"/>
+			<property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+			<property name="CustomIcon" value="meleeToolSalvageT1Wrench"/>
+			<property name="CustomIconTint" value="3a8fd8"/>
+			<property name="TintColor" value="58, 143, 216"/>
+			<property name="Material" value="Mmetal"/>
+			<property name="DescriptionKey" value="hsPipeToolDesc"/>
+			<property name="Stacknumber" value="1"/>
+			<property name="DegradationBreaksAfter" value="false"/>
+			<property name="EconomicValue" value="40"/>
+			<property name="SellableToTrader" value="false"/>
+			<property name="SoundUnholster" value="weapon_unholster"/>
+			<property name="SoundHolster" value="weapon_holster"/>
+			<property name="SoundPickup" value="wrench_grab"/>
+			<property name="SoundPlace" value="wrench_place"/>
+			<property class="Action0">
+				<property name="Class" value="HSPipeTool, HSWorkingStuff"/>
+			</property>
+			<property class="Action1">
+				<property name="Class" value="HSPipeTool, HSWorkingStuff"/>
+			</property>
+			<property name="Group" value="Tools/Traps,Building"/>
+			<property name="FilterTags" value="MC_playerBlocks,SC_plumbing"/>
+		</item>
+	</append>
+
+	<append xpath="/items/item[@name='foodRawMeat']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodRawMeatBundle']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodEgg']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodEggBoiled']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodCharredMeat']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodGrilledMeat']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodBoiledMeat']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodBaconAndEggs']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodCornOnTheCob']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodBakedPotato']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodCropBlueberries']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodCropCorn']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodCropGraceCorn']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodCropPotato']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodCropMushrooms']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodCropMushroomsRadiated']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodCropYuccaFruit']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodCropPumpkin']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodMeatStew']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodSteakAndPotato']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodVegetableStew']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodSpaghetti']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodHoboStew']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodGumboStew']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodShepardsPie']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodBlueberryPie']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodPumpkinPie']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodPumpkinCheesecake']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodPumpkinBread']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodCornBread']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodShamSandwich']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodChickenWings']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodChickenNuggets']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodFishTacos']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodChiliDog']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodHoneyGlazedSham']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodHoneyBrisket']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodShamChowder']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodTunaFishGravyToast']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodAshChickenStew']">
+		<property name="SpoilDays" value="7" />
+	</append>
+	<append xpath="/items/item[@name='foodRoadrunnerChickenJerky']">
+		<property name="SpoilDays" value="21" />
+	</append>
+</configs>

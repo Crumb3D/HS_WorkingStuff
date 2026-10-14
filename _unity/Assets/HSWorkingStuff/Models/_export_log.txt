@@ -1,0 +1,17 @@
+HSCombiBoiler verts=672 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSCombiBoiler.fbx
+HSPanelRadiator verts=664 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSPanelRadiator.fbx
+HSChestFreezer verts=248 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSChestFreezer.fbx
+HSSplitAirCon verts=392 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSSplitAirCon.fbx
+HSCeilingAirCon verts=232 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSCeilingAirCon.fbx
+HSWallThermometer verts=148 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSWallThermometer.fbx
+HSWashingMachine verts=616 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSWashingMachine.fbx
+HSTumbleDryer verts=584 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSTumbleDryer.fbx
+HSFridgeFreezer verts=216 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSFridgeFreezer.fbx
+HSSocketUKSingle verts=40 cols=4 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSSocketUKSingle.fbx
+HSSocketUKDouble verts=64 cols=7 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSSocketUKDouble.fbx
+HSSocketUSSingle verts=104 cols=2 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSSocketUSSingle.fbx
+HSSocketUSDouble verts=132 cols=3 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSSocketUSDouble.fbx
+HSLightSwitchUK verts=24 cols=3 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSLightSwitchUK.fbx
+HSLightSwitchUS verts=72 cols=3 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSLightSwitchUS.fbx
+HSCookerSwitchUK verts=56 cols=4 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSCookerSwitchUK.fbx
+DONE

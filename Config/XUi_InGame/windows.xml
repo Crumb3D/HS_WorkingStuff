@@ -1,0 +1,52 @@
+<configs>
+	<append xpath="/windows">
+		<window name="windowHSStorage" width="465" height="378" panel="Left" cursor_area="true">
+			<rect name="header" height="43" depth="1">
+				<headerbg />
+				<sprite depth="3" name="windowIcon" style="icon32px" pivot="center" pos="21,-21" sprite="ui_game_symbol_cold" />
+				<label depth="3" name="lootName" pos="42,-6" width="300" height="32" text="Fridge" font_size="32" />
+			</rect>
+			<rect name="content" pos="3,-49">
+				<sprite depth="0" name="bg" color="255,255,255,1" type="sliced" sprite="menu_empty" width="459" height="320" />
+				<grid depth="12" name="queue" pos="0,0" rows="4" cols="6" cell_width="75" cell_height="75" repeat_content="true" controller="HSStorageGrid, HSWorkingStuff">
+					<item_stack name="0"/>
+				</grid>
+			</rect>
+		</window>
+
+		<window name="windowHSRainCatch" width="465" height="250" panel="Left" cursor_area="true">
+			<rect name="header" height="43" depth="1">
+				<headerbg />
+				<sprite depth="3" name="windowIcon" style="icon32px" pivot="center" pos="21,-21" sprite="ui_game_symbol_water" />
+				<label depth="3" name="rainName" pos="42,-6" width="300" height="32" text="Rain Catch" font_size="32" />
+			</rect>
+			<rect name="content" pos="3,-49">
+				<sprite depth="0" name="bg" color="255,255,255,1" type="sliced" sprite="menu_empty" width="459" height="195" />
+				<grid depth="12" name="tools" pos="0,0" rows="1" cols="3" cell_width="75" cell_height="75" repeat_content="true" controller="HSRainToolGrid, HSWorkingStuff">
+					<item_stack name="0"/>
+				</grid>
+				<label depth="3" name="rainInfo" pos="10,-82" width="440" height="110" font_size="22" justify="left" upper_case="false" text="" />
+			</rect>
+		</window>
+
+		<window name="windowHSStovePower" width="228" height="121" panel="Right" cursor_area="true" controller="HSStovePowerWindow, HSWorkingStuff">
+			<rect style="header.panel">
+				<headerbg />
+				<sprite style="header.icon" sprite="ui_game_symbol_electric_power"/>
+				<label style="header.name.iconright" text="POWER" text_key="hsStovePowerTitle" />
+			</rect>
+			<rect name="content" depth="0" pos="0,-46" height="75">
+				<sprite depth="2" sprite="menu_empty3px" height="75" color="[black]" type="sliced" fillcenter="false" />
+				<sprite depth="3" pos="38,-37" width="48" height="48" pivot="center" sprite="ui_game_symbol_electric_power" color="{powercolor}" />
+				<label depth="3" pos="72,-22" width="150" height="32" font_size="28" justify="left" upper_case="true" color="{powercolor}" text="{power}" />
+			</rect>
+		</window>
+
+		<window name="HUDHSPipe" pos="-620,180" width="600" height="250" anchor="Right" depth="15" controller="HSPipeHud, HSWorkingStuff">
+			<rect width="600" height="250" visible="{show}">
+				<sprite depth="1" pos="0,0" width="600" height="250" sprite="menu_empty" color="0,0,0,160" type="sliced"/>
+				<label depth="2" pos="12,-10" width="576" height="230" font_size="22" justify="left" upper_case="false" color="255,255,255,235" text="{info}"/>
+			</rect>
+		</window>
+	</append>
+</configs>

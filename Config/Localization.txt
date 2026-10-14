@@ -1,0 +1,304 @@
+Key,File,Type,UsedInMainMenu,NoTranslate,KeepLoaded,english
+hsConnectToIp,UI,Menu,K,,K,Connect to IP
+hsAuthServerStarting,UI,Menu,K,,K,Server is Starting up please wait
+hsFridgeWindow,UI,Menu,,K,K,Fridge
+hsFridge,blocks,Block,,,,Working Fridge
+hsFridgeDesc,blocks,Block,,,,"A powered fridge. Keep it wired and food lasts four times longer. Unpowered it is just a box. E to open, store perishables, or pull spoiled food."
+hsCooler,blocks,Block,,,,Working Cooler
+hsCoolerDesc,blocks,Block,,,,"An ice chest. Food inside lasts twice as long. No power needed."
+hsDryingRack,blocks,Block,,,,Drying Rack
+hsDryingRackDesc,blocks,Block,,,,"Hang raw meat here for about a day to make dried meat that keeps longer."
+hsCompost,blocks,Block,,,,Compost Box
+hsCompostDesc,blocks,Block,,,,"Spoiled food left in here turns into nitrate powder after about a day."
+hsPipeStraight,blocks,Block,,,,Water Pipe
+hsPipeCorner,blocks,Block,,,,Water Pipe Corner
+hsPipeJoint,blocks,Block,,,,Water Pipe Joint
+hsPipeDesc,blocks,Block,,,,"Joins rain catch to tank, tank to sink, tank to boiler, boiler to sink and radiators. Vanilla metal pipes work too. Better: carry these and let the Pipe Tool lay them as hidden pipe you can build over."
+hsPipeTool,items,Item,,,,Pipe Tool
+hsPipeToolDesc,items,Item,,,,"Lays water pipe for you. Hold E: New Water System or Use Water System Here on a rain catch, tank, boiler, sink, radiator, intake or laid pipe, then New Connection on each thing to pipe to it, then Lay pipes. Left click is Use Water System Here, right click is New Connection. Pipe runs along floors and walls, radiators are fed under the floor, and it lays the run if you carry enough water pipes. Laid pipe is not a block: you can build walls, floors and furniture right over it, and you only see it where nothing covers it. E > Take up pipes gives a run back."
+hsWaterIntake,blocks,Block,,,,Water Intake
+hsWaterIntakeDesc,blocks,Block,,,,"Place against a lake, river, or other water block. Pipe from here to a sink for unlimited murky water."
+hsWaterTank,blocks,Block,,,,Water Tank
+hsWaterTankDesc,blocks,Block,,,,"Holds 40 jars of water. It does not collect on its own: pipe a rain catch into it, or pour jars and buckets in. Pipe it on to a sink for the cold tap, and through a combi boiler for the hot tap."
+hsRainCatch,blocks,Block,,,,Rain Catch
+hsRainCatchDesc,blocks,Block,,,,"Collects dew and rain under open sky, no jars needed. Bare it gives murky water. Install a dew filter for clean water; a dew gatherer and tarp speed it up. Pipe it to a water tank and it fills the tank by itself."
+hsSink,blocks,Block,,,,Working Sink
+hsSinkDesc,blocks,Block,,,,"Two taps. Cold comes straight from a piped tank or lake intake, as clean or murky as that water is. Hot comes through a powered combi boiler and is always boiled. A tap with no supply shows greyed out with what it needs. POI kitchen sinks work the same way if you pipe them."
+hsWaterHeater,blocks,Block,,,,Combi Boiler
+hsWaterHeaterDesc,blocks,Block,,,,"Wall-hung combi boiler. Place it against a wall. Pipe a tank into it and on to a sink for a hot tap; it only fires (and draws power) while hot water runs. Pipe radiators to it and switch central heating on to warm the house: 15W plus about 5W per radiator while heating (more with its valve turned up)."
+hsStoveOld,blocks,Block,,,,Electric Cooker
+hsStoveModern,blocks,Block,,,,Electric Cooker
+hsStoveWall,blocks,Block,,,,Electric Wall Oven
+hsStoveDesc,blocks,Block,,,,"An electric cooker. Same recipes and tools as a campfire (pot, grill, beaker). No wood. Wire it to power or it will not cook."
+hsMicrowave,blocks,Block,,,,Microwave
+hsMicrowaveRetro,blocks,Block,,,,Retro Microwave
+hsMicrowaveDesc,blocks,Block,,,,"A cheap powered microwave. Boils water, makes coffee and tea, bakes potatoes, corn on the cob, vegetable stew, sham chowder, spaghetti and gumbo. No pot or grill needed, but you still have to know the recipe. Wire it to power, 5W. Close the door to cook, look at it for the time left. Dings when it is done."
+hsMicrowavePowered,UI,tooltip,,,K,Powered: ready to cook
+hsMicrowaveUnpowered,UI,tooltip,,,K,No power: wire this microwave to cook
+hsMicrowaveCooking,UI,tooltip,,,K,Cooking {0}: {1} left
+hsMicrowaveDoorOpen,UI,tooltip,,,K,"Door open: paused, {0} left"
+hsMicrowaveNoPowerPaused,UI,tooltip,,,K,"No power: paused, {0} left"
+hsMicrowaveDone,UI,tooltip,,,K,Done: your food is ready
+hsCoffeeMaker,blocks,Block,,,,Coffee Maker
+hsCoffeeMakerCommercial,blocks,Block,,,,Commercial Coffee Maker
+hsCoffeeMakerDesc,blocks,Block,,,,"A powered coffee maker. Put in a jar of water (murky is fine, it heats it) and coffee beans and it brews a jar of coffee. Gunpowder makes black strap coffee. You still have to know the recipe. Wire it to power, 5W. It only draws power while it brews or while you have it open."
+hsCoffeePowered,UI,tooltip,,,K,Powered: add a jar of water and coffee beans
+hsCoffeeUnpowered,UI,tooltip,,,K,No power: wire this coffee maker to brew
+hsCoffeeBrewing,UI,tooltip,,,K,Brewing {0}: {1} left
+hsCoffeeDone,UI,tooltip,,,K,Done: your coffee is ready
+hsStovePowered,UI,tooltip,,,K,Powered: cooking like a campfire
+hsStoveUnpowered,UI,tooltip,,,K,No power: wire this cooker to cook
+hsSpoiledFood,items,Item,,,,Spoiled Food
+hsSpoiledFoodDesc,items,Item,,,,"This food sat too long. Compost it for nitrate, or eat it if you like a gamble."
+hsDriedMeat,items,Item,,,,Dried Meat
+hsDriedMeatDesc,items,Item,,,,"Dried on a rack. Keeps about three weeks."
+hsFridgePowered,UI,tooltip,,,K,Powered: food lasts 4x longer
+hsFridgeUnpowered,UI,tooltip,,,K,Unpowered: spoils at normal speed
+hsFridgeEmptyFood,UI,tooltip,,,K,No perishable food stored
+hsFridgeOldest,UI,tooltip,,,K,Oldest food: {0} days left
+hsHeaterOn,UI,tooltip,,,K,Heating: water from this line is boiled
+hsHeaterOff,UI,tooltip,,,K,No power: water stays as it is
+hsWaterClean,UI,tooltip,,,K,clean
+hsWaterMurky,UI,tooltip,,,K,murky
+hsWaterEmpty,UI,tooltip,,,K,empty
+hsTankPrompt,UI,tooltip,,,K,{0}/{1} {2}
+hsTankModsBare,UI,tooltip,,,K,No mods: collecting murky water
+hsTankFilterOn,UI,tooltip,,,K,Filter on: collecting clean water
+hsTankModsOn,UI,tooltip,,,K,Dew mods installed
+hsSinkDry,UI,tooltip,,,K,No water. Pipe this to a tank or an intake in a lake.
+hsSinkLake,UI,tooltip,,,K,Lake feed, {0}
+hsSinkTank,UI,tooltip,,,K,Tank {0} {1}
+hsSpoilWarn,UI,tooltip,,,K,{0} will spoil soon. Get it in a fridge.
+hsSpoilSoon,UI,tooltip,,,K,Spoiling now
+hsSpoilHours,UI,tooltip,,,K,Spoils in {0}h
+hsSpoilDays,UI,tooltip,,,K,Spoils in {0} days
+hsSwitchOn,UI,tooltip,,,K,{0} Switch On
+hsSwitchOff,UI,tooltip,,,K,{0} Switch Off
+hsSwitchTurnOn,UI,tooltip,,,K,{0} Turn {1} On
+hsSwitchTurnOff,UI,tooltip,,,K,{0} Turn {1} Off
+hsSwitchDevices,UI,tooltip,,,K,{0} Devices
+filljar,UI,commands,,,K,Fill jar
+fillall,UI,commands,,,K,Fill all
+pour,UI,commands,,,K,Pour
+pourall,UI,commands,,,K,Pour all
+drink,UI,commands,,,K,Drink
+storefood,UI,commands,,,K,Store perishables
+takespoiled,UI,commands,,,K,Take spoiled
+blockcommand_filljar,UI,commands,,,K,Fill jars in hand
+blockcommand_fillbucket,UI,commands,,,K,Fill bucket
+blockcommand_fillall,UI,commands,,,K,Fill all on you
+blockcommand_pour,UI,commands,,,K,Pour
+blockcommand_pourall,UI,commands,,,K,Pour all
+blockcommand_drink,UI,commands,,,K,Drink
+blockcommand_storefood,UI,commands,,,K,Store perishables
+blockcommand_takespoiled,UI,commands,,,K,Take spoiled
+blockcommand_filljarhot,UI,commands,,,K,Fill jars in hand (hot)
+blockcommand_fillbuckethot,UI,commands,,,K,Fill bucket (hot)
+blockcommand_fillallhot,UI,commands,,,K,Fill all on you (hot)
+blockcommand_drinkhot,UI,commands,,,K,Drink (hot)
+blockcommand_colddry,UI,commands,,,K,Cold: no tank piped in
+blockcommand_hotnoheater,UI,commands,,,K,Hot: needs a combi boiler
+blockcommand_hotnopower,UI,commands,,,K,Hot: boiler has no power
+blockcommand_hotdry,UI,commands,,,K,Hot: boiler has no water behind it
+blockcommand_coldempty,UI,commands,,,K,Cold: the tank is empty
+blockcommand_hotempty,UI,commands,,,K,Hot: the tank is empty
+blockcommand_addtools,UI,commands,,,K,Install dew tools
+blockcommand_notools,UI,commands,,,K,"No dew gatherer, tarp or filter on you"
+blockcommand_removetools,UI,commands,,,K,Remove dew tools
+hsStovePowerTitle,UI,Menu,,,K,POWER
+hsStovePanelOn,UI,Menu,,,K,Powered
+hsStovePanelOff,UI,Menu,,,K,Unpowered
+hsRainNoTools,UI,tooltip,,,K,No dew tools: murky water
+hsRainTools,UI,tooltip,,,K,Tools: {0} (murky water)
+hsRainToolsClean,UI,tooltip,,,K,Tools: {0} (clean water)
+hsRainFeeds,UI,tooltip,,,K,Piped to a tank
+hsRainNoFeed,UI,tooltip,,,K,Not piped to a tank
+hsRainCovered,UI,tooltip,,,K,Covered: needs open sky
+hsRainDrained,UI,tooltip,,,K,Filter in: drained {0} jars of murky water so the clean water stays clean
+hsSinkCold,UI,tooltip,,,K,Cold: {0}
+hsSinkColdNone,UI,tooltip,,,K,Cold: no tank or intake piped in
+hsSinkHot,UI,tooltip,,,K,Hot: {0}
+hsSinkHotNoHeater,UI,tooltip,,,K,Hot: needs a combi boiler piped in
+hsSinkHotNoPower,UI,tooltip,,,K,Hot: the boiler has no power
+hsSinkHotDry,UI,tooltip,,,K,Hot: the boiler has no tank or intake behind it
+hsSinkColdEmpty,UI,tooltip,,,K,Cold: the tank is empty. Pipe a rain catch to it or pour water in
+hsSinkHotEmpty,UI,tooltip,,,K,Hot: the tank behind the boiler is empty
+hsPipeToolHint,UI,tooltip,,,K,"Pipe Tool: E for menu, left click use water system here, right click new connection"
+hsPipeRadialNewSystem,UI,tooltip,,,K,New Water System
+hsPipeRadialUseSystem,UI,tooltip,,,K,Use Water System Here
+hsPipeRadialLay,UI,tooltip,,,K,Lay pipes
+hsPipeRadialNew,UI,tooltip,,,K,New Connection
+hsPipeExisting,UI,tooltip,,,K,Laid pipe
+hsPipeNoFloor,UI,tooltip,,,K,"Radiator pipe runs under the floor: the radiator must stand on a full block (or a half block in the top of its cell), and the other end needs a wall to run down to the floor"
+hsPipeUnderFloor,UI,tooltip,,,K,{0} of them hidden in floors or walls
+hsPipeAimNewSystem,UI,tooltip,,,K,"Aim at a rain catch, tank, boiler, sink, radiator or intake to start a water system there"
+hsPipeAimSystem,UI,tooltip,,,K,"Aim at a rain catch, tank, boiler, sink, radiator, intake or laid pipe to use that water system"
+hsPipeAimPlumbing,UI,tooltip,,,K,"Aim at a rain catch, tank, boiler, sink, radiator, intake or laid pipe to connect it"
+hsPipeSystemNew,UI,tooltip,,,K,New water system at {0}. Look at the next thing and pick New Connection
+hsPipeSystemExisting,UI,tooltip,,,K,"{0} is already in a water system ({1} things), using that one. Look at the next thing and pick New Connection"
+hsPipeSystemUse,UI,tooltip,,,K,Using the water system at {0} ({1} things). New connections come from here
+hsPipeNeedSystem,UI,tooltip,,,K,Pick New Water System or Use Water System Here first
+hsPipeNeedConnection,UI,tooltip,,,K,Look at the thing to connect and pick New Connection first
+hsPipeConnectTo,UI,tooltip,,,K,New connection: {0} from {1}. Pick Lay pipes
+hsPipeAlreadyJoined,UI,tooltip,,,K,{0} is already piped to this water system
+hsPipeNotEnough,UI,tooltip,,,K,"Need {0} water pipes, you have {1}"
+hsPipeClaimed,UI,tooltip,,,K,Part of the route is on someone else's land claim
+hsPipeLaid,UI,tooltip,,,K,Laid {0} pipes: {1} to {2}. Look at the next thing and pick New Connection
+hsPipeSameBlock,UI,tooltip,,,K,That is the water system itself
+hsPipeEndGone,UI,tooltip,,,K,The water system or the thing you are connecting is gone
+hsPipeTouching,UI,tooltip,,,K,"Those two already touch, no pipe needed"
+hsPipeNoRoute,UI,tooltip,,,K,"No route along walls or floors: blocked, or longer than 64 pipes"
+hsPipeNotSet,UI,tooltip,,,K,not set
+hsPipeRouteNoSystem,UI,tooltip,,,K,Route: pick New Water System or Use Water System Here
+hsPipeRoutePending,UI,tooltip,,,K,Route: look at a thing and pick New Connection
+hsPipeRoute,UI,tooltip,,,K,"Route: {0} pipes, {1} bends. {2}"
+hsPipeEnough,UI,tooltip,,,K,You have enough.
+hsPipeShort,UI,tooltip,,,K,Short by {0}.
+hsPipeHudTitle,UI,tooltip,,,K,PIPE TOOL
+hsPipeHudSystem,UI,tooltip,,,K,Water system:
+hsPipeHudParts,UI,tooltip,,,K,({0} things)
+hsPipeHudConnect,UI,tooltip,,,K,Connecting:
+hsPipeHudHave,UI,tooltip,,,K,Water pipes on you: {0}
+hsPipeHudHelp,UI,tooltip,,,K,Left click: use water system here. Right click: new connection. E for menu
+hsRadiator,blocks,Block,,,,Panel Radiator
+hsRadiatorCastIron,blocks,Block,,,,Cast Iron Radiator
+hsRadiatorDesc,blocks,Block,,,,"Place against a wall and pipe it to a combi boiler (or on from another radiator). With central heating on and the boiler powered it keeps you warm within about 5 blocks, like standing by a campfire. Hold E to turn its valve up or down (off, 1 to 5): higher reaches further and draws more power. The gauge shows how hot it is."
+buffHSRadiatorWarmName,buffs,Buff,,,,Radiator Warmth
+buffHSRadiatorWarmDesc,buffs,Buff,,,,"A warm radiator nearby is keeping the cold out."
+hsBoilerNoPower,UI,tooltip,,,K,No power: no hot water or heating
+hsBoilerFiring,UI,tooltip,,,K,Firing: heating water
+hsBoilerIdle,UI,tooltip,,,K,Idle: heats only when a hot tap runs (0W)
+hsBoilerHeatingOff,UI,tooltip,,,K,Central heating: off
+hsBoilerNoRadiators,UI,tooltip,,,K,"Central heating: on, no radiators piped in"
+hsBoilerHeatingOn,UI,tooltip,,,K,"Central heating: on, {0} radiators"
+hsBoilerToldOn,UI,tooltip,,,K,Central heating on
+hsBoilerToldOff,UI,tooltip,,,K,Central heating off
+hsRadiatorWarm,UI,tooltip,,,K,Warm: keeps you warm nearby
+hsRadiatorCold,UI,tooltip,,,K,Cold: pipe to a combi boiler with heating on
+hsRadiatorNoPipe,UI,tooltip,,,K,Cold: not piped to a combi boiler
+hsRadiatorHeatingOff,UI,tooltip,,,K,"Cold: piped to the boiler, but its central heating is off. Turn it on at the boiler"
+hsRadiatorNoPower,UI,tooltip,,,K,Cold: the boiler has no power
+hsRadiatorWarming,UI,tooltip,,,K,"Cold: the boiler is on, warming up"
+hsRadiatorOff,UI,tooltip,,,K,Off at the valve: hold E and turn it up
+hsRadiatorDry,UI,tooltip,,,K,Cold: no water in the heating. Needs {0} more jars in the tank piped to the boiler (1 per radiator)
+hsBoilerNeedsWater,UI,tooltip,,,K,Heating water: {0} of {1} radiators filled. Needs {2} more jars in the tank piped to the boiler
+hsBoilerFilled,UI,tooltip,,,K,Heating water: all {0} radiators filled
+hsRadiatorGauge,UI,tooltip,,,K,Temp: {0} {1}
+hsRadiatorValve,UI,tooltip,,,K,Valve: {0} of {1}
+hsRadiatorValveOff,UI,tooltip,,,K,Valve: off
+hsRadiatorValveMax,UI,tooltip,,,K,The valve is fully open
+hsRadiatorValveMin,UI,tooltip,,,K,The valve is already off
+blockcommand_valveup,UI,commands,,,K,Turn up
+blockcommand_valvedown,UI,commands,,,K,Turn down
+blockcommand_heatingon,UI,commands,,,K,Central heating on
+blockcommand_heatingoff,UI,commands,,,K,Central heating off
+hsPipeRadialTakeUp,UI,tooltip,,,K,Take up pipes
+hsPipeNoneHere,UI,tooltip,,,K,"No laid pipe here: look at it, or at the block it joins"
+hsPipeRemoved,UI,tooltip,,,K,Took up {0} pipes
+hsFreezer,blocks,Block,,,,Chest Freezer
+hsFreezerDesc,blocks,Block,,,,"A powered chest freezer. Keep it wired (10W) and food in it does not spoil at all. Unpowered it is just a box. E to open, store perishables, or pull spoiled food."
+hsFreezerWindow,UI,Menu,,K,K,Freezer
+hsFreezerPowered,UI,tooltip,,,K,Powered: frozen food does not spoil
+hsWaterCooler,blocks,Block,,,,Plumbed Water Cooler
+hsWaterCoolerDesc,blocks,Block,,,,"A water cooler plumbed into your water system. Pipe it to a tank like a sink. It has its own filter, so even murky tank water comes out clean: drink from it or fill jars."
+hsCoolerFiltered,UI,tooltip,,,K,Built-in filter: comes out clean
+hsShower,blocks,Block,,,,Shower
+hsShowerDesc,blocks,Block,,,,"Pipe it to a powered combi boiler for hot water. A shower uses 2 jars of hot water and washes off all your smell for 10 minutes: carried meat, food and sickness will not draw zombies by smell."
+hsBath,blocks,Block,,,,Bath
+hsBathDesc,blocks,Block,,,,"Pipe it to a powered combi boiler for hot water. A bath uses 4 jars of hot water and washes off all your smell for 20 minutes: carried meat, food and sickness will not draw zombies by smell."
+blockcommand_wash,UI,commands,,,K,Wash
+hsWashUses,UI,tooltip,,,K,A wash uses {0} jars of hot water
+hsWashShort,UI,tooltip,,,K,Not enough hot water: a wash needs {0} jars
+hsWashShower,UI,tooltip,,,K,"Showered: nearly all of your body smell is gone, and nothing smells on you for 10 minutes"
+hsWashBath,UI,tooltip,,,K,"Bathed: all of your body smell is gone, and nothing smells on you for 20 minutes"
+buffHSWashedName,buffs,Buff,,,,Freshly Showered
+buffHSWashedBathName,buffs,Buff,,,,Freshly Bathed
+buffHSWashedDesc,buffs,Buff,,,,"You are clean. Nothing you carry or ate gives off a smell zombies can follow."
+hsAirCon,blocks,Block,,,,Wall Air Conditioner
+hsAirConDesc,blocks,Block,,,,"A wall-mounted home air conditioner. Place it on a wall at head height or above. Wire it to power (20W) and it keeps you cool within about 6 blocks, the summer version of a radiator."
+hsAirConOn,UI,tooltip,,,K,Powered: cooling within {0} blocks
+hsAirConOff,UI,tooltip,,,K,No power: wire it up to cool the room
+buffHSAirConCoolName,buffs,Buff,,,,Air Conditioned
+buffHSAirConCoolDesc,buffs,Buff,,,,"A running air conditioner nearby is keeping the heat off."
+hsGasGrill,blocks,Block,,,,Gas Grill
+hsGasGrillDesc,blocks,Block,,,,"A barbecue. Grills corn, meat, steak and potato, wings, jerky and fish tacos without a separate grill tool. Burns wood or coal like a campfire, and a gas can lasts a full minute."
+hsCharcoalGrill,blocks,Block,,,,Charcoal Grill
+hsCharcoalGrillDesc,blocks,Block,,,,"A barbecue. Grills corn, meat, steak and potato, wings, jerky and fish tacos without a separate grill tool. Burns wood or coal like a campfire."
+hsAirConCeiling,blocks,Block,,,,Ceiling Air Conditioner
+hsAirConCeilingDesc,blocks,Block,,,,"A commercial ceiling cassette air conditioner. Place it against a ceiling. Wire it to power (30W) and it keeps you cool within about 6 blocks."
+hsFridgeWhite,blocks,Block,,,,Fridge-Freezer (White)
+hsFridgeWhiteDesc,blocks,Block,,,,"A tall white UK fridge-freezer, two blocks high. Works like the fridge: keep it wired (5W) and food lasts four times longer. E to open, store perishables, or pull spoiled food."
+hsWasher,blocks,Block,,,,Washing Machine
+hsWasherVanilla,blocks,Block,,,,Washing Machine (Old)
+hsWasherDesc,blocks,Block,,,,"Put dirty clothes and armour in, then Wash. Needs power (15W) and a cold water pipe from a tank, like a sink; a wash uses 4 jars. Clothes come out clean but wet."
+hsDryer,blocks,Block,,,,Tumble Dryer
+hsDryerVanilla,blocks,Block,,,,Tumble Dryer (Old)
+hsDryerDesc,blocks,Block,,,,"Put wet clothes and armour in, then Dry. Needs power (20W), no water."
+hsThermometer,blocks,Block,,,,Wall Thermometer
+hsThermometerDesc,blocks,Block,,,,"Hang it on a wall and look at it for the room temperature, the temperature outside, and whether the heating or air con is working on the room."
+blockcommand_hswash,UI,commands,,,K,Wash
+blockcommand_hsdry,UI,commands,,,K,Dry
+hsThermoRoom,UI,tooltip,,,K,Room: {0}
+hsThermoOutside,UI,tooltip,,,K,Outside: {0}
+hsThermoHeating,UI,tooltip,,,K,Radiator heating the room
+hsThermoCooling,UI,tooltip,,,K,Air con cooling the room
+hsThermoCold,UI,tooltip,,,K,Cold: put the heating on
+hsThermoHot,UI,tooltip,,,K,Hot: an air conditioner would help
+hsThermoComfy,UI,tooltip,,,K,Comfortable
+hsLaundryPowered,UI,tooltip,,,K,Powered
+hsLaundryNoPower,UI,tooltip,,,K,No power: wire it up first
+hsWasherHolds,UI,tooltip,,,K,{0} clothes or armour inside
+hsDryerHolds,UI,tooltip,,,K,{0} wet items inside
+hsWasherEmpty,UI,tooltip,,,K,Nothing to wash: put clothes or armour in first
+hsDryerEmpty,UI,tooltip,,,K,Nothing wet to dry
+hsWasherShort,UI,tooltip,,,K,Not enough water: a wash needs {0} jars
+hsWashed,UI,tooltip,,,K,"Washed {0} items. They are wet: dry them in a dryer, or they dry on you in {1} hours"
+hsDried,UI,tooltip,,,K,Dried {0} items
+hsClothesClean,UI,tooltip,,,K,Clean
+hsClothesWorn,UI,tooltip,,,K,Worn
+hsClothesDirty,UI,tooltip,,,K,Dirty
+hsClothesFilthy,UI,tooltip,,,K,Filthy
+hsClothesDirt,UI,tooltip,,,K,{0}: {1}% dirty
+hsClothesSmell,UI,tooltip,,,K,Adds to your smell: wash it in a washing machine
+hsClothesWet,UI,tooltip,,,K,"Wet: cold to wear, dries in {0} h or use a dryer"
+buffHSSmellyName,buffs,Buff,,,,Unwashed
+buffHSSmellyDesc,buffs,Buff,,,,You have not washed for a day or more. Zombies can smell you further away the longer it goes on. Have a shower or a bath.
+buffHSDirtyClothesName,buffs,Buff,,,,Dirty Clothes
+buffHSDirtyClothesDesc,buffs,Buff,,,,Some of what you are wearing is dirty and adds to your smell. Wash it in a washing machine.
+buffHSWetClothesName,buffs,Buff,,,,Wet Clothes
+buffHSWetClothesDesc,buffs,Buff,,,,"Some of what you are wearing is still wet from the wash and makes you colder. Use a tumble dryer, or it dries on you."
+hsSocketUKSingle,blocks,Block,,,,"UK Socket (Single, Switched)"
+hsSocketUKDouble,blocks,Block,,,,"UK Socket (Double, Switched)"
+hsSocketUSSingle,blocks,Block,,,,US Outlet (Single)
+hsSocketUSDouble,blocks,Block,,,,US Outlet (Duplex)
+hsLightSwitchUK,blocks,Block,,,,UK Light Switch
+hsCookerSwitchUK,blocks,Block,,,,UK Cooker Switch (45A)
+hsSocketUKDesc,blocks,Block,,,,"A UK 13A wall socket with its own switch. Wire power into it, then wire from it to the appliance: one plug for a single socket, two for a double. Switch it off and everything plugged in goes off."
+hsSocketUSDesc,blocks,Block,,,,"A US wall outlet, always live with no switch. Wire power into it, then wire from it to the appliance: one plug for a single outlet, two for a duplex."
+hsLightSwitchUKDesc,blocks,Block,,,,A UK rocker light switch. Wire power into it and from it to your lights; it switches them all on and off.
+hsCookerSwitchUKDesc,blocks,Block,,,,A UK 45A cooker switch with a red rocker and neon. Wire power into it and from it to one cooker.
+hsPlugFullOne,UI,tooltip,,,K,This socket takes one plug and it is already in use
+hsPlugFullMany,UI,tooltip,,,K,This socket takes {0} plugs and both are in use
+hsPlugUsed,UI,tooltip,,,K,Plugs: {0} of {1} in use
+hsPlugPowered,UI,tooltip,,,K,Live
+hsPlugNoPower,UI,tooltip,,,K,"No power: wire it from a generator, battery bank or solar bank"
+hsLightSwitchUS,blocks,Block,,,,US Light Switch
+hsLightSwitchUSDesc,blocks,Block,,,,"A US toggle light switch: lever up for on, down for off. Wire power into it and from it to your lights."
+washup,UI,commands,,,K,Wash up
+blockcommand_washup,UI,commands,,,K,"Wash up (1 jar, about 5 m less smell)"
+hsLblWash,UI,tooltip,,,K,Wash
+hsSinkWashed,UI,tooltip,,,K,Washed up at the sink: about 5 m less smell
+hsWashLakeside,UI,tooltip,,,K,Splashed yourself clean: about 5 m less smell
+hsWashTooSoon,UI,tooltip,,,K,You have just had a quick wash. Another one won't help for an hour; a shower or bath will
+hsWashSoakStart,UI,tooltip,,,K,In the water: your smell is slowly washing off
+hsWashSoaking,UI,tooltip,,,K,Washing in the water: {0}% of your body smell off so far. Stay in to keep washing
+hsWashSoakIdle,UI,tooltip,,,K,The water has done what it can for now. A shower or bath gets you properly clean
+hsWashSoakLeft,UI,tooltip,,,K,Out of the water: {0}% of your body smell washed off
+hsWashSoakDone,UI,tooltip,,,K,Washed in the water: {0}% of your body smell gone
+hsoutlet0,UI,commands,,,K,Left socket
+hsoutlet1,UI,commands,,,K,Right socket
+blockcommand_hsoutlet0,UI,commands,,,K,Switch the left socket
+blockcommand_hsoutlet1,UI,commands,,,K,Switch the right socket
+hsOutletState,UI,tooltip,,,K,Left socket: {0}    Right socket: {1}
+hsOutletOn,UI,tooltip,,,K,On
+hsOutletOff,UI,tooltip,,,K,Off

@@ -1,0 +1,91 @@
+using System;
+using System.Reflection;
+using HarmonyLib;
+
+public class HSWorkingStuffMod : IModApi
+{
+    public static string ModPath;
+
+    public void InitMod(Mod _modInstance)
+    {
+        if (!HSGameVersion.AllowLoad("[HSWorkingStuff]"))
+            return;
+        ModPath = _modInstance.Path;
+        HSWorkingStuffSettings.Load(ModPath);
+        HSWorkingStuffNet.RegisterPackage();
+        ModEvents.GameUpdate.RegisterHandler(OnGameUpdate);
+        ModEvents.GameStartDone.RegisterHandler(OnStart);
+        ModEvents.WorldShuttingDown.RegisterHandler(OnShutdown);
+        ApplyHarmony();
+        Log.Out("[HSWorkingStuff] v1.0.24 fridge, fridge-freezer, chest freezer, cooler, stove, microwave, coffee maker, grills, plumbing, water cooler, shower, bath, combi boiler, radiators, air con, washer, dryer, thermometer, sockets, room temperature, smell, laundry, pipe tool, and 7-day food. Install on the host and on every client.");
+    }
+
+    static void ApplyHarmony()
+    {
+        Harmony harmony = new Harmony("HSWorkingStuff");
+        Type[] types = AccessTools.GetTypesFromAssembly(Assembly.GetExecutingAssembly());
+        for (int i = 0; i < types.Length; i++)
+        {
+            Type type = types[i];
+            if (type == null || type.Name == "TileEntityHSFridge")
+                continue;
+            try
+            {
+                harmony.CreateClassProcessor(type).Patch();
+            }
+            catch (Exception e)
+            {
+                Log.Error("[HSWorkingStuff] Harmony patch failed on " + type.Name + ". " + e);
+            }
+        }
+    }
+
+    static void OnGameUpdate(ref ModEvents.SGameUpdateData data)
+    {
+        try
+        {
+            HSSpoil.OnGameUpdate();
+        }
+        catch (Exception e)
+        {
+            Log.Error("[HSWorkingStuff] Spoil tick failed. " + e);
+        }
+        try
+        {
+            HSBoiler.ClientTick();
+            HSPipeNet.ClientTick();
+            HSAirCon.ClientTick();
+            HSLaundry.ClientTick();
+        }
+        catch (Exception e)
+        {
+            Log.Error("[HSWorkingStuff] Radiator/pipe tick failed. " + e);
+        }
+        HSJoinHold.Tick();
+    }
+
+    static void OnStart(ref ModEvents.SGameStartDoneData data)
+    {
+        HSWater.Load();
+        if (HSWorkingStuffNet.IsAuthority)
+        {
+            HSBoiler.Load();
+            HSPipeNet.Load();
+        }
+        HSWorkingStuffNet.RegisterPackage();
+        HSJoinHold.Tick();
+    }
+
+    static void OnShutdown(ref ModEvents.SWorldShuttingDownData data)
+    {
+        HSWater.Save();
+        HSBoiler.Save();
+        HSBoiler.Clear();
+        HSPipeNet.Save();
+        HSPipeNet.Clear();
+        HSJoinHold.Clear();
+        HSAirCon.Clear();
+        HSLaundry.Clear();
+        HSRoomTemp.Clear();
+    }
+}

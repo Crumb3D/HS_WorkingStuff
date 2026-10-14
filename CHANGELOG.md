@@ -1,0 +1,191 @@
+# HS Working Stuff — Changelog
+
+Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
+
+## 1.0.24
+
+- **Plugs show in the socket.** Wire an appliance from a socket and a plug appears in the outlet, with a black lead running to the appliance (vanilla wires only show with the wire tool out). A double socket shows one plug per appliance.
+- **Each outlet of a UK double socket has its own switch.** Look at it for **Switch the left socket** / **Switch the right socket**; the first appliance you wire is the left plug, the second the right. A UK double socket placed before 1.0.24 starts with both outlets off: flick each one on once.
+- **Switches flick.** The rockers on UK sockets, the UK light switch and the cooker switch now show up or down with the switch, the red flash on a UK socket shows when it is on, and the cooker switch neon lights only when it is on and powered. Vanilla no longer tints the whole plate green or red.
+- **US light switch.** A US toggle switch: lever up for on, down for off.
+- **Wash up at a sink.** Kitchen and bathroom sinks with a working tap have **Wash up**: 1 jar of water (hot if there is any), about 5 m off your smell. Once an hour; a shower or bath is the proper clean.
+- **Showers and baths.** A shower now takes off a random 90-100% of your body smell and a bath all of it, and both still hide everything you carry for 10 or 20 minutes.
+- **Wash in lakes and rivers.** Crouch at the water's edge and press the drink key to **Wash** (a splash, about 5 m off, once an hour). Standing in water up to your waist or more washes you slowly: 50-70% of your body smell comes off over half an hour (WaterWashHours). Get out early and you keep what came off. Standing up still drinks like vanilla.
+- **Fridge-freezer icon** is no longer cut off top and bottom.
+- Socket leads start from the plug instead of the bottom of the block.
+
+## 1.0.23
+
+- **Rooms follow the weather.** Indoors the temperature now trails the weather outside by a few game hours, and a house only takes 15°F off it instead of vanilla's instant 30°F. Cold snaps, nights and rainy days make rooms cold; summer makes them hot. Radiators heat a room to 68°F and air conditioners cool it to 72°F. Snow biomes need the heating on.
+- **Wall thermometer.** Shows the room temperature, the temperature outside, and whether the heating or air con is working. Follows your °F/°C game option.
+- **You get smelly.** After a day without a shower or bath you start to smell, worse over three days, and zombies can track it. Washing clears it.
+- **Dirty and wet clothes.** Worn clothes and armour get dirty and add to your smell (hover them to see). Wash them in the new **washing machine** (power + cold water pipe, 4 jars). They come out wet, which makes you colder, until they dry on you or go in the **tumble dryer**.
+- **UK white goods.** White UK washing machine, tumble dryer and tall fridge-freezer to match the boiler and radiators. The vanilla-model washer and dryer are craftable too.
+- **Sockets and switches.** UK switched sockets (single and double), US outlets (single and duplex, always live), a UK light switch and a UK 45A cooker switch. Wire power in and wire the appliance from it; a single takes one plug and a double two, and the wire tool tells you when a socket is full.
+## 1.0.22
+
+- **Chest freezer is 2 blocks wide** and **opens without power**, like the fridge. Before, the freezer model could not be targeted at all, so it never opened. A 1-wide freezer you already placed: pick it up and place it again.
+- **Home air conditioners.** The air conditioner is now a white wall split unit instead of the industrial vanilla box. New **ceiling cassette air conditioner** (30W) for the ceiling. Both unlock at Electrician 45 + Advanced Engineering 2.
+- **Sink uses what's in your hand.** Empty jars in hand: **Fill jars in hand** (only those jars, never jars from your bag). Empty bucket in hand: **Fill bucket**. Anything else or nothing: **Drink**. **Fill all on you** still fills every empty jar and bucket you carry. A jar takes 1 jar of water and a bucket 4 (BucketUnits); when the tank runs short only part of a stack is filled. Same on vanilla sinks and the water cooler.
+- **Sink animations.** Filling swings your arm with the vanilla water-fill sound, drinking plays the drink sound, and the shower and bath splash.
+## 1.0.21
+
+- **Everything has to be learned.** Every recipe in the mod now needs a magazine level **and** a perk rank, nothing is craftable from the start. Cookers, fridge, freezer, boiler and air con: Electrician magazines + Advanced Engineering. Plumbing, radiators, shower and bath: Workstation magazines + Advanced Engineering. Food storage and grills: Home Cooking magazines + Master Chef. Compost: Seed magazines + Living Off The Land. See the README for the levels. Blocks you already placed keep working.
+- **Chest freezer.** New chest freezer model. Works like the fridge, but while it is powered (10W) food in it does not spoil at all.
+- **Plumbed water cooler.** The vanilla water cooler, piped to a tank. Cold tap only, with a built-in filter so it always gives clean water.
+- **Shower and bath.** Pipe them to a powered combi boiler. Wash uses 2 or 4 jars of hot water and takes away all your smell for 10 or 20 minutes.
+- **Air conditioner.** Powered (20W), keeps you cool within about 6 blocks, like a radiator does for the cold.
+- **Gas and charcoal grills.** Barbecue workstations with the vanilla grill menu and no grill tool. Burn wood or coal; a gas can lasts a minute in the gas grill.
+- **Sink pipe stays under the worktop.** A sink on a cabinet no longer shows a pipe stub sticking up behind the tap; the pipe ends inside the cabinet.
+
+## 1.0.20
+
+- **Coffee maker.** New powered Coffee Maker and Commercial Coffee Maker (the vanilla models), unlocked with the microwave at Electrician 25. Put in a jar of water (murky is fine, it heats it) and coffee beans for a jar of coffee, or add 5 gunpowder for black strap coffee. No pot, no fire, no boiling first. Uses the same coffee unlocks as the campfire. 5W only while brewing or open; look at it for the time left.
+- **Rain catch shift-click.** With the rain catch window open, shift-click (or the controller quick move) a dew gatherer, tarp or filter in your bag to drop it straight into its slot, like the vanilla dew collector.
+- **Filtered water stays clean.** A rain catch with a filter now pours away any murky water in the tanks it feeds the moment it sends clean water in (murky jars or buckets poured in by hand, or anything left over), instead of mixing and turning the clean water murky. Its own murky water goes too. An empty tank or rain catch now says "empty" instead of keeping the old "murky" label.
+
+## 1.0.19
+
+- **Filter drains murky water.** Mixing water keeps the worse quality, so murky water left behind would spoil everything a filter collects after it. Putting a dew filter in a rain catch (window or radial) now pours away the murky water in that rain catch and in any murky tanks it fills, and tells you how many jars went. Clean water already in a tank is kept.
+
+## 1.0.18
+
+- **Rain catch opens.** Press E (or Open in the hold-E menu) for a rain catch window like the vanilla dew collector: three slots for the dew gatherer, tarp and filter, plus how much water it holds, its quality and whether it is piped to a tank. Drag tools in and out; anything else, or a second copy of a tool, goes back to your bag. The Install and Remove dew tools commands still work.
+- **Sink pipe comes up from below.** A sink standing on a cabinet or a floor block is now plumbed from underneath: the pipe runs down the wall to the cabinet, inside it, and up into the sink, instead of joining the sink from the side at tap height. Take up the old sink run with the Pipe Tool and lay it again to get the new route.
+
+## 1.0.17
+
+- **Radiators need water.** The heating is now a sealed loop of hot water. Each radiator holds 1 jar. While central heating is on, the boiler fills dry radiators from a tank piped to it (or a lake intake), nearest first. Once filled, the loop keeps its water like a real sealed system, so the radiators stay warm even if the tank later runs dry. Every extra radiator needs another jar; only filled radiators heat. The boiler shows how many radiators are filled, and a cold radiator says how many more jars the tank needs. Existing heating starts empty and fills from the tank on the next load.
+
+## 1.0.16
+
+- **Radiator valve and temperature gauge.** Hold E on a radiator: **Turn up** / **Turn down** sets its valve to off or 1 to 5 (existing and new radiators start at 3). Higher reaches further and draws more power from the boiler; off takes the radiator out of the heating. Looking at it shows the radiator's own temperature on a gauge that climbs while it heats (about 40°C at valve 1 up to 80°C at valve 5) and cools back down when it stops. The setting is saved with the radiator and shared with everyone on the server.
+- **Sink says when the tank is empty.** A sink piped to an empty tank used to say "no tank piped in" and "boiler has no water behind it". It now says the tank is empty (cold), or the tank behind the boiler is empty (hot).
+
+## 1.0.15
+
+- **Fixed (3.3): wires, lights, switches, the cooker, boiler and rain catch losing their settings or connections on every load.** The fridge saved its food in the middle of its save record but read it back from the end. Everything saved after a fridge in the same area of the map was then thrown away on load (the log showed `Dropping TE with unknown/outdated type: None`), and their wires went with it. The fridge now reads its food back from the same place it wrote it. Saves made with the bug load correctly, food included. Anything already lost before this update has to be re-wired or re-placed once.
+- Laid pipe was saving correctly (all 20 pipes in the test save were kept). Plumbing that seemed to "come unplumbed" was the boiler, pump and rain catch losing their data in the same fridge bug.
+
+## 1.0.14
+
+- **Pipe joins fixtures at the bottom.** Tanks, sinks, boilers and rain catches are plumbed at their lowest layer, from below (preferred, like the boiler's copper pipes) or from the side, never from on top. Sink pipe no longer comes in a block too high.
+- **Pipe ends go into the fixture.** Where a pipe meets a tank, sink, boiler or radiator it carries on into the model instead of stopping short at the block edge. Existing laid pipe shows this too.
+- **Radiators say what is wrong.** Instead of always "pipe to a combi boiler", a cold radiator now says whether it is not piped to a boiler at all, piped but central heating is off (turn it on at the boiler), the boiler has no power, or it is warming up.
+
+## 1.0.13
+
+- **Fixed: pipe would not go through concrete, wood and other building blocks.** Building blocks are shaped blocks, and the game only flags a shape as a solid cube if its model says so; the pipe tool now treats any block with all six sides full as solid. Pipe can run through the block a tank sits on, through walls and floors, and is hidden inside them.
+- When New Connection finds no route, the log now says what was next to each end (`Pipe tool: no route from ...`), so a blocked route can be tracked down.
+
+## 1.0.12
+
+- **Half blocks and plates count when they face the right way.** The pipe tool checks each side of a block, not just whether it is a full cube:
+  - A half block or plate that fills the **top** of its cell is a floor: pipe runs along it, radiators can stand on it, and radiator pipe runs through it under the floor.
+  - A half block upright with its **flat full side** toward the pipe is a wall the pipe can run along (and the boiler's drop can run down).
+  - A half block in the bottom of its cell is not a floor (anything on it floats half a block up), so it does not count.
+- Doors, tables and other model blocks still never count.
+
+## 1.0.11
+
+- **Pipe never crosses open air.** Every bit of a run either sits against a floor, wall or ceiling, or is hidden inside a full block (wall, floor, terrain). It prefers the surface and only cuts through a wall or floor where that saves a long way round. If there is no such route you get "No route along walls or floors" instead of a pipe across the room.
+- The drop from the boiler to the floor for radiators runs down the wall.
+- Pipe no longer goes through doors, tables, plates or other part blocks, above or under the floor; only full blocks and terrain hide it.
+- The HUD counts pipe hidden in floors or walls.
+
+## 1.0.10
+
+- **Pipe tool works like the lift and escalator tools.** Hold E for:
+  - **New Water System**: aim at a rain catch, tank, boiler, sink, radiator or intake to start a system there. If it is already piped to things, you are told and that system is used.
+  - **Use Water System Here**: aim at anything in a system (or a laid pipe) and new connections come from there. Use it on the boiler for hot runs, on the tank for cold.
+  - **New Connection**: aim at the thing to connect and it plans the route from the system to it. The route is shown, then **Lay pipes**.
+  - **Lay pipes** and **Take up pipes** as before.
+- The system stays picked after laying, so you just aim at the next sink or radiator and pick New Connection again. No more Clear, no more one-thing-to-one-thing.
+- New connections tee into the system's existing pipe where that is shortest, instead of always running back to the tank or boiler.
+- Connecting something already piped to the system says so instead of laying a second run.
+- Left click is Use Water System Here, right click is New Connection.
+- The HUD shows the picked water system, how many things are in it, and what you are connecting.
+
+## 1.0.9
+
+- **Pipe tool: New connection.** The menu has **New connection**: it clears the last route and starts the next one from whatever you are looking at. **Clear** is gone; New connection does the same job.
+- **Branch off laid pipe.** Start or end on a pipe you already laid and the new run tees into it, so you are no longer limited to one thing piped to one other thing.
+- **Pipes hug walls and floors.** Routes prefer cells beside a floor or wall instead of cutting across a room, and the laid pipe sits against that floor or wall instead of floating in the middle of the block.
+- **Radiators are fed under the floor.** Boiler to radiator is now a drop from the boiler to the floor, a hidden run through the floor, and straight up into the radiator. Later radiators branch off the pipe already under the floor.
+- **The route preview is real pipe** (green, or red when you are short), not a flat line.
+- **Pipe only joins what it was laid into.** A run passing under or beside a sink, tank or radiator no longer connects to it.
+- **Fixed: Take up pipes could reach through walls** and take up a pipe in the next room.
+- The log now says when a run is laid (`Pipe tool laid N pipes ...`) and how many laid pipes loaded with the save.
+
+## 1.0.8
+
+- **Fixed: error when looking at or clicking a microwave or electric cooker.** On 3.3, a cooker that had lost its cooking data threw `NullReferenceException` in `BlockWorkstation.GetBlockActivationCommands` every time you opened its menu. The cooker now rebuilds that data on load, or when you look at it, and the menu never errors. Food that was queued in a broken cooker is not recovered.
+
+## 1.0.7
+
+- **The boiler and Panel Radiator sit at the bottom of the block.** They were floating half a block up, poking out of the top of the cell.
+- **The boiler and radiators can be broken and dug out.** Hits (tools, guns, admin digger) just "tinged" off them. Ones already placed in a save are fixed after the restart.
+
+## 1.0.6
+
+- **Laid pipe no longer gets in the way.** The pipe tool now lays pipe that is not a block. You still see it wherever the cell is open, but you can build walls, floors and furniture straight over it and the water keeps flowing. A full block or terrain in the cell hides that bit of pipe. **E > Take up pipes** on the pipe tool removes a run and gives the pipes back. Pipe blocks placed by hand still work.
+- **Power on demand.** Appliances only draw from the generator while they work. Cookers draw while food is queued or the window is open. The microwave draws only while cooking with the door shut. The fridge already drew only while switched on. Idle appliances still show as powered when the circuit is live.
+- **The water heater is now a wall-hung combi boiler** with its own model. Place it against a wall. It fires (15W) only for 30 seconds after a hot tap runs; idle it draws nothing. Heaters already placed in a save turn into boilers.
+- **New: central heating.** Pipe radiators to the boiler and pick **Central heating on**. It draws 15W plus 5W per radiator, and standing within about 5 blocks of a warm radiator keeps you warm like a campfire.
+- **New: Panel Radiator** (custom UK model) and **Cast Iron Radiator**, built at a workbench.
+- New settings: `HotWaterSeconds`, `RadiatorWatts`, `RadiatorRadius`.
+## 1.0.5
+
+- **Pipe tool clicks work on 3.3.** Left or right click with the pipe tool threw `MissingFieldException: ItemInventoryData.holdingEntity` on 3.3 and did nothing.
+
+## 1.0.4
+
+- **Microwave-safe menu.** Chili dog, chicken nuggets, and black strap coffee are gone. It now cooks boiled water, coffee, goldenrod tea, red tea, honey tea, baked potato, corn on the cob, vegetable stew, sham chowder, spaghetti, and gumbo stew.
+- **Cookers show their power.** The electric cooker and microwave windows show **Powered** or **Unpowered** where the campfire fuel slot was.
+- **Rain catch no longer needs jars.** It collects murky water under open sky with nothing installed. Add the dew collector tools from its menu: the filter makes clean water, the gatherer and tarp each double the rate. Pipe it to a tank and it fills the tank.
+- **Tanks are storage only.** A tank no longer collects water by itself. Fill it from a piped rain catch, or pour jars and buckets in.
+- **Sinks have cold and hot taps.** Cold comes from a tank, hot comes through a powered water heater (always boiled). The sink menu shows both. A tap you can't use is greyed out with the reason, such as "Hot: needs heater" or "Hot: heater has no power". Water keeps the quality of its source, so murky in means murky out.
+- **New: Pipe tool.** Select a start and an end like the lift and escalator tools. A HUD and a line preview show the route and how many pipes it needs. If you carry enough, it lays real pipe blocks for you.
+- Tanks at negative Z coordinates could share water with the wrong tank. Fixed.
+- Tanks and rain catches from older saves convert on load. A rain catch keeps its installed tools. Anything else that was inside the old collector slots drops on the ground next to it.
+
+## 1.0.3
+
+- **New: Microwave** (modern and retro look). Cheap to build at a workbench: 4 forged iron, 3 electrical parts, 4 polymers. Unlocks at Electrician crafting skill 25, alongside switches and lights. Wire it up, 5W.
+- **Microwave menu only.** Boiled water, coffee, black strap coffee, red tea, goldenrod tea, honey tea, baked potato, corn on the cob, chili dog, and chicken nuggets. No pot or grill needed. Each recipe needs the same unlock it needs at a campfire, so the microwave never skips food progression.
+- **It acts like a microwave.** Queue your food and close the door to start it. Opening it pauses the cooking, and closing it carries on from where it stopped.
+- **Look at it to see the timer.** The prompt shows what's cooking and the time left ("Cooking Baked Potato: 0:42 left"). It also tells you when it's paused (door open or no power) and when the food is ready. You can still open it at any time.
+- **It sounds like a microwave.** It hums while it cooks, goes quiet when the door opens or the power goes, and dings when the queue is done. Nearby players hear it too.
+- **Working Fridge and Water Heater can be crafted again.** Their recipes were locked and nothing in the game unlocked them. They now unlock at Electrician crafting skill 45.
+
+## 1.0.2
+
+- **Electric cookers no longer cook without power.** With the cooker window open, the queue kept crafting even when the cooker was unwired or switched off. It now pauses until the cooker has power, and carries on when the power comes back.
+- **Fridges open without power on 3.3.** A fridge that had never been wired could not be opened, stocked, or emptied. It now works as a plain box until you power it.
+- **Switch prompts make sense.** Switches said "Switch light on" no matter what they were wired to. They now say what they control, for example "Turn Working Fridge On" or "Turn Electric Cooker Off". With two different devices both are named, and with more they show a count ("Turn 3 Devices On"). An unwired switch says "Switch On" / "Switch Off". This applies to every switch, vanilla included.
+
+## 1.0.1
+
+Fixes for 7 Days To Die 3.3. Nothing changes on 3.2.
+
+- **Stoves, sinks, and tanks talk to the server again on 3.3.** Electric cooker power, tank levels, and sink fill/drink/pour messages were failing with `KeyNotFoundException: NetPackageHSWorkingStuff`.
+- **Wire tool on an electric cooker no longer errors on 3.3.** Holding the wire tool at a cooker showed the watt label on 3.2 but threw `MissingFieldException` on 3.3.
+- **Food spoil works on 3.3.** The spoil timer, the "Spoils in X days" tooltip, the morning warning, drying rack, and compost box were failing with `MissingFieldException: ItemStack.itemValue`.
+- **Fridges load on 3.3.** On 3.3 a fridge stopped world-load for the containers around it and logged `VTable setup of type TileEntityHSFridge failed`. Fridges now load, save, and keep their food on 3.3. Fridges from a 3.2 save keep their contents when the world opens on 3.3.
+- If the spoil tick ever errors, the rest of the mod keeps running. Join-hold no longer stops with it.
+
+## 1.0.0
+
+First release.
+
+- **Food spoils** in about 7 days (`SpoilDays`). Tooltips show the days left, and there is a morning warning for the food closest to going off. Cooked and crafted food starts fresh. Stacks keep the older timer when merged.
+- **Working Fridge** — 24 slots, food lasts 4x longer while powered. Store perishables / take spoiled buttons.
+- **Working Cooler** — 12 slots, food lasts 2x longer, no power.
+- **Drying rack** turns raw meat into dried meat. **Compost box** turns spoiled food into nitrate.
+- **Plumbing** — pipes, intake, tank, sink, rain catch, and powered water heater. Fill all, pour all, and drink from the tap. Vanilla kitchen sinks and metal pipes count. Tanks take the dew collector mods (filter, gatherer, tarp).
+- **Electric cookers** (old, modern, wall) — campfire recipes and tools, no wood. Wire them to power, 10W.
+- Picking up a fridge keeps its food, and picking up a tank keeps its water.
+- **Connect to IP** button on the main menu.
+- **Hide News** — removes the News button, corner news, and news splash.
+- **Join hold** — players joining a dedicated server that is still starting see "Server is Starting up please wait" instead of being kicked. Esc cancels.
+- Every feature has an on/off switch in `HSWorkingStuffSettings.json`.

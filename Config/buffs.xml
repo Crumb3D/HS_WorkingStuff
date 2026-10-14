@@ -1,0 +1,82 @@
+<configs>
+	<append xpath="/buffs">
+		<!-- Re-added by the mod about twice a second while a warm radiator is near the player. -->
+		<buff name="buffHSRadiatorWarm" hidden="true">
+			<stack_type value="ignore"/>
+			<duration value="1"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffHSRadiatorWarmEffect"/>
+			</effect_group>
+		</buff>
+
+		<buff name="buffHSRadiatorWarmEffect" name_key="buffHSRadiatorWarmName" description_key="buffHSRadiatorWarmDesc" icon="ui_game_symbol_hot" icon_color="255,160,60">
+			<stack_type value="replace"/>
+			<duration value="2"/>
+			<effect_group>
+				<passive_effect name="HypothermalResist" operation="base_add" value="25"/>
+			</effect_group>
+		</buff>
+
+		<!-- Re-added by the mod about twice a second while a running air conditioner is near the player. -->
+		<buff name="buffHSAirConCool" hidden="true">
+			<stack_type value="ignore"/>
+			<duration value="1"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffHSAirConCoolEffect"/>
+			</effect_group>
+		</buff>
+
+		<buff name="buffHSAirConCoolEffect" name_key="buffHSAirConCoolName" description_key="buffHSAirConCoolDesc" icon="ui_game_symbol_cold" icon_color="120,200,255">
+			<stack_type value="replace"/>
+			<duration value="2"/>
+			<effect_group>
+				<passive_effect name="HyperthermalResist" operation="base_add" value="25"/>
+			</effect_group>
+		</buff>
+
+		<!-- Shower and bath. While either runs the mod keeps the smell radius at zero. -->
+		<buff name="buffHSWashed" name_key="buffHSWashedName" description_key="buffHSWashedDesc" icon="ui_game_symbol_water" icon_color="120,200,255">
+			<stack_type value="replace"/>
+			<duration value="600"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffSmell"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffSmellGrace"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="smell" operation="set" value="0"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashedBath"/>
+			</effect_group>
+		</buff>
+
+		<buff name="buffHSWashedBath" name_key="buffHSWashedBathName" description_key="buffHSWashedDesc" icon="ui_game_symbol_water" icon_color="120,200,255">
+			<stack_type value="replace"/>
+			<duration value="1200"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffSmell"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffSmellGrace"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="smell" operation="set" value="0"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashed"/>
+			</effect_group>
+		</buff>
+
+		<!-- Marker from the server after washing up at a sink; the player's own machine takes the smell off once. -->
+		<buff name="buffHSWashedSink" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="6"/>
+		</buff>
+
+		<!-- Status only: the mod adds and removes these and works out the smell and cold itself. -->
+		<buff name="buffHSSmelly" name_key="buffHSSmellyName" description_key="buffHSSmellyDesc" icon="ui_game_symbol_smell" icon_color="200,170,60">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
+
+		<buff name="buffHSDirtyClothes" name_key="buffHSDirtyClothesName" description_key="buffHSDirtyClothesDesc" icon="ui_game_symbol_smell" icon_color="150,110,60">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
+
+		<buff name="buffHSWetClothes" name_key="buffHSWetClothesName" description_key="buffHSWetClothesDesc" icon="ui_game_symbol_wet" icon_color="120,200,255">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
+	</append>
+</configs>

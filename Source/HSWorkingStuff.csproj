@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B7E21C04-9A58-4D11-8F30-2C6E4A5B8D91}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>HSWorkingStuff</RootNamespace>
+    <AssemblyName>HSWorkingStuff</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <LangVersion>7.3</LangVersion>
+    <Deterministic>true</Deterministic>
+    <NoStdLib>true</NoStdLib>
+    <GameDir Condition="'$(GameDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die</GameDir>
+    <ManagedDir Condition="'$(ManagedDir)' == ''">C:\7DTD-Server\ServerFiles\7DaysToDieServer_Data\Managed</ManagedDir>
+    <HarmonyDir Condition="'$(HarmonyDir)' == ''">$(UserProfile)\AppData\Roaming\7DaysToDie\Mods\0_TFP_Harmony</HarmonyDir>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib">
+      <HintPath>$(ManagedDir)\mscorlib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>$(ManagedDir)\System.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>$(ManagedDir)\System.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(HarmonyDir)\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(ManagedDir)\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LogLibrary">
+      <HintPath>$(ManagedDir)\LogLibrary.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(ManagedDir)\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>$(ManagedDir)\UnityEngine.AnimationModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HSGameVersion.cs" />
+    <Compile Include="HSGameApi.cs" />
+    <Compile Include="HSWorkingStuffSettings.cs" />
+    <Compile Include="HSLoc.cs" />
+    <Compile Include="HSWorkingStuffMod.cs" />
+    <Compile Include="HSJoinHold.cs" />
+    <Compile Include="HSWorkingStuffNet.cs" />
+    <Compile Include="HSInv.cs" />
+    <Compile Include="HSItem.cs" />
+    <Compile Include="HSInvData.cs" />
+    <Compile Include="HSFridgeInv.cs" />
+    <Compile Include="HSSpoil.cs" />
+    <Compile Include="HSWater.cs" />
+    <Compile Include="HSPickup.cs" />
+    <Compile Include="HSPatches.cs" />
+    <Compile Include="TileEntityHSFridge.cs" />
+    <Compile Include="BlockHSFridge.cs" />
+    <Compile Include="BlockHSStorage.cs" />
+    <Compile Include="BlockHSSink.cs" />
+    <Compile Include="BlockHSTank.cs" />
+    <Compile Include="BlockHSRainCatch.cs" />
+    <Compile Include="HSPipeNet.cs" />
+    <Compile Include="HSPipeTool.cs" />
+    <Compile Include="HSStovePowerWindow.cs" />
+    <Compile Include="HSModelHit.cs" />
+    <Compile Include="HSPowerDemand.cs" />
+    <Compile Include="HSBoiler.cs" />
+    <Compile Include="BlockHSHeater.cs" />
+    <Compile Include="BlockHSRadiator.cs" />
+    <Compile Include="HSRadiatorValve.cs" />
+    <Compile Include="BlockHSStove.cs" />
+    <Compile Include="HSStovePower.cs" />
+    <Compile Include="BlockHSMicrowave.cs" />
+    <Compile Include="BlockHSCoffeeMaker.cs" />
+    <Compile Include="BlockHSWaterCooler.cs" />
+    <Compile Include="BlockHSShower.cs" />
+    <Compile Include="HSWash.cs" />
+    <Compile Include="BlockHSAirCon.cs" />
+    <Compile Include="HSGrill.cs" />
+    <Compile Include="HSRoomTemp.cs" />
+    <Compile Include="HSLaundry.cs" />
+    <Compile Include="BlockHSLaundry.cs" />
+    <Compile Include="HSPlugs.cs" />
+    <Compile Include="HSMicrowaveSound.cs" />
+    <Compile Include="HSSwitchText.cs" />
+    <Compile Include="XUiC_HSStorageWindowGroup.cs" />
+    <Compile Include="XUiC_HSStorageGrid.cs" />
+    <Compile Include="XUiC_HSRainCatch.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

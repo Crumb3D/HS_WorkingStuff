@@ -1,0 +1,5 @@
+<configs>
+	<insertAfter xpath="/windows/window[@name='mainMenu']/grid/mainmenubutton[@name='btnPlayGame']">
+		<mainmenubutton name="btnConnectToIp" width="400" height="50" caption="Connect to IP" />
+	</insertAfter>
+</configs>
