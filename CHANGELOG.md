@@ -2,6 +2,14 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.29
+
+- **TVs that play your videos.** A 43 inch flat-screen TV on a stand, and one for the wall. Every video file in the TV folder is a channel (`.mp4` works best), in file name order, and the channel name is the file name. Drop files into `%AppData%\7DaysToDie\HSWorkingStuff\TV` (made for you) or the mod's `TV` folder and they show up in game within a few seconds. Hold E for **On / Off**, **Next channel** and **Previous channel**. The sound comes from the set and fades with distance.
+- **TVs need a socket.** Wire a TV from a socket; the wire tool refuses anything else. It draws 15W only while switched on, and goes dark when the socket or power is off.
+- Every TV on the same channel shows the same moment, like broadcast TV. Each player's PC plays the video itself, so in multiplayer everyone needs the same files to see the same channels; the dedicated server needs none.
+- **Plug leads meet the back of the appliance.** The black lead from a socket now ends on the side of the appliance facing the socket (its back, or its top when the socket is higher), instead of inside it.
+- New settings: `TVVolume`, `TVHearRange`, `TVViewRange`.
+
 ## 1.0.28
 
 - **Frozen food.** Food left in a powered chest freezer for 2 game hours freezes solid. Frozen food can't be eaten and recipes won't use it, but it doesn't spoil while frozen. Take it out and it thaws in 2 hours at room temperature, or 8 hours in a powered fridge. The item tooltip says it's frozen and how long it has left to thaw.

@@ -204,6 +204,8 @@ public static class HSWorkingStuffBuild
         d["HS_Copper"] = Opaque("HS_Copper", new Color(0.72f, 0.42f, 0.22f), 0.85f, 0.55f);
         d["HS_Display"] = Glow("HS_Display", new Color(0.25f, 0.65f, 1f), 1.4f);
         d["HS_Led"] = Glow("HS_Led", new Color(0.25f, 1f, 0.35f), 2f);
+        d["HS_Screen"] = Glow("HS_Screen", new Color(0.02f, 0.02f, 0.025f), 0.2f);
+        d["HS_Screen"].SetFloat("_Glossiness", 0.9f);
         d["HS_Red"] = Opaque("HS_Red", new Color(0.78f, 0.08f, 0.06f), 0f, 0.55f);
         d["HS_Neon"] = Glow("HS_Neon", new Color(1f, 0.25f, 0.1f), 2f);
         d["HS_Green"] = Opaque("HS_Green", new Color(0.30f, 0.52f, 0.16f), 0f, 0.25f);

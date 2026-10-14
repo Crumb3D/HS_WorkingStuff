@@ -52,5 +52,9 @@
   "EnableFreezing": true,
   "FreezeHours": 2,
   "ThawHours": 2,
-  "FridgeThawHours": 8
+  "FridgeThawHours": 8,
+
+  "TVVolume": 0.8,
+  "TVHearRange": 15,
+  "TVViewRange": 40
 }

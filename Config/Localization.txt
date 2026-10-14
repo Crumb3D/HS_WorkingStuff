@@ -353,3 +353,18 @@ hsdefrost,UI,commands,,,K,Defrost
 blockcommand_hsdefrost,UI,commands,,,K,Defrost the frozen food on you
 hsDefrostNone,UI,tooltip,,,K,Nothing frozen on you
 hsDefrosted,UI,tooltip,,,K,Defrosted {0} frozen food
+hsTVStand,blocks,Block,,,,Flat-screen TV (Stand)
+hsTVWall,blocks,Block,,,,Flat-screen TV (Wall)
+hsTVDesc,blocks,Block,,,,"A 43 inch flat-screen TV. Wire it from a socket (15W while it is on). Hold E to switch it on and change channel. Every video file in the TV folder is a channel: put .mp4 files in AppData\Roaming\7DaysToDie\HSWorkingStuff\TV or the mod's TV folder."
+hsTVNoSocket,UI,tooltip,,,K,Not plugged in: wire it from a socket
+hsTVNoPower,UI,tooltip,,,K,No power at the socket
+hsTVOff,UI,tooltip,,,K,Off
+hsTVNoVideos,UI,tooltip,,,K,No channels: put .mp4 files in {0}
+hsTVChannel,UI,tooltip,,,K,Channel {0} of {1}: {2}
+hsTVSocketOnly,UI,tooltip,,,K,"A TV plugs into a socket, not straight into the power"
+hstvpower,UI,commands,,,K,On / Off
+blockcommand_hstvpower,UI,commands,,,K,Switch the TV on or off
+hstvnext,UI,commands,,,K,Next channel
+blockcommand_hstvnext,UI,commands,,,K,Next channel
+hstvprev,UI,commands,,,K,Previous channel
+blockcommand_hstvprev,UI,commands,,,K,Previous channel

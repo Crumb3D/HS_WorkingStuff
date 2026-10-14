@@ -30,6 +30,7 @@ MAT_COLORS = {
     "HS_Copper": (0.72, 0.42, 0.22, 1.0),
     "HS_Display": (0.25, 0.65, 1.0, 1.0),
     "HS_Led": (0.25, 1.0, 0.35, 1.0),
+    "HS_Screen": (0.02, 0.02, 0.025, 1.0),
     "HS_Red": (0.78, 0.08, 0.06, 1.0),
     "HS_Neon": (1.0, 0.25, 0.1, 1.0),
     "HS_Green": (0.30, 0.52, 0.16, 1.0),
@@ -68,6 +69,7 @@ class Piece:
         self.mats = []
         self.cols = []
         self.subs = []
+        self.keep_normals = False
 
     # A separate child object the game can show or hide by name, e.g. a plug in a socket.
     def sub(self, suffix):
@@ -133,11 +135,22 @@ class Piece:
         bmesh.ops.transform(self.bm, matrix=m, verts=res["verts"])
         self._finish(list({f for v in res["verts"] for f in v.link_faces}), mat)
 
+    # Flat quad facing -Y (the front) with UVs 0..1 left to right, bottom to top: a TV picture fills it.
+    def screen(self, mat, x0, x1, z0, z1, y):
+        uv = self.bm.loops.layers.uv.verify()
+        vs = [self.bm.verts.new(v) for v in ((x0, y, z0), (x1, y, z0), (x1, y, z1), (x0, y, z1))]
+        f = self.bm.faces.new(vs)
+        for loop, t in zip(f.loops, ((0, 0), (1, 0), (1, 1), (0, 1))):
+            loop[uv].uv = t
+        self._finish([f], mat)
+        self.keep_normals = True
+
     def collider(self, center, size):
         self.cols.append((tuple(center), tuple(size)))
 
     def build(self, collection):
-        bmesh.ops.recalc_face_normals(self.bm, faces=self.bm.faces)
+        if not self.keep_normals:
+            bmesh.ops.recalc_face_normals(self.bm, faces=self.bm.faces)
         me = bpy.data.meshes.new(self.name)
         self.bm.to_mesh(me)
         self.bm.free()
@@ -913,10 +926,57 @@ def icon_wheat_seed():
     return p
 
 
+def _tv_panel(p, w, h, zc, yc):
+    """Slim flat-screen panel centred at (0, yc, zc): black bezel, thin chin with a badge and standby light, picture quad in front."""
+    d = 0.02
+    chin = 0.018
+    bezel = 0.008
+    p.box("HS_Dark", (0, yc, zc), (w, d, h))
+    # deeper electronics box on the back, lower half
+    p.box("HS_Dark", (0, yc + d / 2 + 0.02, zc - h * 0.08), (w * 0.62, 0.04, h * 0.55))
+    yf = yc - d / 2
+    p.box("HS_Grey", (0, yf - 0.002, zc - h / 2 + chin / 2), (w, 0.004, chin))
+    p.box("HS_Chrome", (0, yf - 0.0045, zc - h / 2 + chin / 2), (0.05, 0.001, 0.006))
+    p.box("HS_Red", (w / 2 - 0.04, yf - 0.0045, zc - h / 2 + chin / 2), (0.005, 0.001, 0.003))
+    s = p.sub("Screen")
+    s.screen("HS_Screen", -w / 2 + bezel, w / 2 - bezel, zc - h / 2 + chin, zc + h / 2 - bezel, yf - 0.001)
+    return yf
+
+
+def tv_stand():
+    """43 inch flat-screen TV on a pedestal stand, for a TV unit, worktop or the floor."""
+    p = Piece("HSTVStand")
+    w, h = 0.96, 0.56
+    yc = 0.0
+    z0 = 0.075
+    _tv_panel(p, w, h, z0 + h / 2, yc)
+    # pedestal: flat foot plate and a neck into the back of the panel
+    p.box("HS_Grey", (0, yc + 0.02, 0.006), (0.34, 0.2, 0.012))
+    p.box("HS_Dark", (0, yc + 0.02, 0.0135), (0.3, 0.17, 0.003))
+    p.box("HS_Grey", (0, yc + 0.045, (0.012 + z0 + 0.12) / 2), (0.07, 0.025, z0 + 0.12 - 0.012))
+    p.collider((0, yc + 0.02, (z0 + h) / 2 + 0.01), (w, 0.22, z0 + h))
+    return p
+
+
+def tv_wall():
+    """43 inch flat-screen TV on a slim wall bracket, hung at sitting eye height."""
+    p = Piece("HSTVWall")
+    w, h = 0.96, 0.56
+    yc = WALL - 0.06
+    zc = 0.55
+    _tv_panel(p, w, h, zc, yc)
+    # bracket plate on the wall and arms to the back of the set
+    p.box("HS_Grey", (0, WALL - 0.004, zc), (0.3, 0.008, 0.2))
+    for x in (-0.1, 0.1):
+        p.box("HS_Grey", (x, WALL - 0.02, zc), (0.02, 0.03, 0.18))
+    p.collider((0, (yc - 0.02 + WALL) / 2, zc), (w, WALL - yc + 0.02, h))
+    return p
+
+
 PIECES = [combi_boiler, panel_radiator, chest_freezer, split_air_con, ceiling_air_con, wall_thermometer,
           washing_machine, tumble_dryer, fridge_freezer,
           socket_uk_single, socket_uk_double, socket_us_single, socket_us_double, light_switch_uk, light_switch_us, cooker_switch_uk, range_outlet_us,
-          kettle, toaster, wheat_1, wheat_2, wheat_3]
+          kettle, toaster, wheat_1, wheat_2, wheat_3, tv_stand, tv_wall]
 
 ICON_PIECES = [icon_mug, icon_mug_tea_pj, icon_mug_tea_yorkie, icon_mug_coffee, icon_tea_pj, icon_tea_yorkie,
                icon_wheat, icon_flour, icon_dough, icon_loaf, icon_slice, icon_toast, icon_wheat_seed]

@@ -43,7 +43,7 @@ public static class HSPowerDemand
         if (list == null || blockId >= list.Length)
             return false;
         Block b = list[blockId];
-        return b is BlockHSHeater || b is BlockHSStove;
+        return b is BlockHSHeater || b is BlockHSStove || b is BlockHSTV;
     }
 
     public static bool CircuitLive(Vector3i pos)

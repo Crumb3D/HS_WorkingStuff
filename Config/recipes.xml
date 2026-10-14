@@ -335,6 +335,16 @@
 			<ingredient name="resourceElectricParts" count="2"/>
 			<ingredient name="resourceScrapPolymers" count="2"/>
 		</recipe>
+		<recipe name="hsTVStand" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceElectricParts" count="4"/>
+			<ingredient name="resourceScrapPolymers" count="8"/>
+			<ingredient name="resourceForgedIron" count="2"/>
+		</recipe>
+		<recipe name="hsTVWall" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceElectricParts" count="4"/>
+			<ingredient name="resourceScrapPolymers" count="8"/>
+			<ingredient name="resourceForgedIron" count="2"/>
+		</recipe>
 		<recipe name="hsPlantedWheat1" count="1" craft_time="1" tags="learnable,packMuleCrafting">
 			<ingredient name="hsCropWheat" count="5"/>
 		</recipe>

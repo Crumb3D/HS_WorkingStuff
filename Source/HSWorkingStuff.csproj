@@ -58,6 +58,14 @@
       <HintPath>$(ManagedDir)\UnityEngine.AnimationModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>$(ManagedDir)\UnityEngine.AudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>$(ManagedDir)\UnityEngine.VideoModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HSGameVersion.cs" />
@@ -73,6 +81,7 @@
     <Compile Include="HSFridgeInv.cs" />
     <Compile Include="HSSpoil.cs" />
     <Compile Include="HSFrozen.cs" />
+    <Compile Include="BlockHSTV.cs" />
     <Compile Include="HSWater.cs" />
     <Compile Include="HSPickup.cs" />
     <Compile Include="HSPatches.cs" />

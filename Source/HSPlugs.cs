@@ -25,6 +25,12 @@ public static class HSPlugs
         deniedUntil = Time.time + 1f;
     }
 
+    public static void DenyReason(string text)
+    {
+        denied = text;
+        deniedUntil = Time.time + 1f;
+    }
+
     // Vanilla shows "ttCantHaveParent" straight after the refusal; this swaps in the reason.
     public static string DeniedText()
     {
@@ -69,6 +75,32 @@ public static class HSPlugs
             Cables(world, te, model);
     }
 
+    // The lead meets the appliance on the face nearest the plug (its back, or its top when the socket is higher), never inside it.
+    static Vector3 LeadEnd(Transform appliance, Vector3 plug)
+    {
+        Bounds box = default(Bounds);
+        bool any = false;
+        foreach (var r in appliance.GetComponentsInChildren<Renderer>())
+        {
+            if (!r.enabled || r is LineRenderer || r.GetType().Name == "ParticleSystemRenderer")
+                continue;
+            if (any)
+                box.Encapsulate(r.bounds);
+            else
+            {
+                box = r.bounds;
+                any = true;
+            }
+        }
+        if (!any)
+            return appliance.position + Vector3.up * 0.1f;
+        Vector3 end = box.ClosestPoint(plug);
+        Vector3 away = plug - end;
+        if (away.sqrMagnitude < 1e-6f)
+            return new Vector3(box.center.x, box.max.y + 0.005f, box.center.z);
+        return end + away.normalized * 0.005f;
+    }
+
     // Vanilla wires only show with the wire tool out. A plugged-in appliance gets a black lead from the plug that is always there.
     public static void Cables(WorldBase world, TileEntityPowered te, Transform model)
     {
@@ -100,7 +132,7 @@ public static class HSPlugs
             Vector3i childPos = te.wireDataList[i];
             var child = world.GetTileEntity(childPos) as TileEntityPowered;
             Vector3 b = child != null && child.BlockTransform != null
-                ? child.BlockTransform.position + Vector3.up * 0.1f
+                ? LeadEnd(child.BlockTransform, a)
                 : childPos.ToVector3() + new Vector3(0.5f, 0.1f, 0.5f) - Origin.position;
             GameObject go = old != null ? old.gameObject : new GameObject("HSCable" + i);
             if (old == null)
@@ -255,6 +287,12 @@ public static class HSPatchSocketPlugs
             if (parent == null)
                 return;
             int limit = HSPlugs.Limit(parent.blockValue.Block);
+            if (limit <= 0 && __instance.blockValue.Block is BlockHSTV)
+            {
+                __result = false;
+                HSPlugs.DenyReason(HSLoc.Get("hsTVSocketOnly", "A TV plugs into a socket, not straight into the power"));
+                return;
+            }
             if (limit <= 0)
                 return;
             if (parent.wireDataList.Contains(__instance.ToWorldPos()))

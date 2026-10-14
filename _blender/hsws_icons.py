@@ -29,6 +29,8 @@ ICONS = [
     ("HSRangeOutletUS", "hsRangeOutletUS"),
     ("HSKettle", "hsKettle"),
     ("HSToaster", "hsToaster"),
+    ("HSTVStand", "hsTVStand"),
+    ("HSTVWall", "hsTVWall"),
     ("HSIconWheatSeed", "hsPlantedWheat1"),
     ("HSIconWheat", "hsCropWheat"),
     ("HSIconFlour", "hsFlour"),

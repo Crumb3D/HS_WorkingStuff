@@ -53,6 +53,9 @@ public static class HSWorkingStuffSettings
     public static float FreezeHours = 2f;
     public static float ThawHours = 2f;
     public static float FridgeThawHours = 8f;
+    public static float TVVolume = 0.8f;
+    public static float TVHearRange = 15f;
+    public static float TVViewRange = 40f;
 
     public static void Load(string modPath)
     {
@@ -105,6 +108,9 @@ public static class HSWorkingStuffSettings
         FreezeHours = 2f;
         ThawHours = 2f;
         FridgeThawHours = 8f;
+        TVVolume = 0.8f;
+        TVHearRange = 15f;
+        TVViewRange = 40f;
         if (!string.IsNullOrEmpty(modPath))
             TryRead(Path.Combine(modPath, "HSWorkingStuffSettings.json"));
         try
@@ -178,6 +184,9 @@ public static class HSWorkingStuffSettings
         ReadFloat(text, "FreezeHours", ref FreezeHours);
         ReadFloat(text, "ThawHours", ref ThawHours);
         ReadFloat(text, "FridgeThawHours", ref FridgeThawHours);
+        ReadFloat(text, "TVVolume", ref TVVolume);
+        ReadFloat(text, "TVHearRange", ref TVHearRange);
+        ReadFloat(text, "TVViewRange", ref TVViewRange);
         Log.Out("[HSWorkingStuff] Read " + path);
     }
 

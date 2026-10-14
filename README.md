@@ -53,6 +53,9 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `FreezeHours` | 2 | Game hours in a powered chest freezer until food is frozen |
 | `ThawHours` | 2 | Game hours frozen food takes to thaw at room temperature |
 | `FridgeThawHours` | 8 | Game hours frozen food takes to thaw in a powered fridge |
+| `TVVolume` | 0.8 | TV sound volume (0 to 1) |
+| `TVHearRange` | 15 | How far away you can hear a TV (m) |
+| `TVViewRange` | 40 | TVs further away than this (m) stop playing |
 
 Set a bool to `false` to turn that feature off without removing the mod.
 
@@ -101,6 +104,7 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 - **Sockets and switches** — UK switched sockets (single and double), US outlets (single and duplex, always live, no switch), UK and US light switches, a UK 45A cooker switch and a US 240V range outlet (the US has no cooker switch: a range plugs straight into its own always-live outlet). Wire power into one, then wire from it to the appliance. A socket only takes as many plugs as it has outlets: one wire out of a single, two out of a double, one out of the cooker switch or range outlet; the wire tool says so when it's full. A plug shows in the outlet for each appliance, with a black lead to it. Each outlet of a UK double socket has its own switch (the first appliance wired is the left plug); a UK single socket and the switches turn everything wired from them off and on. The rockers flick up and down with the switch. Hang sockets in the cell above a floor or worktop and switches in the cell one up from the floor.
 - **Kettle** — 10W only while boiling. Boils a jar of water (murky is fine) and makes a **mug of tea** from a mug, a tea bag (**PJ Tops** or **Yorkie Brew**) and a jar of water. Look at it to see what's boiling and the time left.
 - **Toaster** — 5W only while toasting. Turns a slice of bread into toast.
+- **TV (stand / wall)** — a 43 inch flat screen that plays your own videos. Wire it from a socket (the wire tool won't take anything else); it draws 15W only while on. Hold E for **On / Off**, **Next channel**, **Previous channel**. Every video file in `%AppData%\7DaysToDie\HSWorkingStuff\TV` (made the first time you look at a TV) or the mod's `TV` folder is a channel, in file name order, named after the file. `.mp4` (H.264 with AAC sound) works best. New files appear within a few seconds. Every TV on a channel shows the same moment. Each player's PC plays the video, so in multiplayer everyone needs the same files; the server needs none. TVs further than `TVViewRange` away stop playing to save your frame rate.
 - **Wheat, bread and tea.** Plant wheat seed like corn: it grows short and green, then tall, then golden and ready to harvest. 5 wheat makes a seed, 3 wheat grinds into flour, 2 flour and a jar of water make dough, and dough bakes into a loaf in the campfire cooking pot. Cut a loaf into 8 slices for the toaster. Mugs are fired from clay on the campfire. Tea bags come from kitchen loot, coffee machines and the traders. The coffee maker also brews coffee in a mug. Drinking from a mug always gives the mug back.
 - **Gas grill / charcoal grill** — barbecue workstations with the vanilla grill menu (corn, grilled meat, steak and potato, wings, jerky, fish tacos) and no grill tool needed. They burn wood or coal like a campfire; a gas can lasts a minute in the gas grill. Same food unlocks as the campfire grill.
 
@@ -116,7 +120,7 @@ Every recipe in the mod needs **both** a magazine level and a perk rank. The cra
 
 | Magazine | Level | Perk | Unlocks |
 | --- | --- | --- | --- |
-| Electrician | 25 | Advanced Engineering 1 | Microwaves, coffee makers, kettle, toaster, electric cookers, sockets, UK and US light switches, cooker switch, range outlet |
+| Electrician | 25 | Advanced Engineering 1 | Microwaves, coffee makers, kettle, toaster, TVs, electric cookers, sockets, UK and US light switches, cooker switch, range outlet |
 | Electrician | 45 | Advanced Engineering 2 | Fridge, white fridge-freezer, chest freezer, combi boiler, wall and ceiling air conditioners |
 | Workstations | 16 | Advanced Engineering 1 | Pipe tool, pipes, intake, tank, sink, rain catch, water cooler, wall thermometer |
 | Workstations | 26 | Advanced Engineering 2 | Radiators, shower, bath, washing machines, tumble dryers |
