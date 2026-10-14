@@ -484,3 +484,16 @@ buffHSNeedPeeDesc,buffs,Buff,,,,"Your bladder is getting full. A toilet, a urina
 buffHSNeedPooName,buffs,Buff,,,,Need the toilet
 buffHSNeedPooDesc,buffs,Buff,,,,Only a toilet will do. A urinal or a tree will not.
 blockcommand_hsopenfreezer,UI,Menu,,,K,Open freezer
+hsWallThermostat,blocks,Block,,,,Wall Thermostat
+hsWallThermostatDesc,blocks,Block,,,,"A digital room thermostat. Wire it from a socket (it shares the socket, it does not take a plug) and put it within 8 blocks of a radiator. Turn it up or down to set every radiator on that heating loop at once; turning one radiator's own valve still overrides it until you turn the thermostat again. Hold E to switch the central heating on or off."
+blockcommand_hsstatup,UI,Menu,,,K,Turn all radiators up
+blockcommand_hsstatdown,UI,Menu,,,K,Turn all radiators down
+hsStatMin,UI,tooltip,,,K,The thermostat is already at its lowest
+hsStatMax,UI,tooltip,,,K,The thermostat is already at its highest
+hsStatSet,UI,tooltip,,,K,All {0} radiators set to {1} of {2}
+hsStatNoPower,UI,tooltip,,,K,No power: wire it from a live socket
+hsStatNoRadiator,UI,tooltip,,,K,No radiator within {0} blocks: put it in a room with a radiator
+hsStatLevel,UI,tooltip,,,K,"Set to {0} of {1} on {2} radiators (a radiator's own valve overrides it)"
+hsStatHeatingOn,UI,tooltip,,,K,Central heating: on
+hsStatHeatingOff,UI,tooltip,,,K,Central heating: off. Hold E to turn it on
+hsStatSocketOnly,UI,tooltip,,,K,"A thermostat is wired from a socket, not straight into the power"

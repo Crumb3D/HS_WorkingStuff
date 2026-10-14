@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.35
+
+- **Wall thermostat.** Wire it from a socket (it shares the socket and doesn't use a plug) and put it within 8 blocks of a radiator. Turn it up or down to set every radiator on that heating loop at once, and switch the central heating on or off from it. A radiator's own valve still overrides it until you turn the thermostat again. It shows the room temperature, its setting and how many radiators it runs. Made at a workbench; unlocked with the radiators. New setting: `ThermostatRange`.
+
 ## 1.0.34
 
 - **Fridge-freezer: a separate fridge and freezer.** Tap E to open the fridge; hold E and pick **Open freezer** for the freezer. Each has 24 slots. Store food goes in the fridge. (In 1.0.33 the freezer was the bottom two rows of one window.)

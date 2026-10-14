@@ -238,6 +238,11 @@
 			<ingredient name="resourceElectricParts" count="1"/>
 			<ingredient name="resourceBrokenGlass" count="2"/>
 		</recipe>
+		<recipe name="hsWallThermostat" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceScrapPolymers" count="4"/>
+			<ingredient name="resourceElectricParts" count="2"/>
+			<ingredient name="resourceBrokenGlass" count="1"/>
+		</recipe>
 		<recipe name="hsSocketUKSingle" count="1" tags="learnable">
 			<ingredient name="resourceScrapPolymers" count="2"/>
 			<ingredient name="resourceElectricParts" count="1"/>

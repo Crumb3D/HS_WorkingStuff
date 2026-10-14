@@ -49,15 +49,19 @@ public static class HSPlugs
         return world != null && IsSocket(world.GetBlock(pos).Block);
     }
 
-    // Plug leads out of a socket, in wire order. A wire on to the next socket in a chain is not a plug.
+    // Plug leads out of a socket, in wire order. A wire on to the next socket in a chain is not a plug,
+    // and neither is a thermostat: it shares the socket with whatever is plugged in.
     public static List<Vector3i> Leads(WorldBase world, TileEntityPowered te)
     {
         var list = new List<Vector3i>();
         if (world == null || te == null || te.wireDataList == null)
             return list;
         for (int i = 0; i < te.wireDataList.Count; i++)
-            if (!IsSocket(world.GetBlock(te.wireDataList[i]).Block))
+        {
+            Block b = world.GetBlock(te.wireDataList[i]).Block;
+            if (!IsSocket(b) && !(b is BlockHSWallThermostat))
                 list.Add(te.wireDataList[i]);
+        }
         return list;
     }
 
@@ -421,6 +425,12 @@ public static class HSPatchSocketPlugs
                 HSPlugs.DenyReason(HSLoc.Get("hsTVSocketOnly", "A TV plugs into a socket, not straight into the power"));
                 return;
             }
+            if (limit <= 0 && __instance.blockValue.Block is BlockHSWallThermostat)
+            {
+                __result = false;
+                HSPlugs.DenyReason(HSLoc.Get("hsStatSocketOnly", "A thermostat is wired from a socket, not straight into the power"));
+                return;
+            }
             if (parent.wireDataList.Contains(__instance.ToWorldPos()))
                 return;
             var panel = parent.blockValue.Block as BlockHSPanel;
@@ -452,7 +462,7 @@ public static class HSPatchSocketPlugs
                 }
                 return;
             }
-            if (HSPlugs.Leads(world, parent).Count >= limit)
+            if (!(__instance.blockValue.Block is BlockHSWallThermostat) && HSPlugs.Leads(world, parent).Count >= limit)
             {
                 __result = false;
                 HSPlugs.Deny(limit);

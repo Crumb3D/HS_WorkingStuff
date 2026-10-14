@@ -68,6 +68,7 @@
   "WattsPerAmp": 5,
   "OverloadSeconds": 2,
   "MaxSocketsPerRun": 10,
+  "ThermostatRange": 8,
 
   "EnableNeeds": true,
   "BladderHours": 3,
