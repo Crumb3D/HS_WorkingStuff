@@ -51,6 +51,8 @@ ICONS = [
     ("HSIconSlice", "hsBreadSlice"),
     ("HSIconToast", "hsToast"),
     ("HSIconMug", "hsMug", 40),
+    ("HSIconMugBagPJ", "hsMugBagPJ", 40),
+    ("HSIconMugBagYorkie", "hsMugBagYorkie", 40),
     ("HSIconMugTeaPJ", "hsMugTeaPJ", 40),
     ("HSIconMugTeaYorkie", "hsMugTeaYorkie", 40),
     ("HSIconMugCoffee", "hsMugCoffee", 40),

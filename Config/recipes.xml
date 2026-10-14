@@ -391,21 +391,6 @@
 			<ingredient name="hsBreadSlice" count="1"/>
 		</recipe>
 
-		<!-- Kettle menu: it boils the water itself, so a plain jar of water goes in. -->
-		<recipe name="drinkJarBoiledWater" count="1" craft_area="hsKettle" craft_time="20" tags="perkMasterChef,perkChefBoiledWater,cookingPotFood">
-			<ingredient name="drinkJarRiverWater" count="1"/>
-		</recipe>
-		<recipe name="hsMugTeaPJ" count="1" craft_area="hsKettle" craft_time="30" tags="learnable,perkMasterChef">
-			<ingredient name="hsMug" count="1"/>
-			<ingredient name="hsTeaBagsPJ" count="1"/>
-			<ingredient name="drinkJarRiverWater" count="1"/>
-		</recipe>
-		<recipe name="hsMugTeaYorkie" count="1" craft_area="hsKettle" craft_time="30" tags="learnable,perkMasterChef">
-			<ingredient name="hsMug" count="1"/>
-			<ingredient name="hsTeaBagsYorkie" count="1"/>
-			<ingredient name="drinkJarRiverWater" count="1"/>
-		</recipe>
-
 		<!-- Coffee maker: a mug instead of a jar -->
 		<recipe name="hsMugCoffee" count="1" craft_area="hsCoffeeMaker" craft_time="20" tags="learnable,perkMasterChef">
 			<ingredient name="hsMug" count="1"/>

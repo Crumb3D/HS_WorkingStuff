@@ -69,6 +69,8 @@ public static class HSWorkingStuffSettings
     public static int ThermostatRange = 8;
     public static float HifiVolume = 0.8f;
     public static float HifiHearRange = 20f;
+    public static float KettleBoilSeconds = 30f;
+    public static float KettleHotMinutes = 10f;
     public static bool EnableNeeds = true;
     public static float BladderHours = 3f;
     public static float BowelHours = 8f;
@@ -147,6 +149,8 @@ public static class HSWorkingStuffSettings
         ThermostatRange = 8;
         HifiVolume = 0.8f;
         HifiHearRange = 20f;
+        KettleBoilSeconds = 30f;
+        KettleHotMinutes = 10f;
         EnableNeeds = true;
         BladderHours = 3f;
         BowelHours = 8f;
@@ -248,6 +252,8 @@ public static class HSWorkingStuffSettings
         ReadInt(text, "ThermostatRange", ref ThermostatRange);
         ReadFloat(text, "HifiVolume", ref HifiVolume);
         ReadFloat(text, "HifiHearRange", ref HifiHearRange);
+        ReadFloat(text, "KettleBoilSeconds", ref KettleBoilSeconds);
+        ReadFloat(text, "KettleHotMinutes", ref KettleHotMinutes);
         ReadBool(text, "EnableNeeds", ref EnableNeeds);
         ReadFloat(text, "BladderHours", ref BladderHours);
         ReadFloat(text, "BowelHours", ref BowelHours);

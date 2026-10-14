@@ -71,6 +71,8 @@
   "ThermostatRange": 8,
   "HifiVolume": 0.8,
   "HifiHearRange": 20,
+  "KettleBoilSeconds": 30,
+  "KettleHotMinutes": 10,
 
   "EnableNeeds": true,
   "BladderHours": 3,

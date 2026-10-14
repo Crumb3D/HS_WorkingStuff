@@ -152,6 +152,27 @@
 			<property name="Group" value="Food/Cooking,CFDrink/Cooking"/>
 			<property name="SoundPickup" value="jars_grab"/>
 			<property name="SoundPlace" value="jars_place"/>
+			<property class="Action1">
+				<property name="Class" value="PlaceAsBlock"/>
+				<property name="Delay" value=".5"/>
+				<property name="Blockname" value="hsMugPlaced"/>
+			</property>
+		</item>
+		<item name="hsMugBagPJ">
+			<property name="HoldType" value="3"/>
+			<property name="Meshfile" value="@:Other/Items/Food/masonJarFPVEmptyPrefab.prefab"/>
+			<property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+			<property name="Material" value="Mglass"/>
+			<property name="Stacknumber" value="10"/>
+			<property name="EconomicValue" value="20"/>
+			<property name="DescriptionKey" value="hsMugBagPJDesc"/>
+			<property name="Group" value="Food/Cooking,CFDrink/Cooking"/>
+			<property name="SoundPickup" value="jars_grab"/>
+			<property name="SoundPlace" value="jars_place"/>
+		</item>
+		<item name="hsMugBagYorkie">
+			<property name="Extends" value="hsMugBagPJ"/>
+			<property name="DescriptionKey" value="hsMugBagYorkieDesc"/>
 		</item>
 		<item name="hsTeaBagsPJ">
 			<property name="HoldType" value="45"/>

@@ -25,11 +25,14 @@ HSTVWall verts=64 cols=2 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_Wo
 HSHifi verts=792 cols=4 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSHifi.fbx
 HSHifiSpeaker verts=344 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSHifiSpeaker.fbx
 HSHifiSpeakerWall verts=336 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSHifiSpeakerWall.fbx
+HSMugPlaced verts=256 cols=3 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSMugPlaced.fbx
 HSConsumerUnitUK verts=88 cols=27 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSConsumerUnitUK.fbx
 HSBreakerPanelUS verts=96 cols=35 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSBreakerPanelUS.fbx
 HSWashingLine verts=488 cols=11 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSWashingLine.fbx
 HSClothesAirer verts=368 cols=7 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSClothesAirer.fbx
 HSIconMug verts=352 (icon only)
+HSIconMugBagPJ verts=376 (icon only)
+HSIconMugBagYorkie verts=376 (icon only)
 HSIconMugTeaPJ verts=376 (icon only)
 HSIconMugTeaYorkie verts=376 (icon only)
 HSIconMugCoffee verts=352 (icon only)

@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.37
+
+- **The kettle is made by hand now.** Fill it with jars of water (one jar is one cup, up to 3, and you get the jar back), switch it on and it bubbles until it boils, then clicks off. Put a mug down on the worktop (right-click with it), drop a tea bag in, pick it up and pour the boiled kettle onto it for the brew. An empty jar takes a jar of boiled water. Boiled water goes cold after a while. The kettle no longer has a crafting menu; anything left in an old kettle's output can still be taken out. New settings: `KettleBoilSeconds`, `KettleHotMinutes`.
+
 ## 1.0.36
 
 - **Hi-fi and speakers.** A micro hi-fi that plugs into a socket, with separate speakers wired out of it (up to 5): standing speakers for a unit or shelf, and wall speakers on a bracket. Music only comes out of the speakers. Power, play / pause, next and previous track, and volume for every speaker from the hi-fi; each speaker can be turned up or down on its own. Plays .mp3, .ogg and .wav files from the Music folder, moving on to the next track when one ends. Made at a workbench; unlocked with the TVs. New settings: `HifiVolume`, `HifiHearRange`.

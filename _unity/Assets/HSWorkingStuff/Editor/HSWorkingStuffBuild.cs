@@ -239,6 +239,8 @@ public static class HSWorkingStuffBuild
         d["HS_Gloss"] = Opaque("HS_Gloss", new Color(0.012f, 0.012f, 0.014f), 0.1f, 0.95f);
         d["HS_Grille"] = Opaque("HS_Grille", new Color(0.07f, 0.07f, 0.075f), 0f, 0.05f);
         d["HS_Ring"] = Glow("HS_Ring", new Color(1f, 0.86f, 0.62f), 1.6f);
+        d["HS_Paper"] = Opaque("HS_Paper", new Color(0.86f, 0.78f, 0.60f), 0f, 0.1f);
+        d["HS_TeaGreen"] = Opaque("HS_TeaGreen", new Color(0.08f, 0.40f, 0.20f), 0f, 0.3f);
         AssetDatabase.SaveAssets();
         return d;
     }

@@ -808,8 +808,38 @@ def _mug(name, drink=None, tag=None):
     return p
 
 
+def mug_placed():
+    """A mug put down on the worktop. HSMugPlaced_BagPJ / _BagYorkie are the tea bag in it, string and tag over the rim."""
+    p = Piece("HSMugPlaced")
+    r, h = 0.042, 0.095
+    p.seg("HS_White", (0, 0, 0), (0, 0, h), r, r * 1.04, 32)
+    p.rod("HS_Grey", (0, 0, h - 0.004), r * 0.92, 0.002, "Z", 32)
+    pts = []
+    for i in range(9):
+        a = math.radians(-80 + i * 20)
+        pts.append(Vector((r + 0.006 + 0.022 * math.cos(a), 0, h * 0.5 + 0.027 * math.sin(a))))
+    for a_, b_ in zip(pts, pts[1:]):
+        p.seg("HS_White", a_, b_, 0.006, None, 8)
+    for suffix, tag in (("BagPJ", "HS_TeaGreen"), ("BagYorkie", "HS_Red")):
+        s = p.sub(suffix)
+        s.box("HS_Paper", (0, 0, h - 0.015), (0.03, 0.022, 0.012))
+        s.seg("HS_White", (0, 0, h - 0.01), (-r * 1.02, -r * 0.35, h + 0.004), 0.0008, None, 4)
+        s.seg("HS_White", (-r * 1.02, -r * 0.35, h + 0.004), (-r * 1.1, -r * 0.4, h - 0.025), 0.0008, None, 4)
+        s.box(tag, (-r * 1.12, -r * 0.42, h - 0.035), (0.003, 0.018, 0.022))
+    p.collider((0, 0, h / 2), (2 * r + 0.03, 2 * r, h))
+    return p
+
+
 def icon_mug():
     return _mug("HSIconMug")
+
+
+def icon_mug_bag_pj():
+    return _mug("HSIconMugBagPJ", None, "HS_TeaGreen")
+
+
+def icon_mug_bag_yorkie():
+    return _mug("HSIconMugBagYorkie", None, "HS_Red")
 
 
 def icon_mug_tea_pj():
@@ -1376,10 +1406,10 @@ def icon_pegs():
 PIECES = [combi_boiler, panel_radiator, chest_freezer, split_air_con, ceiling_air_con, wall_thermometer,
           washing_machine, tumble_dryer, fridge_freezer,
           socket_uk_single, socket_uk_double, socket_us_single, socket_us_double, light_switch_uk, light_switch_us, cooker_switch_uk, range_outlet_us,
-          kettle, toaster, wheat_1, wheat_2, wheat_3, tv_stand, tv_wall, hifi, hifi_speaker, hifi_speaker_wall, consumer_unit_uk, breaker_panel_us,
+          kettle, toaster, wheat_1, wheat_2, wheat_3, tv_stand, tv_wall, hifi, hifi_speaker, hifi_speaker_wall, mug_placed, consumer_unit_uk, breaker_panel_us,
           washing_line, clothes_airer]
 
-ICON_PIECES = [icon_mug, icon_mug_tea_pj, icon_mug_tea_yorkie, icon_mug_coffee, icon_tea_pj, icon_tea_yorkie,
+ICON_PIECES = [icon_mug, icon_mug_bag_pj, icon_mug_bag_yorkie, icon_mug_tea_pj, icon_mug_tea_yorkie, icon_mug_coffee, icon_tea_pj, icon_tea_yorkie,
                icon_wheat, icon_flour, icon_dough, icon_loaf, icon_slice, icon_toast, icon_wheat_seed,
                icon_fuse, icon_fuse_blown, icon_breaker, icon_pegs]
 

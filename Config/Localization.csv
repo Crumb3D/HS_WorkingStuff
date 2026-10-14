@@ -309,7 +309,7 @@ hsOutletOff,UI,tooltip,,,K,Off
 hsRangeOutletUS,blocks,Block,,,,US Range Outlet (240V)
 hsRangeOutletUSDesc,blocks,Block,,,,"The US way to power a cooker: a big 240V range outlet, always live with no switch. Wire power into it and from it to one cooker."
 hsKettle,blocks,Block,,,,Electric Kettle
-hsKettleDesc,blocks,Block,,,,"A cordless electric kettle. Stand it on a worktop and plug it into a socket (10W, only while it boils). Put in a jar of water and it boils it; add a mug and a tea bag and it makes a proper cuppa. You still have to know the recipe."
+hsKettleDesc,blocks,Block,,,,"A cordless electric kettle. Stand it on a worktop and plug it into a socket. Hold a jar of water and hold E to fill it: one jar is one cup, up to 3. Switch it on and it boils, then clicks off. For a cuppa, put a mug down on the side, drop a tea bag in it, pick it up and pour the boiled kettle onto it. An empty jar takes a jar of boiled water. It stays hot for a while, then you have to boil it again."
 hsToaster,blocks,Block,,,,Toaster
 hsToasterDesc,blocks,Block,,,,"A two-slice toaster for the worktop. Plug it into a socket (5W, only while it toasts) and put in slices of bread to make toast."
 hsPlantedWheat1,blocks,Block,,,,Wheat Seed
@@ -330,11 +330,11 @@ hsBreadSliceDesc,items,Item,,,,"Eat it as it is or put it in a toaster."
 hsToast,items,Item,,,,Toast
 hsToastDesc,items,Item,,,,"Hot toast from the toaster. Best eaten fresh: it goes soggy in a couple of days."
 hsMug,items,Item,,,,Mug
-hsMugDesc,items,Item,,,,"A tea mug. Put it in a kettle with a tea bag and a jar of water for a cuppa, or in a coffee maker with coffee beans. You get the mug back when you drink."
+hsMugDesc,items,Item,,,,"A tea mug. Right-click to put it down on the worktop, drop a tea bag in it, pick it up and pour a boiled kettle onto it for a cuppa. It also goes in a coffee maker with coffee beans. You get the mug back when you drink."
 hsTeaBagsPJ,items,Item,,,,PJ Tops Tea Bag
-hsTeaBagsPJDesc,items,Item,,,,"PJ Tops: the pyramid bag for a smooth everyday brew. One bag, a mug and a jar of water make a mug of tea in a kettle."
+hsTeaBagsPJDesc,items,Item,,,,"PJ Tops: the pyramid bag for a smooth everyday brew. Hold it and look at a mug on the worktop to drop it in, then pour a boiled kettle onto the mug."
 hsTeaBagsYorkie,items,Item,,,,Yorkie Brew Tea Bag
-hsTeaBagsYorkieDesc,items,Item,,,,"Yorkie Brew: a proper strong builder's blend from up north. One bag, a mug and a jar of water make a mug of tea in a kettle."
+hsTeaBagsYorkieDesc,items,Item,,,,"Yorkie Brew: a proper strong builder's blend from up north. Hold it and look at a mug on the worktop to drop it in, then pour a boiled kettle onto the mug."
 hsMugTeaPJ,items,Item,,,,Mug of PJ Tops
 hsMugTeaPJDesc,items,Item,,,,"A nice smooth cuppa. It quenches more thirst than coffee, with a shorter pick-me-up. You keep the mug."
 hsMugTeaYorkie,items,Item,,,,Mug of Yorkie Brew
@@ -532,3 +532,26 @@ hsHifiVolumeMin,UI,tooltip,,,K,The volume is already right down
 hsHifiVolumeMax,UI,tooltip,,,K,The volume is already at full
 hsHifiSpeakerWall,blocks,Block,,,,Hi-Fi Wall Speaker
 hsHifiSpeakerWallDesc,blocks,Block,,,,"The hi-fi speaker on a wall bracket: place it against a wall and it hangs at head height. Wire it from the hi-fi with the wire tool and the music plays out of it. Hold E to turn this speaker up or down on its own; the hi-fi volume sets them all again."
+hsMugBagPJ,items,Item,,,,Mug with a PJ Tops Bag
+hsMugBagPJDesc,items,Item,,,,A mug with a PJ Tops bag in it. Hold it and look at a boiled kettle to pour.
+hsMugBagYorkie,items,Item,,,,Mug with a Yorkie Brew Bag
+hsMugBagYorkieDesc,items,Item,,,,A mug with a Yorkie Brew bag in it. Hold it and look at a boiled kettle to pour.
+hsMugPlaced,blocks,Block,,,,Mug
+blockcommand_hskettlefill,UI,Menu,,,K,Fill with the jar
+blockcommand_hskettleboil,UI,Menu,,,K,Switch on to boil
+blockcommand_hskettlepour,UI,Menu,,,K,Pour onto the tea bag
+blockcommand_hskettlejar,UI,Menu,,,K,Pour a jar of boiled water
+blockcommand_hsmugbag,UI,Menu,,,K,Put the tea bag in
+blockcommand_hsmugpickup,UI,Menu,,,K,Pick up the mug
+hsKettleFilled,UI,tooltip,,,K,Kettle: {0} of {1} cups of water
+hsKettleBrewed,UI,tooltip,,,K,Poured: your brew is ready
+hsKettleJarred,UI,tooltip,,,K,Poured a jar of boiled water
+hsKettleEmpty,UI,tooltip,,,K,Empty: hold a jar of water to fill it (one jar is one cup)
+hsKettleWater,UI,tooltip,,,K,Water: {0} of {1} cups
+hsKettleBoilingNow,UI,tooltip,,,K,Boiling...
+hsKettleHot,UI,tooltip,,,K,Boiled: hold a mug with a tea bag in it and pour
+hsKettleCold,UI,tooltip,,,K,Cold: switch it on to boil
+hsKettleReady,UI,tooltip,,,K,Powered
+hsMugHasPJ,UI,tooltip,,,K,A PJ Tops bag is in: pick it up and pour the boiled kettle onto it
+hsMugHasYorkie,UI,tooltip,,,K,A Yorkie Brew bag is in: pick it up and pour the boiled kettle onto it
+hsMugEmpty,UI,tooltip,,,K,Empty: hold a tea bag to put one in

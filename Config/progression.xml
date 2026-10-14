@@ -30,7 +30,7 @@
 		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="6,100" value="1" tags="hsDryingRack,hsDriedMeat,hsCharcoalGrill,hsFlour,hsDough,hsBreadLoaf,hsBreadSlice,hsMug">
 			<requirement name="ProgressionLevel" progression_name="perkMasterChef" operation="GTE" value="1"/>
 		</passive_effect>
-		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="10,100" value="1" tags="hsCooler,hsToast,hsMugTeaPJ,hsMugTeaYorkie,hsMugCoffee">
+		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="10,100" value="1" tags="hsCooler,hsToast,hsMugCoffee">
 			<requirement name="ProgressionLevel" progression_name="perkMasterChef" operation="GTE" value="1"/>
 		</passive_effect>
 		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="26,100" value="1" tags="hsGasGrill">
@@ -38,7 +38,7 @@
 		</passive_effect>
 	</append>
 	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT1-1')]/unlock_entry[@unlock_tier='3']/@item" delim="," op="add">hsDryingRack,hsDriedMeat,hsCharcoalGrill,hsFlour,hsDough,hsBreadLoaf,hsBreadSlice,hsMug</csv>
-	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT1-1')]/unlock_entry[@unlock_tier='5']/@item" delim="," op="add">hsCooler,hsToast,hsMugTeaPJ,hsMugTeaYorkie,hsMugCoffee</csv>
+	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT1-1')]/unlock_entry[@unlock_tier='5']/@item" delim="," op="add">hsCooler,hsToast,hsMugCoffee</csv>
 	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT2-1')]/unlock_entry[@unlock_tier='5']/@item" delim="," op="add">hsGasGrill</csv>
 
 	<!-- Seed magazines + Living Off The Land: compost at 10 (rank 1). -->

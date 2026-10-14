@@ -1,30 +1,3 @@
-public class BlockHSKettle : BlockHSStove
-{
-    public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
-    {
-        string name = _blockValue.Block.GetLocalizedBlockName();
-        bool powered = HSStovePower.IsPowered(_blockPos);
-        TileEntityWorkstation te = _world.GetTileEntity(_blockPos) as TileEntityWorkstation;
-        string making;
-        float left = BlockHSMicrowave.SecondsLeft(te, out making);
-        string status;
-        if (left <= 0f)
-        {
-            if (te != null && !te.OutputEmpty())
-                status = HSLoc.Get("hsKettleDone", "Boiled: your drink is ready");
-            else if (powered)
-                status = HSLoc.Get("hsKettlePowered", "Powered: add a jar of water, and a mug and tea bag for a cuppa");
-            else
-                status = HSLoc.Get("hsKettleUnpowered", "No power: plug this kettle in to boil");
-        }
-        else if (!powered)
-            status = HSLoc.Format("hsMicrowaveNoPowerPaused", "No power: paused, {0} left", BlockHSMicrowave.Clock(left));
-        else
-            status = HSLoc.Format("hsKettleBoiling", "Boiling for {0}: {1} left", making, BlockHSMicrowave.Clock(left));
-        return name + "\n" + status;
-    }
-}
-
 public class BlockHSToaster : BlockHSStove
 {
     public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)

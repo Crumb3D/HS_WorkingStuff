@@ -24,5 +24,12 @@
 			<Noise ID="2" noise="4" time="1" muffled_when_crouched="0.5"/>
 			<AudioClip ClipName="@:Sounds/ImpactSurface/organichitcloth1.wav"/>
 			<LocalCrouchVolumeScale value="0.5"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="4"/> <MaxRepeatRate value="0.2"/> </SoundDataNode>
+
+		<SoundDataNode name="hsKettleBoil"> <AudioSource name="@:Sounds/Prefabs/AudioSource_FridgeLP.prefab"/>
+			<AudioClip ClipName="@:Sounds/Misc/underwater_lp.ogg" Loop="true"/>
+			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="12"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
+		<SoundDataNode name="hsKettlePour"> <AudioSource name="@:Sounds/Prefabs/AudioSource_UseAction.prefab"/>
+			<AudioClip ClipName="@:Sounds/UseActions/bucketplace_water.wav"/>
+			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="6"/> <MaxRepeatRate value="0.2"/> </SoundDataNode>
 	</append>
 </configs>
