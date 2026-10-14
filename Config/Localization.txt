@@ -295,6 +295,7 @@ hsWashSoaking,UI,tooltip,,,K,Washing in the water: {0}% of your body smell off s
 hsWashSoakIdle,UI,tooltip,,,K,The water has done what it can for now. A shower or bath gets you properly clean
 hsWashSoakLeft,UI,tooltip,,,K,Out of the water: {0}% of your body smell washed off
 hsWashSoakDone,UI,tooltip,,,K,Washed in the water: {0}% of your body smell gone
+hsSinkDrained,UI,tooltip,,,K,You pour the water down the drain
 hsoutlet0,UI,commands,,,K,Left socket
 hsoutlet1,UI,commands,,,K,Right socket
 blockcommand_hsoutlet0,UI,commands,,,K,Switch the left socket

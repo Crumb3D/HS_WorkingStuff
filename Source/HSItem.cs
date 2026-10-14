@@ -39,6 +39,23 @@ public static class HSItem
         writeBin = t.GetMethod("Write", new[] { typeof(System.IO.BinaryWriter) });
     }
 
+    // ItemValue.Meta: 3.2 field, 3.3 property over meta.
+    static MemberInfo metaMember;
+
+    public static int Meta(ItemValue iv)
+    {
+        if (iv == null)
+            return 0;
+        if (metaMember == null)
+            metaMember = (MemberInfo)typeof(ItemValue).GetProperty("Meta", BindingFlags.Public | BindingFlags.Instance)
+                ?? typeof(ItemValue).GetField("Meta", BindingFlags.Public | BindingFlags.Instance);
+        PropertyInfo p = metaMember as PropertyInfo;
+        if (p != null)
+            return (int)p.GetValue(iv, null);
+        FieldInfo f = metaMember as FieldInfo;
+        return f != null ? (int)f.GetValue(iv) : 0;
+    }
+
     public static ItemValue Val(ItemStack stack)
     {
         if (stack == null)

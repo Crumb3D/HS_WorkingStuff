@@ -251,6 +251,7 @@ public static class HSLoc
         { "hsWashSoakIdle", "The water has done what it can for now. A shower or bath gets you properly clean" },
         { "hsWashSoakLeft", "Out of the water: {0}% of your body smell washed off" },
         { "hsWashSoakDone", "Washed in the water: {0}% of your body smell gone" },
+        { "hsSinkDrained", "You pour the water down the drain" },
         { "hsoutlet0", "Left socket" },
         { "hsoutlet1", "Right socket" },
         { "blockcommand_hsoutlet0", "Switch the left socket" },

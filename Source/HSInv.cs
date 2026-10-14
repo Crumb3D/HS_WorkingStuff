@@ -80,13 +80,21 @@ public static class HSInv
         MethodInfo getItem = typeof(Inventory).GetMethod("GetItem", new[] { typeof(int) });
         if (getItem == null)
             getItem = typeof(Inventory).GetMethod("GetItemStack", new[] { typeof(int) });
-        PropertyInfo idxProp = typeof(Inventory).GetProperty("holdingItemIdx");
-        int idx = 0;
-        if (idxProp != null)
-            idx = (int)idxProp.GetValue(inv, null);
+        int idx = HeldIndex(player);
         if (getItem == null)
             return null;
         return getItem.Invoke(inv, new object[] { idx }) as ItemStack;
+    }
+
+    public static int HeldIndex(EntityPlayer player)
+    {
+        if (player == null || player.inventory == null)
+            return 0;
+        PropertyInfo idxProp = typeof(Inventory).GetProperty("holdingItemIdx");
+        if (idxProp != null)
+            return (int)idxProp.GetValue(player.inventory, null);
+        FieldInfo idxField = typeof(Inventory).GetField("holdingItemIdx");
+        return idxField != null ? (int)idxField.GetValue(player.inventory) : 0;
     }
 
     public static bool AddToPlayer(EntityPlayer player, ItemStack stack)

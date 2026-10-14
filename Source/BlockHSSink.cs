@@ -166,3 +166,85 @@ public static class HSPatchRadialGrey
         catch { }
     }
 }
+
+// Emptying a full bucket at a sink, shower or bath pours it down the drain instead of onto the floor.
+[HarmonyPatch(typeof(ItemActionDumpWater), "ExecuteAction")]
+public static class HSPatchSinkDrain
+{
+    internal static readonly HashSet<ItemActionData> Draining = new HashSet<ItemActionData>();
+
+    static bool IsDrain(Block b)
+    {
+        if (b == null || b is BlockHSWaterCooler || b is BlockHSLaundry)
+            return false;
+        string n = b.GetBlockName();
+        if (n == HSWater.WaterCoolerName || n == HSWater.WasherName || n == HSWater.WasherVanillaName)
+            return false;
+        return b is BlockHSSink || HSWater.IsSinkBlock(b);
+    }
+
+    static bool AimingAtDrain(EntityPlayerLocal p)
+    {
+        World world = GameManager.Instance.World;
+        if (world == null || p.HitInfo == null)
+            return false;
+        if (p.HitInfo.bHitValid && IsDrain(p.HitInfo.hit.blockValue.Block))
+            return true;
+        return Voxel.Raycast(world, p.HitInfo.ray, Constants.cDigAndBuildDistance, -555266061, 4095, 0f)
+            && IsDrain(Voxel.voxelRayHitInfo.hit.blockValue.Block);
+    }
+
+    static bool Prefix(ItemActionDumpWater __instance, ItemActionData _actionData, bool _bReleased)
+    {
+        try
+        {
+            if (!_bReleased || _actionData == null || _actionData.lastUseTime > 0f)
+                return true;
+            EntityPlayerLocal p = HSInvData.HoldingEntity(_actionData.invData) as EntityPlayerLocal;
+            if (p == null || p.inventory == null)
+                return true;
+            ItemValue iv = p.inventory.holdingItemItemValue;
+            if (iv == null || HSItem.Meta(iv) < 195 || !AimingAtDrain(p))
+                return true;
+            _actionData.lastUseTime = Time.time;
+            p.RightArmAnimationUse = true;
+            p.PlayOneShot(string.IsNullOrEmpty(__instance.soundStart) ? "bucketfill_water" : __instance.soundStart);
+            Draining.Add(_actionData);
+            return false;
+        }
+        catch
+        {
+            return true;
+        }
+    }
+}
+
+[HarmonyPatch(typeof(ItemActionDumpWater), "OnHoldingUpdate")]
+public static class HSPatchSinkDrainDone
+{
+    static bool Prefix(ItemActionDumpWater __instance, ItemActionData _actionData)
+    {
+        if (_actionData == null || !HSPatchSinkDrain.Draining.Contains(_actionData))
+            return true;
+        if (_actionData.lastUseTime == 0f)
+        {
+            HSPatchSinkDrain.Draining.Remove(_actionData);
+            return true;
+        }
+        if (__instance.IsActionRunning(_actionData))
+            return false;
+        _actionData.lastUseTime = 0f;
+        HSPatchSinkDrain.Draining.Remove(_actionData);
+        try
+        {
+            EntityPlayerLocal p = HSInvData.HoldingEntity(_actionData.invData) as EntityPlayerLocal;
+            if (p == null || p.inventory == null)
+                return false;
+            string to = string.IsNullOrEmpty(__instance.changeItemToItem) ? "bucketEmpty" : __instance.changeItemToItem;
+            p.inventory.SetItem(HSInv.HeldIndex(p), new ItemStack(ItemClass.GetItem(to), p.inventory.holdingCount));
+            GameManager.ShowTooltip(p, HSLoc.Get("hsSinkDrained", "You pour the water down the drain"));
+        }
+        catch { }
+        return false;
+    }
+}

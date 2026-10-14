@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.26
+
+- **Buckets empty down the sink.** Empty a full bucket of water while looking at a sink, shower or bath and it goes down the drain: no water is placed and you get the empty bucket back. Anywhere else it pours out like vanilla. Water coolers and washing machines are not drains.
+
 ## 1.0.25
 
 - **US range outlet.** The US has no cooker switch: an electric range plugs into its own 240V outlet on the wall. New US Range Outlet (NEMA 14-50 style), always live, takes one plug and shows the big black plug and lead when a cooker is wired from it.
