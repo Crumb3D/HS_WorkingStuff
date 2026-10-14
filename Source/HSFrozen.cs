@@ -41,6 +41,22 @@ public static class HSFrozen
         return -RoomRate;
     }
 
+    // The fridge-freezer's bottom two rows are its freezer compartment: it freezes slower than a chest freezer.
+    public const int CompartmentFrom = 12;
+
+    public static bool HasCompartment(Block block)
+    {
+        return block != null && block.GetBlockName() == "hsFridgeWhite";
+    }
+
+    public static float CompartmentColdRate(TileEntity te)
+    {
+        var powered = te as TileEntityPowered;
+        if (!HSWorkingStuffSettings.EnableFridge || powered == null || !powered.IsPowered)
+            return -RoomRate;
+        return HSWorkingStuffSettings.FreezeHours / Mathf.Max(0.1f, HSWorkingStuffSettings.FridgeFreezerFreezeHours);
+    }
+
     public static float GetCold(ItemValue iv)
     {
         float c;

@@ -66,6 +66,14 @@ public static class HSSpoil
         return 1f;
     }
 
+    public static float CompartmentRate(TileEntity te)
+    {
+        var powered = te as TileEntityPowered;
+        if (!HSWorkingStuffSettings.EnableFridge || powered == null || !powered.IsPowered)
+            return 1f;
+        return HSWorkingStuffSettings.FridgeFreezerMultiplier;
+    }
+
     public static void StampFresh(ItemValue iv, ulong now)
     {
         if (iv == null || iv.IsEmpty())
@@ -298,7 +306,21 @@ public static class HSSpoil
                 if (fridge != null)
                 {
                     fridge.EnsureItems();
-                    TickArray(fridge.Items, rate, cold, now);
+                    ItemStack[] items = fridge.Items;
+                    if (HSFrozen.HasCompartment(block) && items != null)
+                    {
+                        float cRate = CompartmentRate(te);
+                        float cCold = HSFrozen.CompartmentColdRate(te);
+                        for (int k = 0; k < items.Length; k++)
+                        {
+                            if (k < HSFrozen.CompartmentFrom)
+                                TickStack(items[k], rate, cold, now);
+                            else
+                                TickStack(items[k], cRate, cCold, now);
+                        }
+                    }
+                    else
+                        TickArray(items, rate, cold, now);
                     fridge.SetModified();
                     continue;
                 }

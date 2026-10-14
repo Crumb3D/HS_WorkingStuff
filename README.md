@@ -27,6 +27,11 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `RadiatorWatts` | 5 | Extra watts per radiator at valve 3 while central heating runs (scales with the valve) |
 | `RadiatorRadius` | 5 | Blocks from a warm radiator at valve 3 that keep you warm (scales with the valve) |
 | `FreezerMultiplier` | 0 | Powered chest freezer spoil rate (0 = never spoils) |
+| `FridgeFreezerMultiplier` | 0.1 | Spoil rate in a powered fridge-freezer's freezer compartment until the food freezes (frozen food does not spoil) |
+| `FridgeFreezerFreezeHours` | 4 | Game hours in the fridge-freezer's freezer compartment until food is frozen |
+| `FridgeTemp` | 39 | Temperature a powered fridge shows: 39°F / 4°C. The number in the file is Fahrenheit |
+| `FreezerTemp` | -4 | Temperature a powered chest freezer shows: -4°F / -20°C. The number in the file is Fahrenheit |
+| `FridgeFreezerTemp` | 0 | Temperature the fridge-freezer's freezer shows: 0°F / -18°C. The number in the file is Fahrenheit |
 | `AirConRadius` | 6 | Blocks from a running air conditioner that keep you cool |
 | `ShowerJars` | 2 | Hot water jars a shower uses |
 | `BathJars` | 4 | Hot water jars a bath uses |
@@ -114,7 +119,7 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 - **Toilet / urinal** — the game's own toilet and wall urinal models, made working. Pipe them like a sink. Hold E to **Pee**, and on a toilet **Poo**. A flush takes 1 jar from the tank (any water, you don't drink it) and you hear the flush. No pipe: hold a jar or bucket of water and **Fill cistern**, then **Flush**. Two pees at a urinal share one jar. A poo with no water leaves the bowl dirty: it smells, the toilet says **dirty** when you look at it, and you can't go again until you flush. A urinal will not take a poo.
 - **Shower / bath** — pipe to a powered combi boiler. **Wash** uses 2 jars (shower) or 4 jars (bath) of hot water. A shower takes off 90-100% of your body smell and a bath all of it, and for 10 or 20 minutes carried meat, smelly food and sickness won't let zombies track you by smell.
 - **Air conditioners** — a wall split unit (20W) and a ceiling cassette (30W, place it on a ceiling). Wired, standing within about 6 blocks keeps the heat off, the summer version of a radiator.
-- **Fridge-freezer (white)** — a tall white UK fridge-freezer, two blocks high, to match the boiler and radiators. Works exactly like the fridge.
+- **Fridge-freezer (white)** — a tall white UK fridge-freezer, two blocks high, to match the boiler and radiators. The top two rows are the fridge (food lasts 4x longer) and the bottom two rows, tinted blue, are the freezer compartment: food there freezes solid in about 4 hours, twice as long as a chest freezer, and barely spoils. Look at any fridge or freezer to see its temperature: a fridge runs at 39°F / 4°C, the fridge-freezer's freezer at 0°F / -18°C and a chest freezer at -4°F / -20°C. Unpowered, they sit at room temperature. The game shows the unit you picked in the options.
 - **Washing machine / tumble dryer** — white UK front-loaders (plus the old vanilla-model versions). Put worn clothes and armour in and pick **Wash**: it needs power (15W) and a cold water pipe from a tank like a sink, and uses 4 jars. Clothes come out clean but **wet**, which makes you colder while you wear them, until they dry on you (6 hours) or go through the tumble dryer (power only, 20W, **Dry**).
 - **Washing line / clothes airer** — dry wet clothes and armour with no power. Open them like a box and hang the washing in. The line is two posts, a line, pegs and a clothes prop, 5 blocks wide: under open sky it dries clothes in about 2 hours in daylight and twice that at night, but rain soaks them again. Under a roof it dries like the airer. The indoor airer dries in about 3 hours in any weather, twice as fast next to a warm radiator. The washing you hang up shows on them. Pegs are made by hand, 10 at a time; a line needs 10.
 - **Wall thermometer** — look at it for the room temperature, the temperature outside, and whether a radiator or air con is working on the room. Shows °F or °C to match your game options.

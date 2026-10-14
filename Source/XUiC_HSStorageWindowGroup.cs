@@ -6,6 +6,7 @@ public class XUiC_HSStorageWindowGroup : XUiController
     public static string ID = "hsWorkingStorage";
     public static IHSFridgeInv Current;
     static string title;
+    static bool split;
 
     XUiC_HSStorageGrid grid;
     XUiC_WindowNonPagingHeader header;
@@ -24,10 +25,16 @@ public class XUiC_HSStorageWindowGroup : XUiController
 
     public static void Open(EntityPlayerLocal player, IHSFridgeInv te, string windowTitle)
     {
+        Open(player, te, windowTitle, false);
+    }
+
+    public static void Open(EntityPlayerLocal player, IHSFridgeInv te, string windowTitle, bool freezerRows)
+    {
         if (player == null || te == null)
             return;
         Current = te;
         title = windowTitle;
+        split = freezerRows;
         te.SetUserAccessing(true);
         player.PlayerUI.windowManager.Open(ID, true);
     }
@@ -44,6 +51,12 @@ public class XUiC_HSStorageWindowGroup : XUiController
             var lbl = nameCtrl.ViewComponent as XUiV_Label;
             if (lbl != null)
                 lbl.Text = shown;
+        }
+        foreach (string id in new[] { "freezerLine", "freezerTint" })
+        {
+            XUiController c = GetChildById(id);
+            if (c != null && c.ViewComponent != null)
+                c.ViewComponent.IsVisible = split;
         }
         if (grid != null)
             grid.Bind(Current);

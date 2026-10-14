@@ -27,6 +27,11 @@ public static class HSWorkingStuffSettings
     public static int RadiatorWatts = 5;
     public static float RadiatorRadius = 5f;
     public static float FreezerMultiplier = 0f;
+    public static float FridgeFreezerMultiplier = 0.1f;
+    public static float FridgeFreezerFreezeHours = 4f;
+    public static float FridgeTemp = 39f;
+    public static float FreezerTemp = -4f;
+    public static float FridgeFreezerTemp = 0f;
     public static float AirConRadius = 6f;
     public static int ShowerJars = 2;
     public static int BathJars = 4;
@@ -97,6 +102,11 @@ public static class HSWorkingStuffSettings
         RadiatorWatts = 5;
         RadiatorRadius = 5f;
         FreezerMultiplier = 0f;
+        FridgeFreezerMultiplier = 0.1f;
+        FridgeFreezerFreezeHours = 4f;
+        FridgeTemp = 39f;
+        FreezerTemp = -4f;
+        FridgeFreezerTemp = 0f;
         AirConRadius = 6f;
         ShowerJars = 2;
         BathJars = 4;
@@ -188,6 +198,13 @@ public static class HSWorkingStuffSettings
         ReadInt(text, "RadiatorWatts", ref RadiatorWatts);
         ReadFloat(text, "RadiatorRadius", ref RadiatorRadius);
         ReadFloat(text, "FreezerMultiplier", ref FreezerMultiplier);
+        ReadAny(text, "FridgeFreezerMultiplier", ref FridgeFreezerMultiplier);
+        if (FridgeFreezerMultiplier < 0f)
+            FridgeFreezerMultiplier = 0f;
+        ReadFloat(text, "FridgeFreezerFreezeHours", ref FridgeFreezerFreezeHours);
+        ReadAny(text, "FridgeTemp", ref FridgeTemp);
+        ReadAny(text, "FreezerTemp", ref FreezerTemp);
+        ReadAny(text, "FridgeFreezerTemp", ref FridgeFreezerTemp);
         ReadFloat(text, "AirConRadius", ref AirConRadius);
         ReadInt(text, "ShowerJars", ref ShowerJars);
         ReadInt(text, "BathJars", ref BathJars);
@@ -250,6 +267,13 @@ public static class HSWorkingStuffSettings
     {
         float v;
         if (TryParseNumber(text, key, out v) && v > 0f)
+            dest = v;
+    }
+
+    static void ReadAny(string text, string key, ref float dest)
+    {
+        float v;
+        if (TryParseNumber(text, key, out v))
             dest = v;
     }
 

@@ -227,7 +227,11 @@ hsCharcoalGrillDesc,blocks,Block,,,,"A barbecue. Grills corn, meat, steak and po
 hsAirConCeiling,blocks,Block,,,,Ceiling Air Conditioner
 hsAirConCeilingDesc,blocks,Block,,,,"A commercial ceiling cassette air conditioner. Place it against a ceiling. Wire it to power (30W) and it keeps you cool within about 6 blocks."
 hsFridgeWhite,blocks,Block,,,,Fridge-Freezer (White)
-hsFridgeWhiteDesc,blocks,Block,,,,"A tall white UK fridge-freezer, two blocks high. Works like the fridge: keep it wired (5W) and food lasts four times longer. E to open, store perishables, or pull spoiled food."
+hsFridgeWhiteDesc,blocks,Block,,,,"A tall white UK fridge-freezer, two blocks high. Keep it wired (5W). The top two rows are the fridge: food lasts four times longer. The bottom two rows are the freezer: food freezes solid in about 4 hours (a chest freezer takes 2) and barely spoils. E to open, store perishables, or pull spoiled food."
+hsFridgeFreezerPowered,UI,tooltip,,,K,"Powered: fridge food lasts 4x longer, freezer food freezes"
+hsFridgeFreezerWindow,UI,Menu,,,K,Fridge (top)  /  Freezer (bottom)
+hsFridgeTemp,UI,tooltip,,,K,Fridge: {0}
+hsFreezerTemp,UI,tooltip,,,K,Freezer: {0}
 hsWasher,blocks,Block,,,,Washing Machine
 hsWasherVanilla,blocks,Block,,,,Washing Machine (Old)
 hsWasherDesc,blocks,Block,,,,"Put dirty clothes and armour in, then Wash. Needs power (15W) and a cold water pipe from a tank, like a sink; a wash uses 4 jars. Clothes come out clean but wet."

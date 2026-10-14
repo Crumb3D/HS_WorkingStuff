@@ -104,12 +104,34 @@ public class BlockHSFridge : BlockPowered
             power = powered
                 ? HSLoc.Get("hsFreezerPowered", "Powered: frozen food does not spoil")
                 : HSLoc.Get("hsFridgeUnpowered", "Unpowered: spoils at normal speed");
+        else if (HSFrozen.HasCompartment(_blockValue.Block))
+            power = powered
+                ? HSLoc.Get("hsFridgeFreezerPowered", "Powered: fridge food lasts 4x longer, freezer food freezes")
+                : HSLoc.Get("hsFridgeUnpowered", "Unpowered: spoils at normal speed");
         else
             power = powered
                 ? HSLoc.Get("hsFridgePowered", "Powered: food lasts 4x longer")
                 : HSLoc.Get("hsFridgeUnpowered", "Unpowered: spoils at normal speed");
         string oldest = te != null ? te.OldestLabel() : "";
-        return _blockValue.Block.GetLocalizedBlockName() + "\n" + power + "\n" + oldest;
+        return _blockValue.Block.GetLocalizedBlockName() + "\n" + Temps(_world, _blockPos, _blockValue, powered) + "\n" + power + "\n" + oldest;
+    }
+
+    // Unpowered, every compartment sits at room temperature.
+    static string Temps(WorldBase world, Vector3i pos, BlockValue bv, bool powered)
+    {
+        float room = 70f;
+        World w = world as World;
+        if (!powered && w != null)
+        {
+            try { room = HSRoomTemp.Room(w, pos.ToVector3() + new Vector3(0.5f, 0.5f, 0.5f)); }
+            catch { }
+        }
+        if (IsFreezer(bv))
+            return HSLoc.Format("hsFreezerTemp", "Freezer: {0}", HSRoomTemp.Format(powered ? HSWorkingStuffSettings.FreezerTemp : room));
+        string fridge = HSLoc.Format("hsFridgeTemp", "Fridge: {0}", HSRoomTemp.Format(powered ? HSWorkingStuffSettings.FridgeTemp : room));
+        if (!HSFrozen.HasCompartment(bv.Block))
+            return fridge;
+        return fridge + "    " + HSLoc.Format("hsFreezerTemp", "Freezer: {0}", HSRoomTemp.Format(powered ? HSWorkingStuffSettings.FridgeFreezerTemp : room));
     }
 
     public override void OnBlockEntityTransformAfterActivated(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, BlockEntityData _ebcd)
@@ -151,7 +173,10 @@ public class BlockHSFridge : BlockPowered
         if (_commandName == "open")
         {
             string title = IsFreezer(_blockValue) ? HSLoc.Get("hsFreezerWindow", "Freezer") : null;
-            XUiC_HSStorageWindowGroup.Open(_player, te, title);
+            bool split = HSFrozen.HasCompartment(_blockValue.Block);
+            if (split)
+                title = HSLoc.Get("hsFridgeFreezerWindow", "Fridge (top)  /  Freezer (bottom)");
+            XUiC_HSStorageWindowGroup.Open(_player, te, title, split);
             return true;
         }
         if (_commandName == "storefood")
