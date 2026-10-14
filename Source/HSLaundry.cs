@@ -255,9 +255,29 @@ public static class HSLaundry
                     r += d * HSWorkingStuffSettings.DirtyClothesSmell;
             }
         }
+        r += HSNeeds.DirtyNearby(p);
         if (r < 5f)
             return 0f;
         return Mathf.Min(r, 100f);
+    }
+
+    // An accident fills every piece you are wearing. A pee also soaks them.
+    public static void SoilWorn(EntityPlayerLocal p, bool wet)
+    {
+        if (p == null || p.equipment == null)
+            return;
+        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+        float nowH = NowHours(world);
+        int n = p.equipment.GetSlotCount();
+        for (int i = 0; i < n; i++)
+        {
+            ItemValue iv = p.equipment.GetSlotItem(i);
+            if (!IsClothing(iv))
+                continue;
+            iv.SetMetadata(MetaDirt, 1f);
+            if (wet)
+                iv.SetMetadata(MetaWet, nowH);
+        }
     }
 
     // Degrees F wet clothes take off the air temperature the player feels.

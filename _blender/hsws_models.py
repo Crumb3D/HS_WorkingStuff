@@ -42,6 +42,8 @@ MAT_COLORS = {
     "HS_ClothYellow": (0.95, 0.78, 0.20, 1.0),
     "HS_ClothPink": (0.92, 0.50, 0.62, 1.0),
     "HS_Denim": (0.20, 0.27, 0.42, 1.0),
+    "HS_Water": (0.25, 0.55, 0.82, 1.0),
+    "HS_Soil": (0.32, 0.22, 0.10, 1.0),
     # icon-only colours (never exported to Unity)
     "HS_Bread": (1.0, 0.70, 0.30, 1.0),
     "HS_Crust": (0.62, 0.37, 0.15, 1.0),
@@ -1231,6 +1233,42 @@ def clothes_airer():
     return p
 
 
+def toilet():
+    """Close-coupled toilet: bowl and seat facing the room, cistern against the wall, flush on the cistern."""
+    p = Piece("HSToilet")
+    p.box("HS_White", (0, 0.02, 0.10), (0.18, 0.20, 0.20))
+    p.box("HS_White", (0, -0.04, 0.28), (0.40, 0.50, 0.22))
+    p.box("HS_White", (0, -0.04, 0.40), (0.46, 0.56, 0.06))
+    p.box("HS_White", (0, -0.06, 0.445), (0.40, 0.48, 0.04))
+    p.box("HS_White", (0, 0.18, 0.62), (0.40, 0.045, 0.32))
+    p.box("HS_White", (0, 0.24, 0.62), (0.40, 0.18, 0.34))
+    p.rod("HS_Chrome", (0.16, 0.12, 0.70), 0.012, 0.08, "Y", 10)
+    p.box("HS_Chrome", (0.16, 0.08, 0.70), (0.03, 0.02, 0.05))
+    w = p.sub("Water")
+    w.box("HS_Water", (0, -0.04, 0.36), (0.26, 0.30, 0.025))
+    s = p.sub("Soil")
+    s.box("HS_Soil", (0, -0.04, 0.37), (0.24, 0.26, 0.03))
+    p.collider((0, 0.02, 0.40), (0.50, 0.64, 0.78))
+    return p
+
+
+def urinal():
+    """Wall-hung urinal. The back sits on the wall the block was placed against."""
+    p = Piece("HSUrinal")
+    y = WALL - 0.10
+    p.box("HS_White", (0, y, 0.78), (0.32, 0.16, 0.42))
+    p.box("HS_White", (0, y - 0.08, 0.58), (0.30, 0.14, 0.14))
+    p.box("HS_White", (0, y - 0.02, 0.50), (0.34, 0.06, 0.04))
+    p.rod("HS_Chrome", (0, y + 0.02, 1.02), 0.018, 0.10, "Z", 12)
+    p.box("HS_Chrome", (0.12, y - 0.09, 0.88), (0.05, 0.025, 0.07))
+    w = p.sub("Water")
+    w.box("HS_Water", (0, y - 0.06, 0.56), (0.16, 0.08, 0.02))
+    s = p.sub("Soil")
+    s.box("HS_Soil", (0, y - 0.06, 0.57), (0.14, 0.07, 0.02))
+    p.collider((0, WALL - 0.12, 0.72), (0.38, 0.30, 0.70))
+    return p
+
+
 def icon_pegs():
     """A few clothes pegs, big enough to read as an icon."""
     p = Piece("HSIconPegs")
@@ -1246,7 +1284,7 @@ PIECES = [combi_boiler, panel_radiator, chest_freezer, split_air_con, ceiling_ai
           washing_machine, tumble_dryer, fridge_freezer,
           socket_uk_single, socket_uk_double, socket_us_single, socket_us_double, light_switch_uk, light_switch_us, cooker_switch_uk, range_outlet_us,
           kettle, toaster, wheat_1, wheat_2, wheat_3, tv_stand, tv_wall, consumer_unit_uk, breaker_panel_us,
-          washing_line, clothes_airer]
+          washing_line, clothes_airer, toilet, urinal]
 
 ICON_PIECES = [icon_mug, icon_mug_tea_pj, icon_mug_tea_yorkie, icon_mug_coffee, icon_tea_pj, icon_tea_yorkie,
                icon_wheat, icon_flour, icon_dough, icon_loaf, icon_slice, icon_toast, icon_wheat_seed,

@@ -234,6 +234,8 @@ public static class HSWorkingStuffBuild
         d["HS_ClothYellow"] = Opaque("HS_ClothYellow", new Color(0.95f, 0.78f, 0.20f), 0f, 0.15f);
         d["HS_ClothPink"] = Opaque("HS_ClothPink", new Color(0.92f, 0.50f, 0.62f), 0f, 0.15f);
         d["HS_Denim"] = Opaque("HS_Denim", new Color(0.20f, 0.27f, 0.42f), 0f, 0.15f);
+        d["HS_Water"] = Opaque("HS_Water", new Color(0.25f, 0.55f, 0.82f), 0.1f, 0.7f);
+        d["HS_Soil"] = Opaque("HS_Soil", new Color(0.32f, 0.22f, 0.10f), 0f, 0.15f);
         AssetDatabase.SaveAssets();
         return d;
     }

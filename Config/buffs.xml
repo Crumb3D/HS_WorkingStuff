@@ -78,5 +78,15 @@
 			<stack_type value="ignore"/>
 			<duration value="0"/>
 		</buff>
+
+		<buff name="buffHSNeedPee" name_key="buffHSNeedPeeName" description_key="buffHSNeedPeeDesc" icon="ui_game_symbol_water" icon_color="80,160,220">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
+
+		<buff name="buffHSNeedPoo" name_key="buffHSNeedPooName" description_key="buffHSNeedPooDesc" icon="ui_game_symbol_smell" icon_color="120,90,40">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
 	</append>
 </configs>

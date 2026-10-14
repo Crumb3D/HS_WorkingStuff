@@ -133,7 +133,7 @@ public static class HSPatchSinkHasCmds
     {
         if (!HSWorkingStuffSettings.EnablePlumbing)
             return;
-        if (__instance is BlockHSSink || __instance is BlockHSLaundry)
+        if (__instance is BlockHSSink || __instance is BlockHSLaundry || __instance is BlockHSToilet)
             return;
         if (HSWater.IsSinkBlock(__instance))
             __result = true;
@@ -147,7 +147,7 @@ public static class HSPatchSinkCmds
     {
         if (!HSWorkingStuffSettings.EnablePlumbing)
             return;
-        if (__instance is BlockHSSink || __instance is BlockHSLaundry)
+        if (__instance is BlockHSSink || __instance is BlockHSLaundry || __instance is BlockHSToilet)
             return;
         if (!HSWater.IsSinkBlock(__instance))
             return;
@@ -170,7 +170,7 @@ public static class HSPatchSinkUse
     {
         if (!HSWorkingStuffSettings.EnablePlumbing)
             return;
-        if (__instance is BlockHSSink || __instance is BlockHSLaundry)
+        if (__instance is BlockHSSink || __instance is BlockHSLaundry || __instance is BlockHSToilet)
             return;
         if (!HSWater.IsSinkBlock(__instance))
             return;
@@ -186,7 +186,7 @@ public static class HSPatchSinkText
     {
         if (!HSWorkingStuffSettings.EnablePlumbing)
             return;
-        if (__instance is BlockHSSink || __instance is BlockHSLaundry)
+        if (__instance is BlockHSSink || __instance is BlockHSLaundry || __instance is BlockHSToilet)
             return;
         if (!HSWater.IsSinkBlock(__instance))
             return;

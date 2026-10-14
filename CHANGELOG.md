@@ -2,6 +2,14 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.32
+
+- **Toilet and urinal.** A close-coupled toilet and a wall urinal. Pipe either one like a sink. A flush takes 1 jar from the tank (dirty water is fine). With no pipe, pour a jar or a bucket into the cistern and flush from that. Two pees at a urinal share one jar.
+- **Bladder and bowels.** You need a pee as time passes, and faster when you drink. You need a poo as time passes, and faster when you eat. A toilet takes either. A urinal or a tree takes a pee only. A dirty toilet bowl smells and will not take another poo until you flush it.
+- **Accidents.** Leave it too long and you wet yourself (clothes soaked, and you smell) or soil yourself (clothes filthy, and you smell worse). Wash the clothes and wash yourself.
+- **Sounds.** A stream when you pee, a splash in the bowl, a flush of water, a fill when you pour into the cistern, and a wet or filthy sound if you don't make it.
+- New settings: `EnableNeeds`, `BladderHours`, `BowelHours`, `DrinkBladder`, `EatBowels`, `UrgeAt`, `FlushJars`, `UrinalUsesPerJar`, `CisternJars`, `DirtyToiletSmell`.
+
 ## 1.0.31
 
 - **Washing line.** Two wooden posts with a line, pegs and a clothes prop, 5 blocks wide. Open it like a box and hang wet clothes and armour on it: they dry with no power, in about 2 hours in daylight and twice that at night. It needs open sky, and **rain soaks the washing again**, so bring it in. Under a roof it dries like an airer. What you hang up shows on the line, up to 8 pieces.

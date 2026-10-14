@@ -452,5 +452,13 @@
 			<ingredient name="resourceScrapIron" count="10"/>
 			<ingredient name="resourceScrapPolymers" count="4"/>
 		</recipe>
+		<recipe name="hsToilet" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceConcreteMix" count="8"/>
+			<ingredient name="resourceScrapIron" count="4"/>
+		</recipe>
+		<recipe name="hsUrinal" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceConcreteMix" count="4"/>
+			<ingredient name="resourceScrapIron" count="2"/>
+		</recipe>
 	</append>
 </configs>

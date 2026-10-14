@@ -84,6 +84,7 @@
     <Compile Include="BlockHSTV.cs" />
     <Compile Include="HSCircuits.cs" />
     <Compile Include="HSDrying.cs" />
+    <Compile Include="HSToilet.cs" />
     <Compile Include="HSWater.cs" />
     <Compile Include="HSPickup.cs" />
     <Compile Include="HSPatches.cs" />

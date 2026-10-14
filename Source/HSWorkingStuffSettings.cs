@@ -61,6 +61,16 @@ public static class HSWorkingStuffSettings
     public static float WattsPerAmp = 5f;
     public static float OverloadSeconds = 2f;
     public static int MaxSocketsPerRun = 10;
+    public static bool EnableNeeds = true;
+    public static float BladderHours = 3f;
+    public static float BowelHours = 8f;
+    public static float DrinkBladder = 25f;
+    public static float EatBowels = 20f;
+    public static int UrgeAt = 60;
+    public static int FlushJars = 1;
+    public static int UrinalUsesPerJar = 2;
+    public static int CisternJars = 4;
+    public static float DirtyToiletSmell = 8f;
 
     public static void Load(string modPath)
     {
@@ -121,6 +131,16 @@ public static class HSWorkingStuffSettings
         WattsPerAmp = 5f;
         OverloadSeconds = 2f;
         MaxSocketsPerRun = 10;
+        EnableNeeds = true;
+        BladderHours = 3f;
+        BowelHours = 8f;
+        DrinkBladder = 25f;
+        EatBowels = 20f;
+        UrgeAt = 60;
+        FlushJars = 1;
+        UrinalUsesPerJar = 2;
+        CisternJars = 4;
+        DirtyToiletSmell = 8f;
         if (!string.IsNullOrEmpty(modPath))
             TryRead(Path.Combine(modPath, "HSWorkingStuffSettings.json"));
         try
@@ -202,6 +222,16 @@ public static class HSWorkingStuffSettings
         ReadFloat(text, "WattsPerAmp", ref WattsPerAmp);
         ReadFloat(text, "OverloadSeconds", ref OverloadSeconds);
         ReadInt(text, "MaxSocketsPerRun", ref MaxSocketsPerRun);
+        ReadBool(text, "EnableNeeds", ref EnableNeeds);
+        ReadFloat(text, "BladderHours", ref BladderHours);
+        ReadFloat(text, "BowelHours", ref BowelHours);
+        ReadFloat(text, "DrinkBladder", ref DrinkBladder);
+        ReadFloat(text, "EatBowels", ref EatBowels);
+        ReadInt(text, "UrgeAt", ref UrgeAt);
+        ReadInt(text, "FlushJars", ref FlushJars);
+        ReadInt(text, "UrinalUsesPerJar", ref UrinalUsesPerJar);
+        ReadInt(text, "CisternJars", ref CisternJars);
+        ReadFloat(text, "DirtyToiletSmell", ref DirtyToiletSmell);
         Log.Out("[HSWorkingStuff] Read " + path);
     }
 

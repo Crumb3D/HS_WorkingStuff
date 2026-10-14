@@ -61,6 +61,16 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `MaxSocketsPerRun` | 10 | Most sockets one run (one circuit) can chain together; 0 = no limit |
 | `LineDryHours` | 2 | Game hours wet clothes take to dry on a washing line in daylight (twice that at night) |
 | `AirerDryHours` | 3 | Game hours wet clothes take on a clothes airer or a covered line (half that by a warm radiator) |
+| `EnableNeeds` | true | Bladder and bowels: drinking, eating, toilets, urinals and trees |
+| `BladderHours` | 3 | Game hours for an empty bladder to fill on its own |
+| `BowelHours` | 8 | Game hours for empty bowels to fill on their own |
+| `DrinkBladder` | 25 | Bladder points one drink adds (100 is an accident) |
+| `EatBowels` | 20 | Bowel points one meal adds (100 is an accident) |
+| `UrgeAt` | 60 | Points before you are told you need to go |
+| `FlushJars` | 1 | Jars one toilet flush takes |
+| `UrinalUsesPerJar` | 2 | Pees at a urinal that share one jar |
+| `CisternJars` | 4 | Jars you can pour into a toilet cistern when it is not piped |
+| `DirtyToiletSmell` | 8 | Smell (m) an unflushed toilet or urinal adds while you stand by it |
 
 Set a bool to `false` to turn that feature off without removing the mod.
 
@@ -101,6 +111,7 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 - **Chest freezer** — a 2-block-wide chest freezer. Opens like the fridge with or without power; wired (10W), food in it does not spoil at all.
   - **Frozen food.** After 2 hours in a powered freezer, food freezes solid (the tooltip says so). Frozen food can't be eaten, and recipes won't use it. Out of the freezer it thaws in 2 hours, or 8 in a powered fridge, and it doesn't spoil while frozen. For a quick thaw, hold E on a powered microwave and pick **Defrost**: everything frozen on you thaws at once.
 - **Plumbed water cooler** — the vanilla water cooler, piped to a tank like a sink. Cold tap only, and it has its own filter, so even murky tank water comes out clean.
+- **Toilet / urinal** — pipe them like a sink. Hold E to **Pee**, and on a toilet **Poo**. A flush takes 1 jar from the tank (any water, you don't drink it) and you hear the flush. No pipe: hold a jar or bucket of water and **Fill cistern**, then **Flush**. Two pees at a urinal share one jar. A poo with no water leaves the bowl dirty: it smells, the dirty water shows in the bowl, and you can't go again until you flush. A urinal will not take a poo.
 - **Shower / bath** — pipe to a powered combi boiler. **Wash** uses 2 jars (shower) or 4 jars (bath) of hot water. A shower takes off 90-100% of your body smell and a bath all of it, and for 10 or 20 minutes carried meat, smelly food and sickness won't let zombies track you by smell.
 - **Air conditioners** — a wall split unit (20W) and a ceiling cassette (30W, place it on a ceiling). Wired, standing within about 6 blocks keeps the heat off, the summer version of a radiator.
 - **Fridge-freezer (white)** — a tall white UK fridge-freezer, two blocks high, to match the boiler and radiators. Works exactly like the fridge.
@@ -128,6 +139,7 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 - **Room temperature.** Indoors, the temperature follows the weather outside slowly (about 3 game hours behind) and a house only takes 15°F (about 8°C) off it, like a UK house: cold in winter, hot in summer, cooler after rain. In the snow or on a cold night you need the radiators on. A warm radiator heats the room up to 68°F (20°C); a running air conditioner cools it to 72°F (22°C). Everything the mod shows in game follows your °C/°F option; the temperature settings below are in °F.
 - **Smell.** After a day without a wash you start to smell (**Unwashed**), and it gets worse over three days. Zombies can follow it. **Wash up** at a sink (1 jar) or crouch at a lake or river and press the drink key to wash: each takes about 5 m off, once an hour. Standing in water up to your waist washes 50-70% off slowly. A shower takes 90-100% and a bath all of it. Indoors it is cut down like other smells; rain or water hides it.
 - **Dirty clothes.** Clothes and armour you wear get dirty over about three days of wear (hover an item to see how dirty). Dirty pieces add to your smell. Wash them in the washing machine.
+- **Bladder and bowels.** An empty bladder fills in about 3 game hours, faster when you drink (a jar is about a quarter). Bowels fill in about 8 hours, faster when you eat. At about 60% you get **Need a pee** or **Need the toilet**. Pee at a toilet, a urinal or a tree (look at the trunk and hold E). Poo only in a toilet. Leave it until you're full and you have an accident: a pee soaks your clothes, a poo makes them filthy, and both make you smell. Wash the clothes and have a shower.
 
 ## Unlocks
 
@@ -138,7 +150,7 @@ Every recipe in the mod needs **both** a magazine level and a perk rank. The cra
 | Electrician | 25 | Advanced Engineering 1 | Microwaves, coffee makers, kettle, toaster, TVs, electric cookers, sockets, UK and US light switches, cooker switch, range outlet, consumer unit, breaker panel, fuses |
 | Electrician | 45 | Advanced Engineering 2 | Fridge, white fridge-freezer, chest freezer, combi boiler, wall and ceiling air conditioners, breakers |
 | Workstations | 16 | Advanced Engineering 1 | Pipe tool, pipes, intake, tank, sink, rain catch, water cooler, wall thermometer, clothes pegs, washing line, clothes airer |
-| Workstations | 26 | Advanced Engineering 2 | Radiators, shower, bath, washing machines, tumble dryers |
+| Workstations | 26 | Advanced Engineering 2 | Radiators, shower, bath, washing machines, tumble dryers, toilet, urinal |
 | Home Cooking | 6 | Master Chef 1 | Drying rack, dried meat, charcoal grill, flour, dough, bread, mugs |
 | Home Cooking | 10 | Master Chef 1 | Cooler, toast, mugs of tea and coffee |
 | Home Cooking | 26 | Master Chef 2 | Gas grill |

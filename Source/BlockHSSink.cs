@@ -97,11 +97,17 @@ public static class HSSinkCmds
             case "filljar":
             case "fillbucket": kind = HSWorkingStuffNet.SinkFill; break;
             case "fillall": kind = HSWorkingStuffNet.SinkFillAll; break;
-            case "drink": kind = HSWorkingStuffNet.SinkDrink; break;
+            case "drink":
+                kind = HSWorkingStuffNet.SinkDrink;
+                HSNeeds.FromDrink(player);
+                break;
             case "filljarhot":
             case "fillbuckethot": kind = HSWorkingStuffNet.SinkFillHot; break;
             case "fillallhot": kind = HSWorkingStuffNet.SinkFillAllHot; break;
-            case "drinkhot": kind = HSWorkingStuffNet.SinkDrinkHot; break;
+            case "drinkhot":
+                kind = HSWorkingStuffNet.SinkDrinkHot;
+                HSNeeds.FromDrink(player);
+                break;
             case "wash": kind = HSWorkingStuffNet.Wash; break;
             case "washup":
                 if (!HSLaundry.QuickWashReady(player))
@@ -146,7 +152,7 @@ public static class HSPatchRadialGrey
         try
         {
             Block b = _blockValue.Block;
-            if (b == null || !(b is BlockHSSink || b is BlockHSRainCatch || HSWater.IsSinkBlock(b)))
+            if (b == null || !(b is BlockHSSink || b is BlockHSRainCatch || b is BlockHSToilet || HSWater.IsSinkBlock(b)))
                 return;
             BlockActivationCommand[] cmds = b.GetBlockActivationCommands(_world, _blockValue, _blockPos, _entityFocusing);
             XUiC_RadialEntry[] items = __instance.menuItem;
@@ -158,7 +164,7 @@ public static class HSPatchRadialGrey
                 if (!state[i] || items[i] == null)
                     continue;
                 int idx = items[i].CommandIndex;
-                if (idx < 0 || idx >= cmds.Length || !HSSinkCmds.IsOff(cmds[idx].text))
+                if (idx < 0 || idx >= cmds.Length || (!HSSinkCmds.IsOff(cmds[idx].text) && !HSNeeds.IsOff(cmds[idx].text)))
                     continue;
                 items[i].SetSprite("ui_game_symbol_" + cmds[idx].icon, grey);
             }
@@ -175,7 +181,7 @@ public static class HSPatchSinkDrain
 
     static bool IsDrain(Block b)
     {
-        if (b == null || b is BlockHSWaterCooler || b is BlockHSLaundry)
+        if (b == null || b is BlockHSWaterCooler || b is BlockHSLaundry || b is BlockHSToilet)
             return false;
         string n = b.GetBlockName();
         if (n == HSWater.WaterCoolerName || n == HSWater.WasherName || n == HSWater.WasherVanillaName)

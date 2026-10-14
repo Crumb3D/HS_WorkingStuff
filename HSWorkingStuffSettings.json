@@ -62,5 +62,16 @@
 
   "WattsPerAmp": 5,
   "OverloadSeconds": 2,
-  "MaxSocketsPerRun": 10
+  "MaxSocketsPerRun": 10,
+
+  "EnableNeeds": true,
+  "BladderHours": 3,
+  "BowelHours": 8,
+  "DrinkBladder": 25,
+  "EatBowels": 20,
+  "UrgeAt": 60,
+  "FlushJars": 1,
+  "UrinalUsesPerJar": 2,
+  "CisternJars": 4,
+  "DirtyToiletSmell": 8
 }

@@ -7,5 +7,22 @@
 		<SoundDataNode name="hsMicrowaveDing"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Interact.prefab"/>
 			<AudioClip ClipName="@:Sounds/TriggeredEvents/elevator_ding1.wav"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="10"/> <MaxRepeatRate value="0"/> </SoundDataNode>
+
+		<SoundDataNode name="hsFlush"> <AudioSource name="@:Sounds/Prefabs/AudioSource_UseAction.prefab"/>
+			<Noise ID="2" noise="7" time="2" muffled_when_crouched="0.5"/>
+			<AudioClip ClipName="@:Sounds/Misc/waterfallinginto.wav"/>
+			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="6"/> <MaxRepeatRate value="0.2"/> </SoundDataNode>
+		<SoundDataNode name="hsStream"> <AudioSource name="@:Sounds/Prefabs/AudioSource_UseAction.prefab"/>
+			<Noise ID="2" noise="4" time="2" muffled_when_crouched="0.5"/>
+			<AudioClip ClipName="@:Sounds/UseActions/bucketbail_water.wav"/>
+			<LocalCrouchVolumeScale value="0.5"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="6"/> <MaxRepeatRate value="0.2"/> </SoundDataNode>
+		<SoundDataNode name="hsSoil"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Impact.prefab"/>
+			<Noise ID="2" noise="4" time="1" muffled_when_crouched="0.5"/>
+			<AudioClip ClipName="@:Sounds/ImpactSurface/organichitwater1.wav"/>
+			<LocalCrouchVolumeScale value="0.5"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="4"/> <MaxRepeatRate value="0.2"/> </SoundDataNode>
+		<SoundDataNode name="hsSoilDry"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Impact.prefab"/>
+			<Noise ID="2" noise="4" time="1" muffled_when_crouched="0.5"/>
+			<AudioClip ClipName="@:Sounds/ImpactSurface/organichitcloth1.wav"/>
+			<LocalCrouchVolumeScale value="0.5"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="4"/> <MaxRepeatRate value="0.2"/> </SoundDataNode>
 	</append>
 </configs>

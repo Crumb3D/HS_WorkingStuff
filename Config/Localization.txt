@@ -440,3 +440,43 @@ hsDryHung,UI,tooltip,,,K,{0} pieces of clothing hung up
 hsDryEmpty,UI,tooltip,,,K,"Nothing hung up: put wet clothes or armour in to dry them"
 hsSocketRun,UI,tooltip,,,K,"Socket {0} of {1} on this run (most {2})"
 hsChainMax,UI,tooltip,,,K,"A run takes at most {0} sockets: start a new circuit from the consumer unit"
+hsToilet,blocks,Block,,,,Toilet
+hsToiletDesc,blocks,Block,,,,"A plumbed toilet. Pipe it like a sink and a flush takes 1 jar from the tank, or pour a jar or bucket into the cistern. Pee or poo here. Poo only works in a toilet, and a dirty bowl has to be flushed before you can go again. It smells until you flush it."
+hsUrinal,blocks,Block,,,,Urinal
+hsUrinalDesc,blocks,Block,,,,"A wall urinal, plumbed like a sink. Pee only: two pees share one jar. It will not do for a poo."
+blockcommand_hspee,UI,radial,,,K,Pee
+blockcommand_hspoo,UI,radial,,,K,Poo
+blockcommand_hsflush,UI,radial,,,K,Flush
+blockcommand_hsfill,UI,radial,,,K,Fill cistern
+blockcommand_hsneedpee,UI,radial,,,K,Don't need a pee
+blockcommand_hsneedpoo,UI,radial,,,K,Don't need a poo
+blockcommand_hsbowlfull,UI,radial,,,K,Flush it first
+blockcommand_hsflushnone,UI,radial,,,K,Nothing to flush
+hsBladderLine,UI,tooltip,,,K,Bladder {0}%
+hsBowelLine,UI,tooltip,,,K,Bowels {0}%
+hsBowlDirty,UI,tooltip,,,K,"The bowl is dirty and it smells. Flush it before you can go again"
+hsUrinalDirty,UI,tooltip,,,K,The urinal hasn't flushed. It smells until it does
+hsCisternJars,UI,tooltip,,,K,Cistern: {0} jars
+hsToiletPiped,UI,tooltip,,,K,Piped: a flush takes water from the tank
+hsToiletDry,UI,tooltip,,,K,"No water. Pipe it, or pour a jar or bucket into the cistern"
+hsNeedNone,UI,tooltip,,,K,You don't need to go
+hsNeedNonePoo,UI,tooltip,,,K,You don't need the toilet
+hsBowlFull,UI,tooltip,,,K,The bowl is dirty. Flush it before you can go again
+hsFlushNone,UI,tooltip,,,K,Nothing to flush
+hsPeed,UI,tooltip,,,K,That's better
+hsUrinalUsed,UI,tooltip,,,K,Used the urinal
+hsNoFlush,UI,tooltip,,,K,No water to flush. The bowl stays dirty until you flush it
+hsFlushed,UI,tooltip,,,K,Flushed
+hsCisternHold,UI,tooltip,,,K,Hold a jar or bucket of water to fill the cistern
+hsCisternFull,UI,tooltip,,,K,The cistern is full
+hsCisternFilled,UI,tooltip,,,K,Cistern filled: {0} jars
+hsTreePee,UI,tooltip,,,K,Went against the tree
+hsUrinalPoo,UI,tooltip,,,K,A urinal is no good for that. Use a toilet
+hsAccidentPee,UI,tooltip,,,K,You wet yourself. Your clothes are soaked and you smell
+hsAccidentPoo,UI,tooltip,,,K,You didn't make it. Your clothes are filthy and you smell
+hsUrgePee,UI,tooltip,,,K,"You need a pee. A toilet, a urinal or a tree will do"
+hsUrgePoo,UI,tooltip,,,K,You need the toilet. Only a toilet will do
+buffHSNeedPeeName,buffs,Buff,,,,Need a pee
+buffHSNeedPeeDesc,buffs,Buff,,,,Your bladder is getting full. A toilet, a urinal or a tree will do.
+buffHSNeedPooName,buffs,Buff,,,,Need the toilet
+buffHSNeedPooDesc,buffs,Buff,,,,Only a toilet will do. A urinal or a tree will not.

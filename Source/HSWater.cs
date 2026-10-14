@@ -153,6 +153,8 @@ public static class HSWater
             return true;
         if (n == WaterCoolerName || n == ShowerName || n == BathName || n == WasherName || n == WasherVanillaName)
             return true;
+        if (n == "hsToilet" || n == "hsUrinal" || block is BlockHSToilet)
+            return true;
         if (n.IndexOf("Sink", StringComparison.Ordinal) >= 0 || n.IndexOf("sink", StringComparison.Ordinal) >= 0)
             return n.IndexOf("Washer", StringComparison.OrdinalIgnoreCase) < 0;
         return false;
