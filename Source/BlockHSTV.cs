@@ -289,7 +289,9 @@ public class HSTVScreen : MonoBehaviour
     Material onMat;
     string playing;
     string failed;
+    string state;
     float next;
+    float prepareBy;
 
     void Update()
     {
@@ -314,8 +316,26 @@ public class HSTVScreen : MonoBehaviour
             return;
         BlockValue bv = world.GetBlock(Pos);
         string file = null;
-        if (HSTV.IsOn(bv) && HSTV.Live(world, Pos) && Near(world))
-            file = HSTV.File(HSTV.Channel(bv));
+        string why;
+        if (!HSTV.IsOn(bv))
+            why = "switched off";
+        else if (!HSTV.PluggedIn(world, Pos))
+            why = "not wired from a socket";
+        else if (!HSTV.Live(world, Pos))
+            why = "no power at the socket";
+        else if (!Near(world))
+            why = "too far away";
+        else if ((file = HSTV.File(HSTV.Channel(bv))) == null)
+            why = "no video files in " + HSTV.ModFolder + " or " + HSTV.UserFolder;
+        else if (file == failed)
+            why = "can't play " + file;
+        else
+            why = "showing " + file;
+        if (why != state)
+        {
+            state = why;
+            Log.Out("[HSWorkingStuff] TV at " + Pos + ": " + why);
+        }
         if (file == null || file == failed)
         {
             StopVideo();
@@ -323,6 +343,13 @@ public class HSTVScreen : MonoBehaviour
         }
         if (file != playing)
             Play(file);
+        else if (!player.isPrepared && Time.time > prepareBy)
+        {
+            Log.Warning("[HSWorkingStuff] TV at " + Pos + ": " + file + " did not load in 15 seconds");
+            failed = file;
+            StopVideo();
+            return;
+        }
         if (sound != null)
         {
             sound.volume = Mathf.Clamp01(HSWorkingStuffSettings.TVVolume);
@@ -345,14 +372,17 @@ public class HSTVScreen : MonoBehaviour
             return true;
         foreach (var r in GetComponentsInChildren<Renderer>(true))
         {
-            if (r.name.EndsWith("_Screen"))
+            if (r.name.EndsWith("_Screen") || (r.sharedMaterial != null && r.sharedMaterial.name.StartsWith("HS_Screen")))
             {
                 screen = r;
                 break;
             }
         }
         if (screen == null)
+        {
+            Log.Warning("[HSWorkingStuff] TV at " + Pos + ": the model has no screen to show the picture on");
             return false;
+        }
         offMat = screen.sharedMaterial;
         frame = new RenderTexture(854, 480, 0);
         frame.Create();
@@ -387,10 +417,16 @@ public class HSTVScreen : MonoBehaviour
     void Play(string file)
     {
         if (!EnsureParts())
+        {
+            failed = file;
             return;
+        }
         playing = file;
+        prepareBy = Time.time + 15f;
+        player.enabled = true;
         player.Stop();
-        player.url = file.Replace('\\', '/');
+        player.url = new Uri(file).AbsoluteUri;
+        player.controlledAudioTrackCount = 1;
         player.EnableAudioTrack(0, true);
         player.SetTargetAudioSource(0, sound);
         player.Prepare();
@@ -400,6 +436,7 @@ public class HSTVScreen : MonoBehaviour
     {
         if (playing == null)
             return;
+        Log.Out("[HSWorkingStuff] TV at " + Pos + ": loaded " + Path.GetFileName(playing) + " (" + vp.width + "x" + vp.height + ", " + vp.length.ToString("0") + "s)");
         vp.time = HSTV.BroadcastTime(vp.length);
         vp.Play();
         if (screen != null)

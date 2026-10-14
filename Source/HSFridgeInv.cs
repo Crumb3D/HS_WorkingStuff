@@ -101,6 +101,23 @@ public static class HSFridgeInv
             HSItem.Write(items[i], bw);
     }
 
+    // The same ItemStack objects, so in-place changes show in both. Unslice writes back slots that were replaced.
+    public static ItemStack[] Slice(ItemStack[] items, int from, int count)
+    {
+        var part = new ItemStack[count];
+        for (int i = 0; i < count; i++)
+            part[i] = items != null && from + i < items.Length ? items[from + i] : ItemStack.Empty.Clone();
+        return part;
+    }
+
+    public static void Unslice(ItemStack[] items, ItemStack[] part, int from)
+    {
+        if (items == null || part == null)
+            return;
+        for (int i = 0; i < part.Length && from + i < items.Length; i++)
+            items[from + i] = part[i];
+    }
+
     public static bool IsFridgeBlock(TileEntity te)
     {
         if (te == null)

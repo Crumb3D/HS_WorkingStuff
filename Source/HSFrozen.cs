@@ -41,8 +41,8 @@ public static class HSFrozen
         return -RoomRate;
     }
 
-    // The fridge-freezer's bottom two rows are its freezer compartment: it freezes slower than a chest freezer.
-    public const int CompartmentFrom = 12;
+    // The fridge-freezer's freezer compartment (its second window): it freezes slower than a chest freezer.
+    public const int CompartmentFrom = TileEntityHSFridge.ViewSlots;
 
     public static bool HasCompartment(Block block)
     {

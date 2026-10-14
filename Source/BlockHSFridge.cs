@@ -6,6 +6,7 @@ public class BlockHSFridge : BlockPowered
     BlockActivationCommand[] cmds = new BlockActivationCommand[]
     {
         new BlockActivationCommand("open", "hand", true),
+        new BlockActivationCommand("hsopenfreezer", "cold", false),
         new BlockActivationCommand("storefood", "store_all_down", true),
         new BlockActivationCommand("takespoiled", "store_all_up", true),
         new BlockActivationCommand("take", "hand", false)
@@ -156,7 +157,8 @@ public class BlockHSFridge : BlockPowered
         _blockPos = HSWater.Parent(_blockPos, _blockValue);
         bool land = _world.IsMyLandProtectedBlock(_blockPos, _world.GetGameManager().GetPersistentLocalPlayer());
         var te = _world.GetTileEntity(_blockPos) as TileEntityPowered;
-        cmds[3].enabled = land && te != null && te.IsPlayerPlaced && TakeDelay > 0f;
+        cmds[1].enabled = HSFrozen.HasCompartment(this);
+        cmds[4].enabled = land && te != null && te.IsPlayerPlaced && TakeDelay > 0f;
         return cmds;
     }
 
@@ -173,16 +175,21 @@ public class BlockHSFridge : BlockPowered
         if (_commandName == "open")
         {
             string title = IsFreezer(_blockValue) ? HSLoc.Get("hsFreezerWindow", "Freezer") : null;
-            bool split = HSFrozen.HasCompartment(_blockValue.Block);
-            if (split)
-                title = HSLoc.Get("hsFridgeFreezerWindow", "Fridge (top)  /  Freezer (bottom)");
-            XUiC_HSStorageWindowGroup.Open(_player, te, title, split);
+            XUiC_HSStorageWindowGroup.Open(_player, te, title, 0);
+            return true;
+        }
+        if (_commandName == "hsopenfreezer")
+        {
+            XUiC_HSStorageWindowGroup.Open(_player, te, HSLoc.Get("hsFreezerWindow", "Freezer"), HSFrozen.CompartmentFrom);
             return true;
         }
         if (_commandName == "storefood")
         {
             te.EnsureItems();
-            if (HSSpoil.StorePerishables(_player, te.Items))
+            ItemStack[] fridge = HSFridgeInv.Slice(te.Items, 0, TileEntityHSFridge.ViewSlots);
+            bool stored = HSSpoil.StorePerishables(_player, fridge);
+            HSFridgeInv.Unslice(te.Items, fridge, 0);
+            if (stored)
                 te.SetModified();
             return true;
         }

@@ -227,9 +227,8 @@ hsCharcoalGrillDesc,blocks,Block,,,,"A barbecue. Grills corn, meat, steak and po
 hsAirConCeiling,blocks,Block,,,,Ceiling Air Conditioner
 hsAirConCeilingDesc,blocks,Block,,,,"A commercial ceiling cassette air conditioner. Place it against a ceiling. Wire it to power (30W) and it keeps you cool within about 6 blocks."
 hsFridgeWhite,blocks,Block,,,,Fridge-Freezer (White)
-hsFridgeWhiteDesc,blocks,Block,,,,"A tall white UK fridge-freezer, two blocks high. Keep it wired (5W). The top two rows are the fridge: food lasts four times longer. The bottom two rows are the freezer: food freezes solid in about 4 hours (a chest freezer takes 2) and barely spoils. E to open, store perishables, or pull spoiled food."
+hsFridgeWhiteDesc,blocks,Block,,,,"A tall white UK fridge-freezer, two blocks high. Keep it wired (5W). It has two compartments: tap E for the fridge, where food lasts four times longer, or hold E and pick Open freezer, where food freezes solid in about 4 hours (a chest freezer takes 2) and barely spoils. Store food puts it in the fridge."
 hsFridgeFreezerPowered,UI,tooltip,,,K,"Powered: fridge food lasts 4x longer, freezer food freezes"
-hsFridgeFreezerWindow,UI,Menu,,,K,Fridge (top)  /  Freezer (bottom)
 hsFridgeTemp,UI,tooltip,,,K,Fridge: {0}
 hsFreezerTemp,UI,tooltip,,,K,Freezer: {0}
 hsWasher,blocks,Block,,,,Washing Machine
@@ -484,3 +483,4 @@ buffHSNeedPeeName,buffs,Buff,,,,Need a pee
 buffHSNeedPeeDesc,buffs,Buff,,,,"Your bladder is getting full. A toilet, a urinal or a tree will do."
 buffHSNeedPooName,buffs,Buff,,,,Need the toilet
 buffHSNeedPooDesc,buffs,Buff,,,,Only a toilet will do. A urinal or a tree will not.
+blockcommand_hsopenfreezer,UI,Menu,,,K,Open freezer

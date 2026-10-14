@@ -793,16 +793,12 @@ public static class HSPipeTool
         return Vector3i.zero;
     }
 
-    // Air touching a floor, wall or ceiling (or the thing being piped).
+    // Visible pipe only runs up or along a wall, or straight up into the thing being piped. Never out across
+    // a floor or ceiling in the middle of a room: there it goes inside the floor instead.
     static bool Hugs(World world, Vector3i p, HashSet<Vector3i> fromSet, HashSet<Vector3i> toSet)
     {
-        foreach (Vector3i d in HSWater.Dirs)
-        {
-            Vector3i n = p + d;
-            if (fromSet.Contains(n) || toSet.Contains(n) || Covers(world, n, p - n))
-                return true;
-        }
-        return false;
+        Vector3i up = p + Vector3i.up;
+        return OnWall(world, p) || fromSet.Contains(up) || toSet.Contains(up);
     }
 
     // Does the block at n have a flat, full side facing its neighbour in direction toward? Full cubes and

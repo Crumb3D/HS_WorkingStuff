@@ -8,8 +8,6 @@
 			</rect>
 			<rect name="content" pos="3,-49">
 				<sprite depth="0" name="bg" color="255,255,255,1" type="sliced" sprite="menu_empty" width="459" height="320" />
-				<sprite depth="1" name="freezerTint" pos="0,-150" color="90,160,255,40" type="sliced" sprite="menu_empty" width="450" height="150" />
-				<sprite depth="2" name="freezerLine" pos="0,-148" color="140,200,255,255" type="sliced" sprite="menu_empty" width="450" height="3" />
 				<grid depth="12" name="queue" pos="0,0" rows="4" cols="6" cell_width="75" cell_height="75" repeat_content="true" controller="HSStorageGrid, HSWorkingStuff">
 					<item_stack name="0"/>
 				</grid>

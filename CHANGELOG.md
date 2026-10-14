@@ -2,11 +2,17 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.34
+
+- **Fridge-freezer: a separate fridge and freezer.** Tap E to open the fridge; hold E and pick **Open freezer** for the freezer. Each has 24 slots. Store food goes in the fridge. (In 1.0.33 the freezer was the bottom two rows of one window.)
+- **Pipes never cross the middle of a room.** Pipe you can see only runs up or along a wall, or straight up into the thing it feeds. Anywhere else it goes inside the floor. Take up any old runs standing in the room with the pipe tool and lay them again.
+- **TV says what it's doing.** The game log now says why a TV isn't showing anything (switched off, not wired from a socket, no power, too far away, no video files, or a video that won't load), and when it loads a video. Video files with spaces in the name now load.
+
 ## 1.0.33
 
 - **All the mod's text now loads.** The text file had the wrong name, so the game never read it and some names and help showed as raw keys (like `hsToilet`). Every block, item, buff and help line now shows proper text.
 - **TV works once it's wired.** A TV wired from a live socket said "Not plugged in" until you reloaded. It now sees its socket straight away, and so do the circuit name on sockets and appliances and the socket count on a run. With no video files it says where to put them.
-- **The fridge-freezer has a freezer.** The bottom two rows of its window, tinted blue under a divider, are the freezer compartment. Food there freezes in about 4 hours, twice as long as a chest freezer, and barely spoils until it does. The top two rows are still the fridge. Food already in the bottom two rows starts freezing.
+- **The fridge-freezer has a freezer.** Food in its freezer compartment freezes in about 4 hours, twice as long as a chest freezer, and barely spoils until it does.
 - **Fridge and freezer temperatures on hover.** A fridge shows 39°F / 4°C, the fridge-freezer shows its fridge and its freezer (0°F / -18°C), and a chest freezer shows -4°F / -20°C. Unpowered, they show the room temperature. The game shows the unit you picked in the options.
 - New settings: `FridgeFreezerMultiplier`, `FridgeFreezerFreezeHours`, `FridgeTemp`, `FreezerTemp`, `FridgeFreezerTemp`.
 - **Toilet and urinal use the game's own models.** The vanilla toilet and wall urinal, made working. Same plumbing, flushing and recipes.

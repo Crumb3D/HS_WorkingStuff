@@ -8,7 +8,9 @@ public class TileEntityHSFridge : TileEntityPoweredBlock, IHSFridgeInv
         get { return items; }
     }
     public const int Magic = 0x48534631;
-    public const int SlotCount = 24;
+    // Two compartments of ViewSlots: the fridge, then the fridge-freezer's freezer (unused by other fridges).
+    public const int ViewSlots = 24;
+    public const int SlotCount = ViewSlots * 2;
 
     public ItemStack[] items;
 

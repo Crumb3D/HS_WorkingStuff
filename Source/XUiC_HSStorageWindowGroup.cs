@@ -6,7 +6,7 @@ public class XUiC_HSStorageWindowGroup : XUiController
     public static string ID = "hsWorkingStorage";
     public static IHSFridgeInv Current;
     static string title;
-    static bool split;
+    static int from;
 
     XUiC_HSStorageGrid grid;
     XUiC_WindowNonPagingHeader header;
@@ -20,21 +20,22 @@ public class XUiC_HSStorageWindowGroup : XUiController
 
     public static void Open(EntityPlayerLocal player, IHSFridgeInv te)
     {
-        Open(player, te, null);
+        Open(player, te, null, 0);
     }
 
     public static void Open(EntityPlayerLocal player, IHSFridgeInv te, string windowTitle)
     {
-        Open(player, te, windowTitle, false);
+        Open(player, te, windowTitle, 0);
     }
 
-    public static void Open(EntityPlayerLocal player, IHSFridgeInv te, string windowTitle, bool freezerRows)
+    // firstSlot picks the compartment: 0 the fridge, ViewSlots the fridge-freezer's freezer.
+    public static void Open(EntityPlayerLocal player, IHSFridgeInv te, string windowTitle, int firstSlot)
     {
         if (player == null || te == null)
             return;
         Current = te;
         title = windowTitle;
-        split = freezerRows;
+        from = firstSlot;
         te.SetUserAccessing(true);
         player.PlayerUI.windowManager.Open(ID, true);
     }
@@ -52,14 +53,8 @@ public class XUiC_HSStorageWindowGroup : XUiController
             if (lbl != null)
                 lbl.Text = shown;
         }
-        foreach (string id in new[] { "freezerLine", "freezerTint" })
-        {
-            XUiController c = GetChildById(id);
-            if (c != null && c.ViewComponent != null)
-                c.ViewComponent.IsVisible = split;
-        }
         if (grid != null)
-            grid.Bind(Current);
+            grid.Bind(Current, from);
         xui.playerUI.windowManager.Open("backpack", false);
     }
 
