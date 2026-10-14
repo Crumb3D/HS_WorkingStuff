@@ -364,7 +364,7 @@ public static class HSLoc
         { "hsClothesFilthy", "Filthy" },
         { "hsClothesDirt", "{0}: {1}% dirty" },
         { "hsClothesSmell", "Adds to your smell: wash it in a washing machine" },
-        { "hsClothesWet", "Wet: cold to wear, dries in {0} h or use a dryer" },
+        { "hsClothesWet", "Wet: cold to wear, dries in {0} h. A washing line, airer or dryer is quicker" },
         { "buffHSSmellyName", "Unwashed" },
         { "buffHSSmellyDesc", "You have not washed for a day or more. Zombies can smell you further away the longer it goes on. Have a shower or a bath." },
         { "buffHSDirtyClothesName", "Dirty Clothes" },

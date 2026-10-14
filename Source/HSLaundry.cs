@@ -304,7 +304,7 @@ public static class HSLaundry
         if (wet > 0f)
         {
             float left = wet * Mathf.Max(0.1f, HSWorkingStuffSettings.AirDryHours);
-            line += "\n" + HSLoc.Format("hsClothesWet", "Wet: cold to wear, dries in {0} h or use a dryer", left.ToString("0.0"));
+            line += "\n" + HSLoc.Format("hsClothesWet", "Wet: cold to wear, dries in {0} h. A washing line, airer or dryer is quicker", left.ToString("0.0"));
         }
         return line;
     }

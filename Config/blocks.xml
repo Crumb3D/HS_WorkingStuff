@@ -455,6 +455,65 @@
 			<property name="CustomIcon" value="hsBreakerPanelUS" />
 		</block>
 
+		<!-- Washing line and clothes airer: storage that dries wet clothes with no power. -->
+		<block name="hsWashingLine">
+			<property name="Class" value="HSDryer, HSWorkingStuff" />
+			<property class="CompositeFeatures">
+				<property class="TEFeatureStorage">
+					<property name="LootList" value="hsWashingLine" />
+				</property>
+			</property>
+			<property name="CreativeMode" value="Player" />
+			<property name="DescriptionKey" value="hsWashingLineDesc" />
+			<property name="Material" value="Mwood" />
+			<property name="Shape" value="ModelEntity" />
+			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSWashingLine" />
+			<property name="ModelOffset" value="0,0,0" />
+			<property name="MultiBlockDim" value="5,2,1" />
+			<property name="HSOutdoor" value="true" />
+			<property name="HSShown" value="8" />
+			<property name="Place" value="TowardsPlacerInverted" />
+			<property name="AllowedRotations" value="Basic90" />
+			<property name="Collide" value="movement,melee,bullet,arrow,rocket" />
+			<property name="StabilitySupport" value="false" />
+			<property name="WaterFlow" value="permitted" />
+			<property name="MaxDamage" value="250" />
+			<property name="FuelValue" value="200" />
+			<property name="SoundPickup" value="cloth_grab" />
+			<property name="SoundPlace" value="cratewood_place" />
+			<property name="UnlockedBy" value="craftingWorkstations,perkAdvancedEngineering" />
+			<property name="CustomIcon" value="hsWashingLine" />
+			<property class="RepairItems">
+				<property name="resourceWood" value="6" />
+			</property>
+			<drop event="Destroy" name="resourceWood" count="2,6" />
+			<property name="Group" value="Building,Decor/Miscellaneous" />
+			<property name="FilterTags" value="MC_playerBlocks,SC_decor" />
+		</block>
+
+		<block name="hsClothesAirer">
+			<property name="Extends" value="hsWashingLine" />
+			<property class="CompositeFeatures">
+				<property class="TEFeatureStorage">
+					<property name="LootList" value="hsClothesAirer" />
+				</property>
+			</property>
+			<property name="DescriptionKey" value="hsClothesAirerDesc" />
+			<property name="Material" value="Mmetal_weak" />
+			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSClothesAirer" />
+			<property name="MultiBlockDim" value="2,1,1" />
+			<property name="HSOutdoor" value="false" />
+			<property name="HSShown" value="6" />
+			<property name="FuelValue" value="0" />
+			<property name="SoundPlace" value="cloth_place" />
+			<property name="UnlockedBy" value="craftingWorkstations,perkAdvancedEngineering" />
+			<property name="CustomIcon" value="hsClothesAirer" />
+			<property class="RepairItems">
+				<property name="resourceScrapIron" value="4" />
+			</property>
+			<drop event="Destroy" name="resourceScrapIron" count="2,4" />
+		</block>
+
 		<!-- Wheat: planted on a farm plot like corn. The seed is the planted block. -->
 		<block name="hsPlantedWheat1">
 			<property name="Extends" value="cropsGrowingMaster" param1="CustomIcon" />

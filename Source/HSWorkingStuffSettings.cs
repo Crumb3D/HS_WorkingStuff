@@ -47,6 +47,8 @@ public static class HSWorkingStuffSettings
     public static float DirtyClothesSmell = 6f;
     public static int WasherJars = 4;
     public static float AirDryHours = 6f;
+    public static float LineDryHours = 2f;
+    public static float AirerDryHours = 3f;
     public static float WaterWashHours = 0.5f;
     public static float WetClothesCold = 6f;
     public static bool EnableFreezing = true;
@@ -58,6 +60,7 @@ public static class HSWorkingStuffSettings
     public static float TVViewRange = 40f;
     public static float WattsPerAmp = 5f;
     public static float OverloadSeconds = 2f;
+    public static int MaxSocketsPerRun = 10;
 
     public static void Load(string modPath)
     {
@@ -104,6 +107,8 @@ public static class HSWorkingStuffSettings
         DirtyClothesSmell = 6f;
         WasherJars = 4;
         AirDryHours = 6f;
+        LineDryHours = 2f;
+        AirerDryHours = 3f;
         WaterWashHours = 0.5f;
         WetClothesCold = 6f;
         EnableFreezing = true;
@@ -115,6 +120,7 @@ public static class HSWorkingStuffSettings
         TVViewRange = 40f;
         WattsPerAmp = 5f;
         OverloadSeconds = 2f;
+        MaxSocketsPerRun = 10;
         if (!string.IsNullOrEmpty(modPath))
             TryRead(Path.Combine(modPath, "HSWorkingStuffSettings.json"));
         try
@@ -182,6 +188,8 @@ public static class HSWorkingStuffSettings
         ReadFloat(text, "DirtyClothesSmell", ref DirtyClothesSmell);
         ReadInt(text, "WasherJars", ref WasherJars);
         ReadFloat(text, "AirDryHours", ref AirDryHours);
+        ReadFloat(text, "LineDryHours", ref LineDryHours);
+        ReadFloat(text, "AirerDryHours", ref AirerDryHours);
         ReadFloat(text, "WaterWashHours", ref WaterWashHours);
         ReadFloat(text, "WetClothesCold", ref WetClothesCold);
         ReadBool(text, "EnableFreezing", ref EnableFreezing);
@@ -193,6 +201,7 @@ public static class HSWorkingStuffSettings
         ReadFloat(text, "TVViewRange", ref TVViewRange);
         ReadFloat(text, "WattsPerAmp", ref WattsPerAmp);
         ReadFloat(text, "OverloadSeconds", ref OverloadSeconds);
+        ReadInt(text, "MaxSocketsPerRun", ref MaxSocketsPerRun);
         Log.Out("[HSWorkingStuff] Read " + path);
     }
 

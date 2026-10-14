@@ -46,6 +46,8 @@
   "DirtyClothesSmell": 6,
   "WasherJars": 4,
   "AirDryHours": 6,
+  "LineDryHours": 2,
+  "AirerDryHours": 3,
   "WaterWashHours": 0.5,
   "WetClothesCold": 6,
 
@@ -59,5 +61,6 @@
   "TVViewRange": 40,
 
   "WattsPerAmp": 5,
-  "OverloadSeconds": 2
+  "OverloadSeconds": 2,
+  "MaxSocketsPerRun": 10
 }

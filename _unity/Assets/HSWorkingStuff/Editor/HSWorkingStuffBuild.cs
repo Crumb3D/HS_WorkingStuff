@@ -129,14 +129,17 @@ public static class HSWorkingStuffBuild
         var combined = new Bounds(Vector3.zero, Vector3.one);
         bool anyCol = false;
         var colObjs = new List<GameObject>();
+        var split = new List<Bounds>();
         foreach (var t in go.GetComponentsInChildren<Transform>(true))
         {
             t.gameObject.layer = 16;
             if (t != go.transform) t.gameObject.tag = "Untagged";
-            if (t.name.StartsWith("COL_", StringComparison.OrdinalIgnoreCase))
+            bool own = t.name.StartsWith("COLS_", StringComparison.OrdinalIgnoreCase);
+            if (own || t.name.StartsWith("COL_", StringComparison.OrdinalIgnoreCase))
             {
                 var mf = t.GetComponent<MeshFilter>();
                 var mb = mf != null && mf.sharedMesh != null ? mf.sharedMesh.bounds : new Bounds(Vector3.zero, Vector3.one);
+                var one = new Bounds();
                 for (int i = 0; i < 8; i++)
                 {
                     var lp = mb.center + Vector3.Scale(mb.extents, new Vector3(
@@ -144,9 +147,12 @@ public static class HSWorkingStuffBuild
                         (i & 2) == 0 ? -1f : 1f,
                         (i & 4) == 0 ? -1f : 1f));
                     var rootLocal = go.transform.InverseTransformPoint(t.TransformPoint(lp));
-                    if (!anyCol) { combined = new Bounds(rootLocal, Vector3.zero); anyCol = true; }
-                    else combined.Encapsulate(rootLocal);
+                    if (i == 0) one = new Bounds(rootLocal, Vector3.zero);
+                    else one.Encapsulate(rootLocal);
                 }
+                if (own) split.Add(one);
+                else if (!anyCol) { combined = one; anyCol = true; }
+                else combined.Encapsulate(one);
                 colObjs.Add(t.gameObject);
                 continue;
             }
@@ -168,6 +174,17 @@ public static class HSWorkingStuffBuild
             UnityEngine.Object.DestroyImmediate(colObjs[i]);
         foreach (var old in go.GetComponents<BoxCollider>())
             UnityEngine.Object.DestroyImmediate(old);
+        if (split.Count > 0)
+        {
+            foreach (var sb in split)
+            {
+                var sc = go.AddComponent<BoxCollider>();
+                sc.center = sb.center;
+                sc.size = Vector3.Max(sb.size, new Vector3(0.05f, 0.05f, 0.05f));
+                sc.isTrigger = false;
+            }
+            return;
+        }
         var bc = go.AddComponent<BoxCollider>();
         if (!anyCol)
         {
@@ -211,6 +228,12 @@ public static class HSWorkingStuffBuild
         d["HS_Green"] = Opaque("HS_Green", new Color(0.30f, 0.52f, 0.16f), 0f, 0.25f);
         d["HS_Straw"] = Opaque("HS_Straw", new Color(0.78f, 0.60f, 0.28f), 0f, 0.2f);
         d["HS_Wheat"] = Opaque("HS_Wheat", new Color(0.86f, 0.64f, 0.24f), 0f, 0.2f);
+        d["HS_Wood"] = Opaque("HS_Wood", new Color(0.55f, 0.38f, 0.20f), 0f, 0.25f);
+        d["HS_Cord"] = Opaque("HS_Cord", new Color(0.85f, 0.84f, 0.78f), 0f, 0.2f);
+        d["HS_ClothBlue"] = Opaque("HS_ClothBlue", new Color(0.16f, 0.32f, 0.70f), 0f, 0.15f);
+        d["HS_ClothYellow"] = Opaque("HS_ClothYellow", new Color(0.95f, 0.78f, 0.20f), 0f, 0.15f);
+        d["HS_ClothPink"] = Opaque("HS_ClothPink", new Color(0.92f, 0.50f, 0.62f), 0f, 0.15f);
+        d["HS_Denim"] = Opaque("HS_Denim", new Color(0.20f, 0.27f, 0.42f), 0f, 0.15f);
         AssetDatabase.SaveAssets();
         return d;
     }

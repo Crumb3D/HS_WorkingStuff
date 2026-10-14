@@ -36,6 +36,12 @@ MAT_COLORS = {
     "HS_Green": (0.30, 0.52, 0.16, 1.0),
     "HS_Straw": (0.78, 0.60, 0.28, 1.0),
     "HS_Wheat": (0.86, 0.64, 0.24, 1.0),
+    "HS_Wood": (0.55, 0.38, 0.20, 1.0),
+    "HS_Cord": (0.85, 0.84, 0.78, 1.0),
+    "HS_ClothBlue": (0.16, 0.32, 0.70, 1.0),
+    "HS_ClothYellow": (0.95, 0.78, 0.20, 1.0),
+    "HS_ClothPink": (0.92, 0.50, 0.62, 1.0),
+    "HS_Denim": (0.20, 0.27, 0.42, 1.0),
     # icon-only colours (never exported to Unity)
     "HS_Bread": (1.0, 0.70, 0.30, 1.0),
     "HS_Crust": (0.62, 0.37, 0.15, 1.0),
@@ -70,6 +76,8 @@ class Piece:
         self.cols = []
         self.subs = []
         self.keep_normals = False
+        # Each collider box stays its own BoxCollider (COLS_*) instead of one box round them all (COL_*).
+        self.split_cols = False
 
     # A separate child object the game can show or hide by name, e.g. a plug in a socket.
     def sub(self, suffix):
@@ -164,7 +172,7 @@ class Piece:
             cm = bpy.data.meshes.new("COL_%s_%d" % (self.name, i))
             bm.to_mesh(cm)
             bm.free()
-            ob = bpy.data.objects.new("COL_%d" % i, cm)
+            ob = bpy.data.objects.new(("COLS_%d" if self.split_cols else "COL_%d") % i, cm)
             ob.parent = root
             ob.location = Vector(center)
             ob.scale = Vector(size)
@@ -1095,14 +1103,154 @@ def icon_breaker():
     return p
 
 
+# ---------------------------------------------------------------- washing line / clothes airer
+# Hidden children "Cloth0".."Cloth<n>": the game shows as many as there are clothes hung up.
+
+def _peg(p, x, z, y=0.0, s=1.0):
+    """Wooden spring peg astride a line at height z: two legs and the wire spring."""
+    for side in (-1, 1):
+        p.box("HS_Wood", (x, y + side * 0.007 * s, z - 0.022 * s), (0.012 * s, 0.006 * s, 0.075 * s))
+    p.box("HS_Chrome", (x, y, z - 0.012 * s), (0.015 * s, 0.02 * s, 0.008 * s))
+
+
+LINE_HX = 2.25      # posts at +-LINE_HX
+LINE_Z = 1.95       # line height at the posts
+LINE_SAG = 0.05
+
+
+def _line_z(x):
+    return LINE_Z - LINE_SAG * (1.0 - (x / LINE_HX) ** 2)
+
+
+def _shirt(s, x, zl, mat):
+    s.box(mat, (x, 0, zl - 0.23), (0.32, 0.012, 0.42))
+    s.box(mat, (x, 0, zl - 0.02), (0.20, 0.014, 0.04))
+    for side in (-1, 1):
+        s.obox(mat, (x + side * 0.19, 0, zl - 0.1), (0.09, 0.012, 0.2), Matrix.Rotation(math.radians(side * 35), 3, "Y"))
+    for side in (-1, 1):
+        _peg(s, x + side * 0.13, zl)
+
+
+def _trousers(s, x, zl, mat):
+    s.box(mat, (x, 0, zl - 0.03), (0.32, 0.016, 0.06))
+    for side in (-1, 1):
+        s.box(mat, (x + side * 0.085, 0, zl - 0.33), (0.15, 0.012, 0.56))
+        _peg(s, x + side * 0.14, zl)
+
+
+def _towel(s, x, zl, mat, band):
+    s.box(mat, (x, 0, zl - 0.3), (0.38, 0.01, 0.6))
+    for dz in (0.08, 0.5):
+        s.box(band, (x, 0, zl - dz), (0.38, 0.013, 0.035))
+    for side in (-1, 1):
+        _peg(s, x + side * 0.16, zl)
+
+
+def _socks(s, x, zl, mat):
+    for side in (-1, 1):
+        sx = x + side * 0.09
+        s.box(mat, (sx, 0, zl - 0.12), (0.07, 0.012, 0.24))
+        s.box(mat, (sx + side * 0.025, 0, zl - 0.26), (0.12, 0.012, 0.06))
+        _peg(s, sx, zl)
+
+
+def washing_line():
+    """Garden washing line (MultiBlockDim 5,2,1): two wooden posts, a sagging line held up by a clothes prop, pegs."""
+    p = Piece("HSWashingLine")
+    p.split_cols = True
+    for side in (-1, 1):
+        x = side * LINE_HX
+        p.box("HS_Grey", (x, 0, 0.03), (0.22, 0.22, 0.06))
+        p.box("HS_Wood", (x, 0, 1.0), (0.09, 0.09, 2.0))
+        p.box("HS_Wood", (x, 0, 2.01), (0.11, 0.11, 0.02))
+        p.rod("HS_Chrome", (x - side * 0.055, 0, LINE_Z), 0.012, 0.02, "X", 12)
+        p.box("HS_Wood", (x - side * 0.12, 0, 0.35), (0.04, 0.05, 0.3))
+    n = 16
+    for i in range(n):
+        x0 = -LINE_HX + 2 * LINE_HX * i / n
+        x1 = -LINE_HX + 2 * LINE_HX * (i + 1) / n
+        p.seg("HS_Cord", (x0, 0, _line_z(x0)), (x1, 0, _line_z(x1)), 0.004, segs=6)
+    # clothes prop: a long pole from the ground up to a fork under the middle of the line
+    top = (0.0, 0.0, _line_z(0.0) - 0.01)
+    p.seg("HS_Wood", (0.25, -0.42, 0.0), top, 0.018, 0.014, segs=8)
+    for side in (-1, 1):
+        p.seg("HS_Wood", top, (side * 0.03, 0.0, top[2] + 0.05), 0.008, segs=6)
+    # spare pegs along the line
+    for x in (-2.05, -1.98, -0.05, 0.05, 1.98, 2.05):
+        _peg(p, x, _line_z(x))
+    looks = [
+        (_shirt, ("HS_White",)), (_trousers, ("HS_Denim",)), (_towel, ("HS_ClothYellow", "HS_White")),
+        (_socks, ("HS_Dark",)), (_shirt, ("HS_ClothBlue",)), (_towel, ("HS_ClothPink", "HS_White")),
+        (_trousers, ("HS_Grey",)), (_shirt, ("HS_Red",)),
+    ]
+    for i, (make, mats) in enumerate(looks):
+        x = -1.75 + i * 0.5
+        make(p.sub("Cloth%d" % i), x, _line_z(x) - 0.004, *mats)
+    for side in (-1, 1):
+        p.collider((side * LINE_HX, 0, 1.0), (0.16, 0.16, 2.0))
+    p.collider((0, 0, LINE_Z - 0.03), (2 * LINE_HX, 0.1, 0.08))
+    return p
+
+
+def _drape(s, mat, x, y, z, w, h, band=None):
+    """Something folded over a rail: a roll on top and a flap down each side."""
+    s.rod(mat, (x, y, z), 0.012, w, "X", 10)
+    for side in (-1, 1):
+        s.box(mat, (x, y + side * 0.011, z - h / 2), (w, 0.006, h))
+        if band:
+            s.box(band, (x, y + side * 0.0125, z - h + 0.05), (w, 0.006, 0.03))
+
+
+def clothes_airer():
+    """Gullwing clothes airer (MultiBlockDim 2,1,1): white-coated rails on an A-frame, wings dropped a little."""
+    p = Piece("HSClothesAirer")
+    hx = 0.68
+    zt = 0.95
+    mat = "HS_White"
+    for side in (-1, 1):
+        x = side * hx
+        for ys in (-1, 1):
+            p.seg(mat, (x, ys * 0.27, 0.0), (x, ys * 0.03, zt), 0.01, segs=8)
+            p.box("HS_Grey", (x, ys * 0.27, 0.01), (0.03, 0.04, 0.02))
+        p.seg(mat, (x, -0.38, zt - 0.1), (x, 0.38, zt - 0.1), 0.008, segs=8)
+    for y in (-0.12, -0.04, 0.04, 0.12):
+        p.rod(mat, (0, y, zt), 0.006, 2 * hx, "X", 10)
+    for ys in (-1, 1):
+        for k, y in enumerate((0.2, 0.28, 0.36)):
+            p.rod(mat, (0, ys * y, zt - 0.04 - k * 0.03), 0.006, 2 * hx, "X", 10)
+        p.rod(mat, (0, ys * 0.15, 0.45), 0.006, 2 * hx, "X", 10)
+    looks = [
+        (-0.4, -0.12, "HS_ClothBlue", "HS_White", 0.3), (0.05, -0.04, "HS_White", None, 0.28),
+        (0.42, -0.2, "HS_ClothPink", None, 0.25), (-0.38, 0.12, "HS_ClothYellow", "HS_White", 0.32),
+        (0.02, 0.2, "HS_Denim", None, 0.35), (0.42, 0.04, "HS_Red", None, 0.2),
+    ]
+    for i, (x, y, cm, band, h) in enumerate(looks):
+        z = zt if abs(y) < 0.15 else zt - 0.04 - [0.2, 0.28, 0.36].index(abs(y)) * 0.03
+        _drape(p.sub("Cloth%d" % i), cm, x, y, z, 0.3, h, band)
+    p.collider((0, 0, 0.5), (2 * hx + 0.06, 0.8, 1.0))
+    return p
+
+
+def icon_pegs():
+    """A few clothes pegs, big enough to read as an icon."""
+    p = Piece("HSIconPegs")
+    for i, (x, y, rz) in enumerate(((-0.08, 0.0, 10), (0.02, 0.05, -15), (0.1, -0.03, 25))):
+        rot = Matrix.Rotation(math.radians(rz), 3, "Y")
+        for side in (-1, 1):
+            p.obox("HS_Wood", (x, y + side * 0.018, 0.1), (0.03, 0.016, 0.22), rot)
+        p.obox("HS_Chrome", (x, y, 0.13), (0.036, 0.05, 0.02), rot)
+    return p
+
+
 PIECES = [combi_boiler, panel_radiator, chest_freezer, split_air_con, ceiling_air_con, wall_thermometer,
           washing_machine, tumble_dryer, fridge_freezer,
           socket_uk_single, socket_uk_double, socket_us_single, socket_us_double, light_switch_uk, light_switch_us, cooker_switch_uk, range_outlet_us,
-          kettle, toaster, wheat_1, wheat_2, wheat_3, tv_stand, tv_wall, consumer_unit_uk, breaker_panel_us]
+          kettle, toaster, wheat_1, wheat_2, wheat_3, tv_stand, tv_wall, consumer_unit_uk, breaker_panel_us,
+          washing_line, clothes_airer]
 
 ICON_PIECES = [icon_mug, icon_mug_tea_pj, icon_mug_tea_yorkie, icon_mug_coffee, icon_tea_pj, icon_tea_yorkie,
                icon_wheat, icon_flour, icon_dough, icon_loaf, icon_slice, icon_toast, icon_wheat_seed,
-               icon_fuse, icon_fuse_blown, icon_breaker]
+               icon_fuse, icon_fuse_blown, icon_breaker, icon_pegs]
 
 
 def clear_scene():

@@ -58,6 +58,9 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `TVViewRange` | 40 | TVs further away than this (m) stop playing |
 | `WattsPerAmp` | 5 | How many watts each amp of a fuse or breaker carries (a 15A fuse = 75W) |
 | `OverloadSeconds` | 2 | Seconds a circuit can be overloaded before its fuse blows or its breaker trips |
+| `MaxSocketsPerRun` | 10 | Most sockets one run (one circuit) can chain together; 0 = no limit |
+| `LineDryHours` | 2 | Game hours wet clothes take to dry on a washing line in daylight (twice that at night) |
+| `AirerDryHours` | 3 | Game hours wet clothes take on a clothes airer or a covered line (half that by a warm radiator) |
 
 Set a bool to `false` to turn that feature off without removing the mod.
 
@@ -102,9 +105,10 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 - **Air conditioners** — a wall split unit (20W) and a ceiling cassette (30W, place it on a ceiling). Wired, standing within about 6 blocks keeps the heat off, the summer version of a radiator.
 - **Fridge-freezer (white)** — a tall white UK fridge-freezer, two blocks high, to match the boiler and radiators. Works exactly like the fridge.
 - **Washing machine / tumble dryer** — white UK front-loaders (plus the old vanilla-model versions). Put worn clothes and armour in and pick **Wash**: it needs power (15W) and a cold water pipe from a tank like a sink, and uses 4 jars. Clothes come out clean but **wet**, which makes you colder while you wear them, until they dry on you (6 hours) or go through the tumble dryer (power only, 20W, **Dry**).
+- **Washing line / clothes airer** — dry wet clothes and armour with no power. Open them like a box and hang the washing in. The line is two posts, a line, pegs and a clothes prop, 5 blocks wide: under open sky it dries clothes in about 2 hours in daylight and twice that at night, but rain soaks them again. Under a roof it dries like the airer. The indoor airer dries in about 3 hours in any weather, twice as fast next to a warm radiator. The washing you hang up shows on them. Pegs are made by hand, 10 at a time; a line needs 10.
 - **Wall thermometer** — look at it for the room temperature, the temperature outside, and whether a radiator or air con is working on the room. Shows °F or °C to match your game options.
 - **Sockets and switches** — UK switched sockets (single and double), US outlets (single and duplex, always live, no switch), UK and US light switches, a UK 45A cooker switch and a US 240V range outlet (the US has no cooker switch: a range plugs straight into its own always-live outlet). Wire power into one, then wire from it to the appliance. A socket only takes as many plugs as it has outlets: one wire out of a single, two out of a double, one out of the cooker switch or range outlet; the wire tool says so when it's full. A plug shows in the outlet for each appliance, with a black lead to it. Each outlet of a UK double socket has its own switch (the first appliance wired is the left plug); a UK single socket and the switches turn everything wired from them off and on. The rockers flick up and down with the switch. Hang sockets in the cell above a floor or worktop and switches in the cell one up from the floor.
-- **Socket chains.** Besides its plugs, every socket can have one wire on to another socket, which doesn't use up a plug and has no lead. Chain a row of sockets round a kitchen and they all share one circuit. Switching a UK socket off only kills its own plugs; the sockets further along the chain stay live. Hover a socket to see if it links on.
+- **Socket chains.** Besides its plugs, every socket can have one wire on to another socket, which doesn't use up a plug and has no lead. Chain a row of sockets round a kitchen and they all share one circuit. Sockets go in sequence: each one links on to only one more, so a new socket goes on the end of the run, and a run takes at most 10 sockets (`MaxSocketsPerRun`). Switching a UK socket off only kills its own plugs; the sockets further along the chain stay live. Hover a socket to see if it links on and where it is on its run.
 - **Consumer unit (UK) / breaker panel (US)** — the fuse box. Wire it from a generator, battery bank or solar bank, then wire one circuit out of it per way (6 in the UK unit, 8 in the US panel): a socket, a chain of sockets, a light switch or a light. **A circuit is dead until it has a fuse or breaker.** Look at the panel to see every circuit, its fuse and its load. Hold E for:
   - **Next circuit** — picks which circuit the other options work on (marked `>`).
   - **Fit fuse / breaker** — hold a fuse or breaker and fit it in the picked circuit. Whatever was in there comes back to you.
@@ -133,7 +137,7 @@ Every recipe in the mod needs **both** a magazine level and a perk rank. The cra
 | --- | --- | --- | --- |
 | Electrician | 25 | Advanced Engineering 1 | Microwaves, coffee makers, kettle, toaster, TVs, electric cookers, sockets, UK and US light switches, cooker switch, range outlet, consumer unit, breaker panel, fuses |
 | Electrician | 45 | Advanced Engineering 2 | Fridge, white fridge-freezer, chest freezer, combi boiler, wall and ceiling air conditioners, breakers |
-| Workstations | 16 | Advanced Engineering 1 | Pipe tool, pipes, intake, tank, sink, rain catch, water cooler, wall thermometer |
+| Workstations | 16 | Advanced Engineering 1 | Pipe tool, pipes, intake, tank, sink, rain catch, water cooler, wall thermometer, clothes pegs, washing line, clothes airer |
 | Workstations | 26 | Advanced Engineering 2 | Radiators, shower, bath, washing machines, tumble dryers |
 | Home Cooking | 6 | Master Chef 1 | Drying rack, dried meat, charcoal grill, flour, dough, bread, mugs |
 | Home Cooking | 10 | Master Chef 1 | Cooler, toast, mugs of tea and coffee |

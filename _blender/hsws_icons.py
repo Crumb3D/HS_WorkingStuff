@@ -37,6 +37,9 @@ ICONS = [
     ("HSIconFuse", "hsFuse", 30),
     ("HSIconFuseBlown", "hsFuseBlown", 30),
     ("HSIconBreaker", "hsBreaker"),
+    ("HSWashingLine", "hsWashingLine", 10),
+    ("HSClothesAirer", "hsClothesAirer", 25),
+    ("HSIconPegs", "hsClothesPegs", 35),
     ("HSIconWheatSeed", "hsPlantedWheat1"),
     ("HSIconWheat", "hsCropWheat"),
     ("HSIconFlour", "hsFlour"),
@@ -68,8 +71,12 @@ scene.render.image_settings.file_format = "PNG"
 scene.render.image_settings.color_mode = "RGBA"
 scene.render.image_settings.color_depth = "8"
 
+def is_collider(name):
+    return name.startswith("COL_") or name.startswith("COLS_")
+
+
 for ob in bpy.data.objects:
-    if ob.name.startswith("COL_"):
+    if is_collider(ob.name):
         ob.hide_render = True
         ob.hide_viewport = True
 
@@ -87,7 +94,7 @@ def mesh_objects(root):
         ob = stack.pop()
         # Panels show every way with a closed breaker and the main switch on.
         hidden = re.search(r"_(W\d+(Off|Fuse|Blown)|MainOff)$", ob.name)
-        if ob.type == "MESH" and not ob.name.startswith("COL_") and "_Plug" not in ob.name and "_SwOff" not in ob.name and not hidden:
+        if ob.type == "MESH" and not is_collider(ob.name) and "_Plug" not in ob.name and "_SwOff" not in ob.name and not hidden:
             out.append(ob)
         stack.extend(list(ob.children))
     return out

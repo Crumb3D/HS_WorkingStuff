@@ -51,6 +51,44 @@ public static class HSPlugs
         return false;
     }
 
+    static TileEntityPowered NextInRun(WorldBase world, TileEntityPowered te)
+    {
+        if (world == null || te == null || te.wireDataList == null)
+            return null;
+        for (int i = 0; i < te.wireDataList.Count; i++)
+            if (IsSocket(world.GetBlock(te.wireDataList[i]).Block))
+                return world.GetTileEntity(te.wireDataList[i]) as TileEntityPowered;
+        return null;
+    }
+
+    // Sockets from the start of the run up to and including this one.
+    public static int RunPosition(WorldBase world, TileEntityPowered te)
+    {
+        int n = 0;
+        for (int guard = 0; te != null && guard < 64 && IsSocket(te.blockValue.Block); guard++)
+        {
+            n++;
+            if (!te.HasParent())
+                break;
+            te = world.GetTileEntity(te.GetParent()) as TileEntityPowered;
+        }
+        return n;
+    }
+
+    // Sockets linked on after this one.
+    public static int RunAfter(WorldBase world, TileEntityPowered te)
+    {
+        int n = 0;
+        for (int guard = 0; guard < 64; guard++)
+        {
+            te = NextInRun(world, te);
+            if (te == null)
+                break;
+            n++;
+        }
+        return n;
+    }
+
     // Plug count, the onward socket link and the circuit it is on, for socket hover text.
     public static string Usage(WorldBase world, Vector3i pos, int limit)
     {
@@ -62,6 +100,10 @@ public static class HSPlugs
             text = HSLoc.Format("hsPlugUsed", "Plugs: {0} of {1} in use", used, limit);
             if (Chained(world, te))
                 text += "\n" + HSLoc.Get("hsSocketChained", "Linked on to the next socket");
+            int at = RunPosition(world, te);
+            int total = at + RunAfter(world, te);
+            if (total > 1)
+                text += "\n" + HSLoc.Format("hsSocketRun", "Socket {0} of {1} on this run (most {2})", at, total, HSWorkingStuffSettings.MaxSocketsPerRun);
         }
         string circuit = HSCircuits.CircuitLine(world, pos);
         if (!string.IsNullOrEmpty(circuit))
@@ -379,6 +421,13 @@ public static class HSPatchSocketPlugs
                 {
                     __result = false;
                     HSPlugs.DenyReason(HSLoc.Get("hsChainFull", "This socket already links on to another socket: one onward link per socket"));
+                    return;
+                }
+                int max = HSWorkingStuffSettings.MaxSocketsPerRun;
+                if (max > 0 && HSPlugs.RunPosition(world, parent) + 1 + HSPlugs.RunAfter(world, __instance) > max)
+                {
+                    __result = false;
+                    HSPlugs.DenyReason(HSLoc.Format("hsChainMax", "A run takes at most {0} sockets: start a new circuit from the consumer unit", max));
                 }
                 return;
             }

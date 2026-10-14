@@ -24,6 +24,8 @@ HSTVStand verts=64 cols=2 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_W
 HSTVWall verts=64 cols=2 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSTVWall.fbx
 HSConsumerUnitUK verts=88 cols=27 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSConsumerUnitUK.fbx
 HSBreakerPanelUS verts=96 cols=35 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSBreakerPanelUS.fbx
+HSWashingLine verts=488 cols=11 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSWashingLine.fbx
+HSClothesAirer verts=368 cols=7 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSClothesAirer.fbx
 HSIconMug verts=352 (icon only)
 HSIconMugTeaPJ verts=376 (icon only)
 HSIconMugTeaYorkie verts=376 (icon only)
@@ -40,4 +42,5 @@ HSIconWheatSeed verts=684 (icon only)
 HSIconFuse verts=152 (icon only)
 HSIconFuseBlown verts=258 (icon only)
 HSIconBreaker verts=24 (icon only)
+HSIconPegs verts=72 (icon only)
 DONE

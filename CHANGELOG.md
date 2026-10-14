@@ -2,6 +2,15 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.31
+
+- **Washing line.** Two wooden posts with a line, pegs and a clothes prop, 5 blocks wide. Open it like a box and hang wet clothes and armour on it: they dry with no power, in about 2 hours in daylight and twice that at night. It needs open sky, and **rain soaks the washing again**, so bring it in. Under a roof it dries like an airer. What you hang up shows on the line, up to 8 pieces.
+- **Clothes airer.** A folding gullwing airer for indoors: wet clothes dry on it in about 3 hours whatever the weather, twice as fast next to a warm radiator. Up to 6 pieces show on it.
+- **Clothes pegs.** Made by hand from wood and a spring, 10 at a time. A washing line needs 10.
+- Look at a line or airer to see how many pieces are hung up and how long they'll take to dry.
+- **Sockets go in sequence, up to 10 on a run.** A socket still links on to only one more socket, so a new socket has to go on the end of the run. A run now takes at most 10 sockets; start another circuit from the consumer unit for more. Look at a socket to see where it is on its run (`Socket 3 of 7 on this run`).
+- New settings: `LineDryHours`, `AirerDryHours`, `MaxSocketsPerRun`.
+
 ## 1.0.30
 
 - **Consumer unit (UK) and breaker panel (US).** Wire one from the power, then wire one circuit out of it per way: 6 ways in the white UK consumer unit with its red main switch, 8 in the grey US panel with its main breaker. A circuit stays dead until you fit a fuse or a breaker for it.

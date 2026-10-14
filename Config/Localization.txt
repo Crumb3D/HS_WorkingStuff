@@ -260,7 +260,7 @@ hsClothesDirty,UI,tooltip,,,K,Dirty
 hsClothesFilthy,UI,tooltip,,,K,Filthy
 hsClothesDirt,UI,tooltip,,,K,{0}: {1}% dirty
 hsClothesSmell,UI,tooltip,,,K,Adds to your smell: wash it in a washing machine
-hsClothesWet,UI,tooltip,,,K,"Wet: cold to wear, dries in {0} h or use a dryer"
+hsClothesWet,UI,tooltip,,,K,"Wet: cold to wear, dries in {0} h. A washing line, airer or dryer is quicker"
 buffHSSmellyName,buffs,Buff,,,,Unwashed
 buffHSSmellyDesc,buffs,Buff,,,,You have not washed for a day or more. Zombies can smell you further away the longer it goes on. Have a shower or a bath.
 buffHSDirtyClothesName,buffs,Buff,,,,Dirty Clothes
@@ -424,3 +424,19 @@ hsCircuitNamed,UI,tooltip,,,K,Circuit named {0}
 hsCircuitNameCleared,UI,tooltip,,,K,Circuit name cleared
 hsSocketChained,UI,tooltip,,,K,Linked on to the next socket
 hsChainFull,UI,tooltip,,,K,This socket already links on to another socket: one onward link per socket
+hsWashingLine,blocks,Block,,,,Washing Line
+hsWashingLineDesc,blocks,Block,,,,"Two posts, a line and a clothes prop, 5 blocks wide. Peg wet clothes and armour on it (open it like a box) and they dry with no power: about 2 hours in daylight, twice that at night. Put it under open sky, and bring the washing in when it rains or it gets soaked again. Under a roof it dries like an airer."
+hsClothesAirer,blocks,Block,,,,Clothes Airer
+hsClothesAirerDesc,blocks,Block,,,,"A folding gullwing airer for indoors. Hang wet clothes and armour on it (open it like a box) and they dry in about 3 hours with no power, any weather. Next to a warm radiator they dry twice as fast."
+hsClothesPegs,items,Item,,,,Clothes Pegs
+hsClothesPegsDesc,items,Item,,,,"Wooden spring pegs. A washing line needs 10."
+hsDrySun,UI,tooltip,,,K,"Good drying weather: wet clothes dry in {0} h"
+hsDryNight,UI,tooltip,,,K,"Night: drying slowly, about {0} h"
+hsDryRain,UI,tooltip,,,K,"Raining: the washing is getting wet again. Bring it in!"
+hsDryCovered,UI,tooltip,,,K,"Under cover: dries like an airer, about {0} h"
+hsDryWarm,UI,tooltip,,,K,"Warm room: wet clothes dry in {0} h"
+hsDryIndoors,UI,tooltip,,,K,"Wet clothes dry in {0} h (a warm radiator nearby halves that)"
+hsDryHung,UI,tooltip,,,K,{0} pieces of clothing hung up
+hsDryEmpty,UI,tooltip,,,K,"Nothing hung up: put wet clothes or armour in to dry them"
+hsSocketRun,UI,tooltip,,,K,"Socket {0} of {1} on this run (most {2})"
+hsChainMax,UI,tooltip,,,K,"A run takes at most {0} sockets: start a new circuit from the consumer unit"

@@ -313,6 +313,19 @@
 			<property name="CustomIconTint" value="7fe07f"/>
 			<property name="UnlockedBy" value="craftingElectrician,perkAdvancedEngineering"/>
 		</item>
+		<item name="hsClothesPegs">
+			<property name="HoldType" value="45"/>
+			<property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+			<property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+			<property name="Material" value="Mwood"/>
+			<property name="Stacknumber" value="100"/>
+			<property name="EconomicValue" value="2"/>
+			<property name="DescriptionKey" value="hsClothesPegsDesc"/>
+			<property name="UnlockedBy" value="craftingWorkstations,perkAdvancedEngineering"/>
+			<property name="Group" value="Resources,Basics"/>
+			<property name="SoundPickup" value="wood_grab"/>
+			<property name="SoundPlace" value="wood_place"/>
+		</item>
 	</append>
 
 	<append xpath="/items/item[@name='foodRawMeat']">

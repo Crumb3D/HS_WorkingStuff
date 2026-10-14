@@ -9,6 +9,12 @@
 		<lootcontainer name="hsCompost" count="0" size="6,2" sound_open="UseActions/open_garbage" sound_close="UseActions/close_garbage" loot_quality_template="qualBaseTemplate">
 			<item name="cobweb"/>
 		</lootcontainer>
+		<lootcontainer name="hsWashingLine" count="0" size="8,2" sound_open="UseActions/crate_wood_open" sound_close="UseActions/crate_wood_close" loot_quality_template="qualBaseTemplate">
+			<item name="cobweb"/>
+		</lootcontainer>
+		<lootcontainer name="hsClothesAirer" count="0" size="6,1" sound_open="UseActions/crate_wood_open" sound_close="UseActions/crate_wood_close" loot_quality_template="qualBaseTemplate">
+			<item name="cobweb"/>
+		</lootcontainer>
 	</append>
 
 	<append xpath="/lootcontainers/lootgroup[@name='seeds']">
