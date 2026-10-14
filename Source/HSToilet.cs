@@ -39,52 +39,6 @@ public class BlockHSToilet : Block
     {
         return HSNeeds.Run(_commandName, _world as World, _blockPos, _blockValue, Urinal, _player);
     }
-
-    public override void OnBlockEntityTransformAfterActivated(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, BlockEntityData _ebcd)
-    {
-        base.OnBlockEntityTransformAfterActivated(_world, _blockPos, _blockValue, _ebcd);
-        HSModelHit.Wire(_ebcd);
-        if (GameManager.IsDedicatedServer || _ebcd == null || _ebcd.transform == null)
-            return;
-        var view = _ebcd.transform.GetComponent<HSToiletView>();
-        if (view == null)
-            view = _ebcd.transform.gameObject.AddComponent<HSToiletView>();
-        view.Pos = _blockPos;
-    }
-}
-
-// Shows the water in a clean bowl and the dirty water once it needs a flush.
-public class HSToiletView : MonoBehaviour
-{
-    public Vector3i Pos;
-    GameObject water, soil;
-    float next;
-
-    void Start()
-    {
-        foreach (var t in GetComponentsInChildren<Transform>(true))
-        {
-            if (t.name.EndsWith("_Water"))
-                water = t.gameObject;
-            else if (t.name.EndsWith("_Soil"))
-                soil = t.gameObject;
-        }
-    }
-
-    void Update()
-    {
-        if (Time.time < next)
-            return;
-        next = Time.time + 0.5f;
-        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
-        if (world == null)
-            return;
-        bool dirty = HSNeeds.Dirty(world.GetBlock(Pos));
-        if (water != null && water.activeSelf == dirty)
-            water.SetActive(!dirty);
-        if (soil != null && soil.activeSelf != dirty)
-            soil.SetActive(dirty);
-    }
 }
 
 public static class HSNeeds

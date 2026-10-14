@@ -66,7 +66,7 @@ hsTankModsBare,UI,tooltip,,,K,No mods: collecting murky water
 hsTankFilterOn,UI,tooltip,,,K,Filter on: collecting clean water
 hsTankModsOn,UI,tooltip,,,K,Dew mods installed
 hsSinkDry,UI,tooltip,,,K,No water. Pipe this to a tank or an intake in a lake.
-hsSinkLake,UI,tooltip,,,K,Lake feed, {0}
+hsSinkLake,UI,tooltip,,,K,"Lake feed, {0}"
 hsSinkTank,UI,tooltip,,,K,Tank {0} {1}
 hsSpoilWarn,UI,tooltip,,,K,{0} will spoil soon. Get it in a fridge.
 hsSpoilSoon,UI,tooltip,,,K,Spoiling now
@@ -477,6 +477,6 @@ hsAccidentPoo,UI,tooltip,,,K,You didn't make it. Your clothes are filthy and you
 hsUrgePee,UI,tooltip,,,K,"You need a pee. A toilet, a urinal or a tree will do"
 hsUrgePoo,UI,tooltip,,,K,You need the toilet. Only a toilet will do
 buffHSNeedPeeName,buffs,Buff,,,,Need a pee
-buffHSNeedPeeDesc,buffs,Buff,,,,Your bladder is getting full. A toilet, a urinal or a tree will do.
+buffHSNeedPeeDesc,buffs,Buff,,,,"Your bladder is getting full. A toilet, a urinal or a tree will do."
 buffHSNeedPooName,buffs,Buff,,,,Need the toilet
 buffHSNeedPooDesc,buffs,Buff,,,,Only a toilet will do. A urinal or a tree will not.

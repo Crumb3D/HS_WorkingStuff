@@ -201,9 +201,10 @@ public static class HSTV
     public static bool PluggedIn(WorldBase world, Vector3i pos)
     {
         var te = world != null ? world.GetTileEntity(pos) as TileEntityPowered : null;
-        if (te == null || !te.HasParent())
+        Vector3i parent;
+        if (!HSPlugs.Parent(te, out parent))
             return false;
-        return HSPlugs.Limit(world.GetBlock(te.GetParent()).Block) > 0;
+        return HSPlugs.Limit(world.GetBlock(parent).Block) > 0;
     }
 
     public static bool Live(WorldBase world, Vector3i pos)

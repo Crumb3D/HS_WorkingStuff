@@ -927,22 +927,19 @@
 			<property name="Class" value="HSToilet, HSWorkingStuff" />
 			<property name="CreativeMode" value="Player" />
 			<property name="DescriptionKey" value="hsToiletDesc" />
-			<property name="Material" value="Mconcrete" />
+			<property name="Material" value="MstoneFurniture" />
 			<property name="Shape" value="ModelEntity" />
-			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSToilet" />
-			<property name="ModelOffset" value="0,0,0" />
-			<property name="Place" value="TowardsPlacerInverted" />
-			<property name="AllowedRotations" value="Basic90" />
-			<property name="Collide" value="movement,melee,bullet,arrow,rocket" />
-			<property name="StabilityIgnore" value="true" />
+			<property name="Model" value="@:Entities/LootContainers/toiletCommercial01Prefab.prefab" />
+			<property name="Place" value="TowardsPlacer" />
+			<property name="Path" value="solid" />
+			<property name="IsTerrainDecoration" value="true" />
+			<property name="StabilitySupport" value="false" />
 			<property name="WaterFlow" value="permitted" />
 			<property name="HSUrinal" value="false" />
 			<property name="TakeDelay" value="5" />
 			<property name="MaxDamage" value="300" />
-			<property name="SoundPickup" value="wood_grab" />
-			<property name="SoundPlace" value="cratewood_place" />
 			<property name="UnlockedBy" value="craftingWorkstations,perkAdvancedEngineering" />
-			<property name="CustomIcon" value="hsToilet" />
+			<property name="CustomIcon" value="cntToilet01" />
 			<property class="RepairItems">
 				<property name="resourceConcreteMix" value="4" />
 			</property>
@@ -954,9 +951,10 @@
 		<block name="hsUrinal">
 			<property name="Extends" value="hsToilet" />
 			<property name="DescriptionKey" value="hsUrinalDesc" />
-			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSUrinal" />
+			<property name="Model" value="@:Entities/Commercial/urinalCommercialMountedPrefab.prefab" />
+			<property name="Place" value="TowardsPlacerInverted" />
 			<property name="HSUrinal" value="true" />
-			<property name="CustomIcon" value="hsUrinal" />
+			<property name="CustomIcon" value="urinalCommercialMounted" />
 			<property class="RepairItems">
 				<property name="resourceConcreteMix" value="2" />
 			</property>

@@ -27,6 +27,10 @@ _blender/_out/
 *.user
 *.suo
 
+# Your own TV channels
+TV/*
+!TV/README.txt
+
 # Packs
 *.rar
 HS_WorkingStuff-v*.zip

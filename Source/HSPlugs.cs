@@ -23,6 +23,26 @@ public static class HSPlugs
         return Limit(block) > 0;
     }
 
+    // The server only updates PowerItem.Parent when a wire is laid, so parentPosition there is whatever was last loaded.
+    public static bool Parent(TileEntityPowered te, out Vector3i parent)
+    {
+        parent = Vector3i.zero;
+        if (te == null)
+            return false;
+        PowerItem item = te.GetPowerItem();
+        if (item != null)
+        {
+            if (item.Parent == null)
+                return false;
+            parent = item.Parent.Position;
+            return true;
+        }
+        if (!te.HasParent())
+            return false;
+        parent = te.GetParent();
+        return true;
+    }
+
     public static bool IsSocketAt(Vector3i pos)
     {
         World world = GameManager.Instance != null ? GameManager.Instance.World : null;
@@ -68,9 +88,10 @@ public static class HSPlugs
         for (int guard = 0; te != null && guard < 64 && IsSocket(te.blockValue.Block); guard++)
         {
             n++;
-            if (!te.HasParent())
+            Vector3i parent;
+            if (!Parent(te, out parent))
                 break;
-            te = world.GetTileEntity(te.GetParent()) as TileEntityPowered;
+            te = world.GetTileEntity(parent) as TileEntityPowered;
         }
         return n;
     }
@@ -573,5 +594,40 @@ public class BlockHSWallRelay : BlockPowered
     public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
         return _blockValue.Block.GetLocalizedBlockName() + "\n" + HSPlugs.Status(_world, _blockPos, this);
+    }
+}
+
+// Keeps parentPosition true on the server so clients (and the save) know which socket a device hangs off.
+public static class HSParentSync
+{
+    static readonly System.Reflection.FieldInfo field = AccessTools.Field(typeof(TileEntityPowered), "parentPosition");
+
+    public static void Set(PowerItem child)
+    {
+        if (field == null || child == null || child.TileEntity == null)
+            return;
+        Vector3i want = child.Parent != null ? child.Parent.Position : new Vector3i(-9999, -9999, -9999);
+        if ((Vector3i)field.GetValue(child.TileEntity) == want)
+            return;
+        field.SetValue(child.TileEntity, want);
+        child.TileEntity.SetModified();
+    }
+}
+
+[HarmonyPatch(typeof(PowerManager), "SetParent", new System.Type[] { typeof(PowerItem), typeof(PowerItem) })]
+public static class HSPatchParentSyncSet
+{
+    static void Postfix(PowerItem child)
+    {
+        try { HSParentSync.Set(child); } catch { }
+    }
+}
+
+[HarmonyPatch(typeof(PowerManager), "RemoveParent", new System.Type[] { typeof(PowerItem) })]
+public static class HSPatchParentSyncRemove
+{
+    static void Postfix(PowerItem node)
+    {
+        try { HSParentSync.Set(node); } catch { }
     }
 }

@@ -2,6 +2,13 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.33
+
+- **All the mod's text now loads.** The text file had the wrong name, so the game never read it and some names and help showed as raw keys (like `hsToilet`). Every block, item, buff and help line now shows proper text.
+- **TV works once it's wired.** A TV wired from a live socket said "Not plugged in" until you reloaded. It now sees its socket straight away, and so do the circuit name on sockets and appliances and the socket count on a run. With no video files it says where to put them.
+- **Toilet and urinal use the game's own models.** The vanilla toilet and wall urinal, made working. Same plumbing, flushing and recipes.
+- **Pipe drops stay on the wall.** When the floor under a boiler (or other thing) is already taken by another pipe, the drop now runs down the wall beside it instead of standing out in the room.
+
 ## 1.0.32
 
 - **Toilet and urinal.** A close-coupled toilet and a wall urinal. Pipe either one like a sink. A flush takes 1 jar from the tank (dirty water is fine). With no pipe, pour a jar or a bucket into the cistern and flush from that. Two pees at a urinal share one jar.

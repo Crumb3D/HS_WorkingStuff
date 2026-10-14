@@ -450,9 +450,9 @@ public static class HSCircuits
         for (int n = 0; n < 32; n++)
         {
             var te = world.GetTileEntity(cur) as TileEntityPowered;
-            if (te == null || !te.HasParent())
+            Vector3i parent;
+            if (!HSPlugs.Parent(te, out parent))
                 return null;
-            Vector3i parent = te.GetParent();
             BlockValue pbv = world.GetBlock(parent);
             if (pbv.Block is BlockHSPanel)
             {

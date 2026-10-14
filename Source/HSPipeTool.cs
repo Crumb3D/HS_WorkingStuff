@@ -141,6 +141,7 @@ public static class HSPipeTool
     // Radiator runs go under the floor and stay in the floor layer instead of climbing walls.
     const int UnderVertCost = 30;
     const int MaxDrop = 16;
+    const int OffWallCost = 4;
 
     public static readonly string[] PipeItems = { "hsPipeStraight", "hsPipeCorner", "hsPipeJoint" };
 
@@ -1005,6 +1006,7 @@ public static class HSPipeTool
             return false;
         }
         bool inFloor = pipe && !world.GetBlock(pos).isair;
+        int best = int.MaxValue;
         var starts = new List<Vector3i>();
         var sideways = new HashSet<Vector3i>();
         foreach (Vector3i c in cells)
@@ -1037,6 +1039,7 @@ public static class HSPipeTool
                 {
                     riser = new List<Vector3i>();
                     entry = s;
+                    best = 0;
                 }
                 continue;
             }
@@ -1053,13 +1056,42 @@ public static class HSPipeTool
                     break;
                 }
             }
-            if (landed && (riser == null || r.Count < riser.Count))
+            if (!landed)
+                continue;
+            int score = DropScore(world, r);
+            if (riser == null || score < best)
             {
                 riser = r;
                 entry = q;
+                best = score;
             }
         }
         return riser != null;
+    }
+
+    // A drop standing out in the room costs far more than one running down a wall, so a blocked straight drop
+    // moves along the wall instead of away from it.
+    static int DropScore(World world, List<Vector3i> r)
+    {
+        int score = r.Count;
+        foreach (Vector3i c in r)
+        {
+            if (!OnWall(world, c))
+                score += OffWallCost;
+        }
+        return score;
+    }
+
+    static bool OnWall(World world, Vector3i c)
+    {
+        foreach (Vector3i d in HSWater.Dirs)
+        {
+            if (d.y != 0)
+                continue;
+            if (Covers(world, c + d, Vector3i.zero - d))
+                return true;
+        }
+        return false;
     }
 
     // Cheapest run from any seed to any goal cell (both included). Bends cost a little so runs stay straight.

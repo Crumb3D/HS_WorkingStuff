@@ -40,8 +40,6 @@ ICONS = [
     ("HSWashingLine", "hsWashingLine", 10),
     ("HSClothesAirer", "hsClothesAirer", 25),
     ("HSIconPegs", "hsClothesPegs", 35),
-    ("HSToilet", "hsToilet", 20),
-    ("HSUrinal", "hsUrinal", 10),
     ("HSIconWheatSeed", "hsPlantedWheat1"),
     ("HSIconWheat", "hsCropWheat"),
     ("HSIconFlour", "hsFlour"),
