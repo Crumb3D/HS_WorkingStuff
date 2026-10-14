@@ -2,6 +2,12 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.28
+
+- **Frozen food.** Food left in a powered chest freezer for 2 game hours freezes solid. Frozen food can't be eaten and recipes won't use it, but it doesn't spoil while frozen. Take it out and it thaws in 2 hours at room temperature, or 8 hours in a powered fridge. The item tooltip says it's frozen and how long it has left to thaw.
+- **Microwave Defrost.** Hold E on a powered microwave and pick **Defrost** to thaw all the frozen food you carry at once.
+- New settings: `EnableFreezing`, `FreezeHours`, `ThawHours`, `FridgeThawHours`.
+
 ## 1.0.27
 
 - **Kettle.** A white electric kettle (10W while boiling). Boils a jar of water straight from murky, and makes mugs of tea.

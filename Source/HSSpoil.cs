@@ -131,6 +131,7 @@ public static class HSSpoil
             return;
         if (!IsPerishable(keep) || !IsPerishable(incoming))
             return;
+        HSFrozen.KeepColder(keep, incoming);
         float a = GetAcc(keep);
         float b = GetAcc(incoming);
         if (b > a)
@@ -144,7 +145,17 @@ public static class HSSpoil
         }
     }
 
+    public static ulong LastTick(ItemValue iv, ulong now)
+    {
+        return ReadLast(iv, now);
+    }
+
     public static void TickStack(ItemStack stack, float rate, ulong now)
+    {
+        TickStack(stack, rate, -HSFrozen.RoomRate, now);
+    }
+
+    public static void TickStack(ItemStack stack, float rate, float cold, ulong now)
     {
         ItemValue iv = HSItem.Val(stack);
         if (stack == null || stack.IsEmpty() || iv == null)
@@ -157,6 +168,8 @@ public static class HSSpoil
         ulong last = ReadLast(iv, now);
         if (now <= last)
             return;
+        if (HSFrozen.Tick(iv, cold, now - last))
+            rate = 0f;
         if (rate <= 0f)
         {
             WriteLast(iv, now);
@@ -205,10 +218,15 @@ public static class HSSpoil
 
     public static void TickArray(ItemStack[] items, float rate, ulong now)
     {
+        TickArray(items, rate, -HSFrozen.RoomRate, now);
+    }
+
+    public static void TickArray(ItemStack[] items, float rate, float cold, ulong now)
+    {
         if (items == null)
             return;
         for (int i = 0; i < items.Length; i++)
-            TickStack(items[i], rate, now);
+            TickStack(items[i], rate, cold, now);
     }
 
     public static void OnGameUpdate()
@@ -275,18 +293,19 @@ public static class HSSpoil
                     continue;
                 Block block = te.blockValue.Block;
                 float rate = RateForBlock(block, te);
+                float cold = HSFrozen.ColdRateForBlock(block, te);
                 IHSFridgeInv fridge = HSFridgeInv.Of(te);
                 if (fridge != null)
                 {
                     fridge.EnsureItems();
-                    TickArray(fridge.Items, rate, now);
+                    TickArray(fridge.Items, rate, cold, now);
                     fridge.SetModified();
                     continue;
                 }
                 ItemStack[] stacks = HSInv.GetStorageStacks(te);
                 if (stacks != null)
                 {
-                    TickArray(stacks, rate, now);
+                    TickArray(stacks, rate, cold, now);
                     TickDryingAndCompost(block, stacks, now);
                 }
             }
@@ -394,6 +413,9 @@ public static class HSSpoil
     {
         if (stack == null || stack.IsEmpty() || !IsPerishable(HSItem.Val(stack)))
             return null;
+        string frozen = HSFrozen.TooltipLine(stack);
+        if (frozen != null)
+            return frozen;
         World world = GameManager.Instance != null ? GameManager.Instance.World : null;
         ulong now = world != null ? world.worldTime : 0UL;
         float left = RemainingDays(HSItem.Val(stack), now);

@@ -49,6 +49,10 @@ public static class HSWorkingStuffSettings
     public static float AirDryHours = 6f;
     public static float WaterWashHours = 0.5f;
     public static float WetClothesCold = 6f;
+    public static bool EnableFreezing = true;
+    public static float FreezeHours = 2f;
+    public static float ThawHours = 2f;
+    public static float FridgeThawHours = 8f;
 
     public static void Load(string modPath)
     {
@@ -97,6 +101,10 @@ public static class HSWorkingStuffSettings
         AirDryHours = 6f;
         WaterWashHours = 0.5f;
         WetClothesCold = 6f;
+        EnableFreezing = true;
+        FreezeHours = 2f;
+        ThawHours = 2f;
+        FridgeThawHours = 8f;
         if (!string.IsNullOrEmpty(modPath))
             TryRead(Path.Combine(modPath, "HSWorkingStuffSettings.json"));
         try
@@ -166,6 +174,10 @@ public static class HSWorkingStuffSettings
         ReadFloat(text, "AirDryHours", ref AirDryHours);
         ReadFloat(text, "WaterWashHours", ref WaterWashHours);
         ReadFloat(text, "WetClothesCold", ref WetClothesCold);
+        ReadBool(text, "EnableFreezing", ref EnableFreezing);
+        ReadFloat(text, "FreezeHours", ref FreezeHours);
+        ReadFloat(text, "ThawHours", ref ThawHours);
+        ReadFloat(text, "FridgeThawHours", ref FridgeThawHours);
         Log.Out("[HSWorkingStuff] Read " + path);
     }
 

@@ -9,6 +9,37 @@ public class BlockHSMicrowave : BlockHSStove
         base.OnBlockRemoved(world, _chunk, _blockPos, _blockValue);
     }
 
+    public override BlockActivationCommand[] GetBlockActivationCommands(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
+    {
+        BlockActivationCommand[] baseCmds = base.GetBlockActivationCommands(_world, _blockValue, _blockPos, _entityFocusing);
+        if (!HSWorkingStuffSettings.EnableFreezing || baseCmds == null)
+            return baseCmds;
+        var all = new BlockActivationCommand[baseCmds.Length + 1];
+        System.Array.Copy(baseCmds, all, baseCmds.Length);
+        all[baseCmds.Length] = new BlockActivationCommand("hsdefrost", "campfire", HSStovePower.IsPowered(_blockPos));
+        return all;
+    }
+
+    public override bool OnBlockActivated(string _commandName, WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, EntityPlayerLocal _player)
+    {
+        if (_commandName != "hsdefrost")
+            return base.OnBlockActivated(_commandName, _world, _blockPos, _blockValue, _player);
+        if (!HSStovePower.IsPowered(_blockPos))
+        {
+            GameManager.ShowTooltip(_player, HSLoc.Get("hsMicrowaveUnpowered", "No power: wire this microwave to cook"));
+            return true;
+        }
+        int n = HSFrozen.ThawPlayer(_player);
+        if (n == 0)
+        {
+            GameManager.ShowTooltip(_player, HSLoc.Get("hsDefrostNone", "Nothing frozen on you"));
+            return true;
+        }
+        _player.PlayOneShot(HSMicrowaveSound.Ding);
+        GameManager.ShowTooltip(_player, HSLoc.Format("hsDefrosted", "Defrosted {0} frozen food", n));
+        return true;
+    }
+
     public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
         string name = _blockValue.Block.GetLocalizedBlockName();

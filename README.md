@@ -49,6 +49,10 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `AirDryHours` | 6 | Game hours for washed clothes to dry on their own |
 | `WaterWashHours` | 0.5 | Game hours standing in a lake or river takes to wash 50-70% of your body smell off |
 | `WetClothesCold` | 6 | Degrees F colder you feel per wet piece you wear |
+| `EnableFreezing` | true | Food freezes solid in a powered chest freezer |
+| `FreezeHours` | 2 | Game hours in a powered chest freezer until food is frozen |
+| `ThawHours` | 2 | Game hours frozen food takes to thaw at room temperature |
+| `FridgeThawHours` | 8 | Game hours frozen food takes to thaw in a powered fridge |
 
 Set a bool to `false` to turn that feature off without removing the mod.
 
@@ -87,6 +91,7 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 - **Microwave (modern / retro)** — cheap, 5W only while cooking with the door shut, a short microwave-safe menu with no pot or grill: boiled water, coffee, goldenrod tea, red tea, honey tea, baked potato, corn on the cob, vegetable stew, sham chowder, spaghetti, gumbo stew. Each one needs the same unlock as at the campfire. Queue the food and close the door to cook; opening the door pauses it. Look at it to see what's cooking and the time left. It hums while cooking and dings when the queue is done.
 - **Coffee maker (home / commercial)** — put in a jar of water and coffee beans and it brews a jar of coffee; add 5 gunpowder for black strap coffee. Murky water is fine, the machine heats it, so no boiling first and no pot. Same unlocks as campfire coffee. 5W, only while brewing or while its window is open. Look at it for what's brewing and the time left.
 - **Chest freezer** — a 2-block-wide chest freezer. Opens like the fridge with or without power; wired (10W), food in it does not spoil at all.
+  - **Frozen food.** After 2 hours in a powered freezer, food freezes solid (the tooltip says so). Frozen food can't be eaten, and recipes won't use it. Out of the freezer it thaws in 2 hours, or 8 in a powered fridge, and it doesn't spoil while frozen. For a quick thaw, hold E on a powered microwave and pick **Defrost**: everything frozen on you thaws at once.
 - **Plumbed water cooler** — the vanilla water cooler, piped to a tank like a sink. Cold tap only, and it has its own filter, so even murky tank water comes out clean.
 - **Shower / bath** — pipe to a powered combi boiler. **Wash** uses 2 jars (shower) or 4 jars (bath) of hot water. A shower takes off 90-100% of your body smell and a bath all of it, and for 10 or 20 minutes carried meat, smelly food and sickness won't let zombies track you by smell.
 - **Air conditioners** — a wall split unit (20W) and a ceiling cassette (30W, place it on a ceiling). Wired, standing within about 6 blocks keeps the heat off, the summer version of a radiator.

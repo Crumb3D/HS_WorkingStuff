@@ -72,6 +72,7 @@
     <Compile Include="HSInvData.cs" />
     <Compile Include="HSFridgeInv.cs" />
     <Compile Include="HSSpoil.cs" />
+    <Compile Include="HSFrozen.cs" />
     <Compile Include="HSWater.cs" />
     <Compile Include="HSPickup.cs" />
     <Compile Include="HSPatches.cs" />

@@ -32,7 +32,7 @@ hsStoveWall,blocks,Block,,,,Electric Wall Oven
 hsStoveDesc,blocks,Block,,,,"An electric cooker. Same recipes and tools as a campfire (pot, grill, beaker). No wood. Wire it to power or it will not cook."
 hsMicrowave,blocks,Block,,,,Microwave
 hsMicrowaveRetro,blocks,Block,,,,Retro Microwave
-hsMicrowaveDesc,blocks,Block,,,,"A cheap powered microwave. Boils water, makes coffee and tea, bakes potatoes, corn on the cob, vegetable stew, sham chowder, spaghetti and gumbo. No pot or grill needed, but you still have to know the recipe. Wire it to power, 5W. Close the door to cook, look at it for the time left. Dings when it is done."
+hsMicrowaveDesc,blocks,Block,,,,"A cheap powered microwave. Boils water, makes coffee and tea, bakes potatoes, corn on the cob, vegetable stew, sham chowder, spaghetti and gumbo. No pot or grill needed, but you still have to know the recipe. Wire it to power, 5W. Close the door to cook, look at it for the time left. Dings when it is done. Hold E for Defrost to thaw frozen food you carry."
 hsMicrowavePowered,UI,tooltip,,,K,Powered: ready to cook
 hsMicrowaveUnpowered,UI,tooltip,,,K,No power: wire this microwave to cook
 hsMicrowaveCooking,UI,tooltip,,,K,Cooking {0}: {1} left
@@ -196,7 +196,7 @@ hsPipeRadialTakeUp,UI,tooltip,,,K,Take up pipes
 hsPipeNoneHere,UI,tooltip,,,K,"No laid pipe here: look at it, or at the block it joins"
 hsPipeRemoved,UI,tooltip,,,K,Took up {0} pipes
 hsFreezer,blocks,Block,,,,Chest Freezer
-hsFreezerDesc,blocks,Block,,,,"A powered chest freezer. Keep it wired (10W) and food in it does not spoil at all. Unpowered it is just a box. E to open, store perishables, or pull spoiled food."
+hsFreezerDesc,blocks,Block,,,,"A powered chest freezer. Keep it wired (10W) and food in it does not spoil at all, but it freezes solid after 2 hours. Frozen food can't be eaten or cooked: let it thaw, or Defrost it at a microwave. Unpowered it is just a box. E to open, store perishables, or pull spoiled food."
 hsFreezerWindow,UI,Menu,,K,K,Freezer
 hsFreezerPowered,UI,tooltip,,,K,Powered: frozen food does not spoil
 hsWaterCooler,blocks,Block,,,,Plumbed Water Cooler
@@ -346,3 +346,10 @@ hsToasterDone,UI,tooltip,,,K,Popped up: your toast is ready
 hsToasterPowered,UI,tooltip,,,K,Powered: add slices of bread
 hsToasterUnpowered,UI,tooltip,,,K,No power: plug this toaster in to toast
 hsToasterToasting,UI,tooltip,,,K,Toasting: {0} left
+hsFrozenHours,UI,tooltip,,,K,Frozen: thaws in {0}h at room temperature
+hsFrozenMins,UI,tooltip,,,K,Frozen: thaws in {0} min at room temperature
+hsFrozenNoEat,UI,tooltip,,,K,"It's frozen solid. Let it thaw, or defrost it in a microwave."
+hsdefrost,UI,commands,,,K,Defrost
+blockcommand_hsdefrost,UI,commands,,,K,Defrost the frozen food on you
+hsDefrostNone,UI,tooltip,,,K,Nothing frozen on you
+hsDefrosted,UI,tooltip,,,K,Defrosted {0} frozen food

@@ -47,5 +47,10 @@
   "WasherJars": 4,
   "AirDryHours": 6,
   "WaterWashHours": 0.5,
-  "WetClothesCold": 6
+  "WetClothesCold": 6,
+
+  "EnableFreezing": true,
+  "FreezeHours": 2,
+  "ThawHours": 2,
+  "FridgeThawHours": 8
 }
