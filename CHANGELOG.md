@@ -75,7 +75,7 @@ Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the de
 
 ## 1.0.23
 
-- **Rooms follow the weather.** Indoors the temperature now trails the weather outside by a few game hours, and a house only takes 15°F off it instead of vanilla's instant 30°F. Cold snaps, nights and rainy days make rooms cold; summer makes them hot. Radiators heat a room to 68°F and air conditioners cool it to 72°F. Snow biomes need the heating on.
+- **Rooms follow the weather.** Indoors the temperature now trails the weather outside by a few game hours, and a house only takes 15°F / 8°C off it instead of vanilla's instant 30°F / 17°C. Cold snaps, nights and rainy days make rooms cold; summer makes them hot. Radiators heat a room to 68°F / 20°C and air conditioners cool it to 72°F / 22°C. Snow biomes need the heating on.
 - **Wall thermometer.** Shows the room temperature, the temperature outside, and whether the heating or air con is working. Follows your °F/°C game option.
 - **You get smelly.** After a day without a shower or bath you start to smell, worse over three days, and zombies can track it. Washing clears it.
 - **Dirty and wet clothes.** Worn clothes and armour get dirty and add to your smell (hover them to see). Wash them in the new **washing machine** (power + cold water pipe, 4 jars). They come out wet, which makes you colder, until they dry on you or go in the **tumble dryer**.
@@ -118,7 +118,7 @@ Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the de
 
 ## 1.0.16
 
-- **Radiator valve and temperature gauge.** Hold E on a radiator: **Turn up** / **Turn down** sets its valve to off or 1 to 5 (existing and new radiators start at 3). Higher reaches further and draws more power from the boiler; off takes the radiator out of the heating. Looking at it shows the radiator's own temperature on a gauge that climbs while it heats (about 40°C at valve 1 up to 80°C at valve 5) and cools back down when it stops. The setting is saved with the radiator and shared with everyone on the server.
+- **Radiator valve and temperature gauge.** Hold E on a radiator: **Turn up** / **Turn down** sets its valve to off or 1 to 5 (existing and new radiators start at 3). Higher reaches further and draws more power from the boiler; off takes the radiator out of the heating. Looking at it shows the radiator's own temperature on a gauge that climbs while it heats (about 40°C / 104°F at valve 1 up to 80°C / 176°F at valve 5) and cools back down when it stops. The gauge follows your °C or °F game option. The setting is saved with the radiator and shared with everyone on the server.
 - **Sink says when the tank is empty.** A sink piped to an empty tank used to say "no tank piped in" and "boiler has no water behind it". It now says the tank is empty (cold), or the tank behind the boiler is empty (hot).
 
 ## 1.0.15

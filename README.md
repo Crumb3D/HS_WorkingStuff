@@ -32,12 +32,12 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `BathJars` | 4 | Hot water jars a bath uses |
 | `GasCanGrillSeconds` | 60 | Seconds one gas can burns in a gas grill |
 | `EnableRoomTemperature` | true | Indoor temperature follows the weather slowly; radiators and air con heat or cool the room |
-| `IndoorInsulation` | 15 | Degrees F a house takes off the weather (vanilla shelter is 30) |
+| `IndoorInsulation` | 15 | How much a house takes off the weather: 15°F / 8°C (vanilla shelter is 30°F / 17°C). The number in the file is Fahrenheit |
 | `IndoorLagHours` | 3 | Game hours for a house to catch up with the weather outside |
-| `RadiatorHeat` | 40 | Degrees F a warm radiator can add to a room |
-| `ThermostatHeat` | 68 | Radiators heat a room up to this (F) |
-| `AirConCool` | 30 | Degrees F a running air conditioner can take off a room |
-| `ThermostatCool` | 72 | Air con cools a room down to this (F) |
+| `RadiatorHeat` | 40 | How much a warm radiator can add to a room: 40°F / 22°C. The number in the file is Fahrenheit |
+| `ThermostatHeat` | 68 | Radiators heat a room up to 68°F / 20°C. The number in the file is Fahrenheit |
+| `AirConCool` | 30 | How much a running air conditioner can take off a room: 30°F / 17°C. The number in the file is Fahrenheit |
+| `ThermostatCool` | 72 | Air con cools a room down to 72°F / 22°C. The number in the file is Fahrenheit |
 | `EnableBodySmell` | true | You get smelly when you don't wash |
 | `BodySmellStartHours` | 24 | Game hours after a wash before you start to smell |
 | `BodySmellFullHours` | 72 | Game hours after a wash until you smell your worst |
@@ -48,7 +48,7 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `WasherJars` | 4 | Cold water jars a wash uses |
 | `AirDryHours` | 6 | Game hours for washed clothes to dry on their own |
 | `WaterWashHours` | 0.5 | Game hours standing in a lake or river takes to wash 50-70% of your body smell off |
-| `WetClothesCold` | 6 | Degrees F colder you feel per wet piece you wear |
+| `WetClothesCold` | 6 | How much colder you feel per wet piece you wear: 6°F / 3°C. The number in the file is Fahrenheit |
 | `EnableFreezing` | true | Food freezes solid in a powered chest freezer |
 | `FreezeHours` | 2 | Game hours in a powered chest freezer until food is frozen |
 | `ThawHours` | 2 | Game hours frozen food takes to thaw at room temperature |
@@ -104,7 +104,7 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 - **Combi boiler** — hangs on the wall: place it against a wall and its back sits flat on it. Pipe a tank in and a sink out for the hot tap. It draws no power while idle and only fires (15W) for 30 seconds after a hot tap runs. Pipe radiators to it and pick **Central heating on**: it then draws 15W plus about 5W per radiator (more or less with each radiator's valve). Look at it to see if it is idle, firing, and how many radiators it heats.
 - **Radiators (panel / cast iron)** — place against a wall and pipe to a combi boiler, or on from another radiator. While central heating is on and the boiler has power, standing within about 5 blocks keeps you warm like a campfire.
   - **Heating water.** The heating is a sealed loop of water. Each radiator holds 1 jar: while central heating is on, the boiler fills dry radiators from a tank on its pipes (or a lake intake), nearest radiator first. Once filled the loop keeps its water even if the tank runs dry. Only filled radiators heat; adding a radiator needs another jar. The boiler and any cold radiator say how many jars are still needed.
-  - **Valve and gauge.** Hold E on a radiator for **Turn up** / **Turn down**: off, or 1 to 5 (new radiators start at 3). Higher reaches further (3 to 7 blocks) and draws more power; off takes it out of the heating. Looking at it shows its own temperature on a gauge, climbing to about 40°C (104°F) at valve 1 up to 80°C (176°F) at valve 5 while heating, and cooling back to the room temperature when off. It follows your °C/°F setting.
+  - **Valve and gauge.** Hold E on a radiator for **Turn up** / **Turn down**: off, or 1 to 5 (new radiators start at 3). Higher reaches further (3 to 7 blocks) and draws more power; off takes it out of the heating. Looking at it shows its own temperature on a gauge, climbing to about 40°C / 104°F at valve 1 up to 80°C / 176°F at valve 5 while heating, and cooling back to the room temperature when off. It follows your °C or °F game option.
 - **Electric cooker (old / modern / wall)** — same recipes and tools as a campfire (cooking pot, grill, beaker). No wood. Wire it to a generator or it will not cook. Draws 10W only while food is queued or its window is open. The cooker window shows **Powered** or **Unpowered** where the campfire fuel slot was.
 - **Microwave (modern / retro)** — cheap, 5W only while cooking with the door shut, a short microwave-safe menu with no pot or grill: boiled water, coffee, goldenrod tea, red tea, honey tea, baked potato, corn on the cob, vegetable stew, sham chowder, spaghetti, gumbo stew. Each one needs the same unlock as at the campfire. Queue the food and close the door to cook; opening the door pauses it. Look at it to see what's cooking and the time left. It hums while cooking and dings when the queue is done.
 - **Coffee maker (home / commercial)** — put in a jar of water and coffee beans and it brews a jar of coffee; add 5 gunpowder for black strap coffee. Murky water is fine, the machine heats it, so no boiling first and no pot. Same unlocks as campfire coffee. 5W, only while brewing or while its window is open. Look at it for what's brewing and the time left.
@@ -136,7 +136,7 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 
 ## Living in the house
 
-- **Room temperature.** Indoors, the temperature follows the weather outside slowly (about 3 game hours behind) and a house only takes 15°F (about 8°C) off it, like a UK house: cold in winter, hot in summer, cooler after rain. In the snow or on a cold night you need the radiators on. A warm radiator heats the room up to 68°F (20°C); a running air conditioner cools it to 72°F (22°C). Everything the mod shows in game follows your °C/°F option; the temperature settings below are in °F.
+- **Room temperature.** Indoors, the temperature follows the weather outside slowly (about 3 game hours behind) and a house only takes 15°F / 8°C off it, like a UK house: cold in winter, hot in summer, cooler after rain. In the snow or on a cold night you need the radiators on. A warm radiator heats the room up to 68°F / 20°C. A running air conditioner cools it to 72°F / 22°C. The thermometer, the radiator gauge and the temperature you feel all follow the °C or °F option in the game's video settings. The numbers in the settings file stay Fahrenheit, because that is the unit the game stores.
 - **Smell.** After a day without a wash you start to smell (**Unwashed**), and it gets worse over three days. Zombies can follow it. **Wash up** at a sink (1 jar) or crouch at a lake or river and press the drink key to wash: each takes about 5 m off, once an hour. Standing in water up to your waist washes 50-70% off slowly. A shower takes 90-100% and a bath all of it. Indoors it is cut down like other smells; rain or water hides it.
 - **Dirty clothes.** Clothes and armour you wear get dirty over about three days of wear (hover an item to see how dirty). Dirty pieces add to your smell. Wash them in the washing machine.
 - **Bladder and bowels.** An empty bladder fills in about 3 game hours, faster when you drink (a jar is about a quarter). Bowels fill in about 8 hours, faster when you eat. At about 60% you get **Need a pee** or **Need the toilet**. Pee at a toilet, a urinal or a tree (look at the trunk and hold E). Poo only in a toilet. Leave it until you're full and you have an accident: a pee soaks your clothes, a poo makes them filthy, and both make you smell. Wash the clothes and have a shower.
