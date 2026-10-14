@@ -17,7 +17,7 @@ public class HSWorkingStuffMod : IModApi
         ModEvents.GameStartDone.RegisterHandler(OnStart);
         ModEvents.WorldShuttingDown.RegisterHandler(OnShutdown);
         ApplyHarmony();
-        Log.Out("[HSWorkingStuff] v1.0.26 fridge, fridge-freezer, chest freezer, cooler, stove, microwave, coffee maker, grills, plumbing, water cooler, shower, bath, combi boiler, radiators, air con, washer, dryer, thermometer, sockets, room temperature, smell, laundry, pipe tool, and 7-day food. Install on the host and on every client.");
+        Log.Out("[HSWorkingStuff] v1.0.27 fridge, fridge-freezer, chest freezer, cooler, stove, microwave, coffee maker, kettle, toaster, wheat and bread, tea, grills, plumbing, water cooler, shower, bath, combi boiler, radiators, air con, washer, dryer, thermometer, sockets, room temperature, smell, laundry, pipe tool, and 7-day food. Install on the host and on every client.");
     }
 
     static void ApplyHarmony()

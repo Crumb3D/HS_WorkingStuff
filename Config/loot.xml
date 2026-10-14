@@ -10,4 +10,21 @@
 			<item name="cobweb"/>
 		</lootcontainer>
 	</append>
+
+	<append xpath="/lootcontainers/lootgroup[@name='seeds']">
+		<item name="hsPlantedWheat1"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='seedsNoFlowers']">
+		<item name="hsPlantedWheat1" count="3,5"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupCoffeeMaker01']">
+		<item name="hsTeaBagsPJ" count="2,6" loot_prob_template="medLow"/>
+		<item name="hsTeaBagsYorkie" count="2,6" loot_prob_template="medLow"/>
+		<item name="hsMug" count="1" loot_prob_template="low"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupFoodCommon']">
+		<item name="hsTeaBagsPJ" count="2,6" loot_prob_template="low"/>
+		<item name="hsTeaBagsYorkie" count="2,6" loot_prob_template="low"/>
+		<item name="hsFlour" count="1,2" loot_prob_template="low"/>
+	</append>
 </configs>

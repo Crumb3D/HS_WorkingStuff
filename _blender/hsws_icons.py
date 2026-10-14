@@ -27,6 +27,21 @@ ICONS = [
     ("HSLightSwitchUS", "hsLightSwitchUS"),
     ("HSCookerSwitchUK", "hsCookerSwitchUK"),
     ("HSRangeOutletUS", "hsRangeOutletUS"),
+    ("HSKettle", "hsKettle"),
+    ("HSToaster", "hsToaster"),
+    ("HSIconWheatSeed", "hsPlantedWheat1"),
+    ("HSIconWheat", "hsCropWheat"),
+    ("HSIconFlour", "hsFlour"),
+    ("HSIconDough", "hsDough", 30),
+    ("HSIconLoaf", "hsBreadLoaf"),
+    ("HSIconSlice", "hsBreadSlice"),
+    ("HSIconToast", "hsToast"),
+    ("HSIconMug", "hsMug", 40),
+    ("HSIconMugTeaPJ", "hsMugTeaPJ", 40),
+    ("HSIconMugTeaYorkie", "hsMugTeaYorkie", 40),
+    ("HSIconMugCoffee", "hsMugCoffee", 40),
+    ("HSIconTeaPJ", "hsTeaBagsPJ"),
+    ("HSIconTeaYorkie", "hsTeaBagsYorkie"),
 ]
 
 scene = bpy.context.scene
@@ -38,6 +53,9 @@ scene.display.shading.show_cavity = True
 scene.render.resolution_x = 232
 scene.render.resolution_y = 160
 scene.render.film_transparent = True
+# Blender's default AgX view greys out light colours (white goods, bread, wheat).
+scene.view_settings.view_transform = "Standard"
+scene.view_settings.look = "None"
 scene.render.image_settings.file_format = "PNG"
 scene.render.image_settings.color_mode = "RGBA"
 scene.render.image_settings.color_depth = "8"

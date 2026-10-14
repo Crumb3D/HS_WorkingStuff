@@ -15,4 +15,22 @@ HSLightSwitchUK verts=24 cols=3 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mod
 HSLightSwitchUS verts=72 cols=3 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSLightSwitchUS.fbx
 HSCookerSwitchUK verts=56 cols=4 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSCookerSwitchUK.fbx
 HSRangeOutletUS verts=152 cols=2 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSRangeOutletUS.fbx
+HSKettle verts=408 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSKettle.fbx
+HSToaster verts=320 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSToaster.fbx
+HSWheat1 verts=1170 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSWheat1.fbx
+HSWheat2 verts=3080 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSWheat2.fbx
+HSWheat3 verts=3360 cols=1 -> C:\Users\Crumb\AppData\Roaming\7DaysToDie\Mods\HS_WorkingStuff\_unity\Assets\HSWorkingStuff\Models\HSWheat3.fbx
+HSIconMug verts=352 (icon only)
+HSIconMugTeaPJ verts=376 (icon only)
+HSIconMugTeaYorkie verts=376 (icon only)
+HSIconMugCoffee verts=352 (icon only)
+HSIconTeaPJ verts=104 (icon only)
+HSIconTeaYorkie verts=104 (icon only)
+HSIconWheat verts=5980 (icon only)
+HSIconFlour verts=680 (icon only)
+HSIconDough verts=524 (icon only)
+HSIconLoaf verts=112 (icon only)
+HSIconSlice verts=208 (icon only)
+HSIconToast verts=208 (icon only)
+HSIconWheatSeed verts=684 (icon only)
 DONE

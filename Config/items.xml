@@ -42,6 +42,209 @@
 			<property name="Group" value="Tools/Traps,Building"/>
 			<property name="FilterTags" value="MC_playerBlocks,SC_plumbing"/>
 		</item>
+
+		<!-- Wheat to bread to toast -->
+		<item name="hsCropWheat">
+			<property name="HoldType" value="45"/>
+			<property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+			<property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+			<property name="Material" value="MresourceCrop"/>
+			<property name="Stacknumber" value="500"/>
+			<property name="EconomicValue" value="8"/>
+			<property name="CraftingIngredientTime" value="5"/>
+			<property name="DescriptionKey" value="hsCropWheatDesc"/>
+			<property name="Group" value="Food/Cooking,CFFood/Cooking"/>
+			<property name="SoundPickup" value="coffeebeans_grab"/>
+			<property name="SoundPlace" value="coffeebeans_place"/>
+		</item>
+		<item name="hsFlour">
+			<property name="Extends" value="hsCropWheat"/>
+			<property name="Stacknumber" value="125"/>
+			<property name="EconomicValue" value="20"/>
+			<property name="CraftingIngredientTime" value="10"/>
+			<property name="UnlockedBy" value="craftingFood,perkMasterChef"/>
+			<property name="DescriptionKey" value="hsFlourDesc"/>
+			<property name="SoundPickup" value="cornmeal_grab"/>
+			<property name="SoundPlace" value="cornmeal_place"/>
+		</item>
+		<item name="hsDough">
+			<property name="Extends" value="hsCropWheat"/>
+			<property name="Stacknumber" value="20"/>
+			<property name="EconomicValue" value="30"/>
+			<property name="Material" value="Morganic"/>
+			<property name="UnlockedBy" value="craftingFood,perkMasterChef"/>
+			<property name="DescriptionKey" value="hsDoughDesc"/>
+			<property name="SoundPickup" value="cornbread_grab"/>
+			<property name="SoundPlace" value="cornbread_place"/>
+		</item>
+		<item name="hsBreadLoaf">
+			<property name="Tags" value="food,foodSkill,fitness,farmerFoodBonus"/>
+			<property name="HoldType" value="31"/>
+			<property name="DisplayType" value="food"/>
+			<property name="Meshfile" value="@:Other/Items/Food/parcelGenericPrefab.prefab"/>
+			<property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+			<property name="Material" value="Morganic"/>
+			<property name="Stacknumber" value="10"/>
+			<property name="EconomicValue" value="60"/>
+			<property name="SpoilDays" value="5"/>
+			<property name="UnlockedBy" value="craftingFood,perkMasterChef"/>
+			<property name="DescriptionKey" value="hsBreadLoafDesc"/>
+			<property name="SoundPickup" value="cornbread_grab"/>
+			<property name="SoundPlace" value="cornbread_place"/>
+			<property class="Action0">
+				<property name="Class" value="Eat"/>
+				<property name="Delay" value="1.0"/>
+				<property name="Sound_start" value="player_eating"/>
+				<property name="SmellUse" value="10"/>
+			</property>
+			<property name="Group" value="Food/Cooking,CFFood/Cooking"/>
+			<effect_group tiered="false" name="Food Tier 2">
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$foodAmountAdd" operation="add" value="36"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="foodHealthAmount" operation="add" value="12"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".foodStaminaBonusAdd" operation="add" value="20"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="water" operation="add" value="-8"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffProcessConsumables"/>
+				<display_value name="$waterAmountAdd" value="-8"/>
+				<display_value name="dSmellUse" value="10"/>
+			</effect_group>
+		</item>
+		<item name="hsBreadSlice">
+			<property name="Extends" value="hsBreadLoaf"/>
+			<property name="Stacknumber" value="40"/>
+			<property name="EconomicValue" value="8"/>
+			<property name="DescriptionKey" value="hsBreadSliceDesc"/>
+			<effect_group tiered="false" name="Food Tier 1">
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$foodAmountAdd" operation="add" value="5"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="foodHealthAmount" operation="add" value="2"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="water" operation="add" value="-1"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffProcessConsumables"/>
+				<display_value name="$waterAmountAdd" value="-1"/>
+				<display_value name="dSmellUse" value="10"/>
+			</effect_group>
+		</item>
+		<item name="hsToast">
+			<property name="Extends" value="hsBreadLoaf"/>
+			<property name="Stacknumber" value="20"/>
+			<property name="EconomicValue" value="12"/>
+			<property name="SpoilDays" value="2"/>
+			<property name="DescriptionKey" value="hsToastDesc"/>
+			<effect_group tiered="false" name="Food Tier 1">
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$foodAmountAdd" operation="add" value="8"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="foodHealthAmount" operation="add" value="4"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar=".foodStaminaBonusAdd" operation="add" value="5"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyStats" stat="water" operation="add" value="-1"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffProcessConsumables"/>
+				<display_value name="$waterAmountAdd" value="-1"/>
+				<display_value name="dSmellUse" value="10"/>
+			</effect_group>
+		</item>
+
+		<!-- Mugs and tea. Drinking from a mug always gives the mug back. -->
+		<item name="hsMug">
+			<property name="HoldType" value="3"/>
+			<property name="Meshfile" value="@:Other/Items/Food/masonJarFPVEmptyPrefab.prefab"/>
+			<property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+			<property name="Material" value="Mglass"/>
+			<property name="Stacknumber" value="10"/>
+			<property name="EconomicValue" value="15"/>
+			<property name="UnlockedBy" value="craftingFood,perkMasterChef"/>
+			<property name="DescriptionKey" value="hsMugDesc"/>
+			<property name="Group" value="Food/Cooking,CFDrink/Cooking"/>
+			<property name="SoundPickup" value="jars_grab"/>
+			<property name="SoundPlace" value="jars_place"/>
+		</item>
+		<item name="hsTeaBagsPJ">
+			<property name="HoldType" value="45"/>
+			<property name="Meshfile" value="@:Other/Items/Misc/sackPrefab.prefab"/>
+			<property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+			<property name="Material" value="Mpaper"/>
+			<property name="Stacknumber" value="80"/>
+			<property name="EconomicValue" value="6"/>
+			<property name="DescriptionKey" value="hsTeaBagsPJDesc"/>
+			<property name="Group" value="Food/Cooking,CFDrink/Cooking"/>
+			<property name="SoundPickup" value="paper_grab"/>
+			<property name="SoundPlace" value="paper_place"/>
+		</item>
+		<item name="hsTeaBagsYorkie">
+			<property name="Extends" value="hsTeaBagsPJ"/>
+			<property name="DescriptionKey" value="hsTeaBagsYorkieDesc"/>
+		</item>
+		<item name="hsMugTeaPJ">
+			<property name="Tags" value="drinks,foodSkill,fitness"/>
+			<property name="HoldType" value="3"/>
+			<property name="DisplayType" value="waterCoffee"/>
+			<property name="Meshfile" value="@:Other/Items/Food/masonJarRedTeaPrefab.prefab"/>
+			<property name="DropMeshfile" value="@:Other/Items/Misc/sack_droppedPrefab.prefab"/>
+			<property name="Material" value="Mglass"/>
+			<property name="Stacknumber" value="10"/>
+			<property name="EconomicValue" value="60"/>
+			<property name="UnlockedBy" value="craftingFood,perkMasterChef"/>
+			<property name="DescriptionKey" value="hsMugTeaPJDesc"/>
+			<property name="SoundPickup" value="jars_grab"/>
+			<property name="SoundPlace" value="jars_place"/>
+			<property class="Action0">
+				<property name="Class" value="Eat"/>
+				<property name="Delay" value="4"/>
+				<property name="Sound_start" value="player_drinking"/>
+				<property name="Create_item" value="hsMug"/>
+			</property>
+			<property name="Group" value="Food/Cooking,CFDrink/Cooking"/>
+			<effect_group tiered="false" name="Drink Tier 1">
+				<requirement name="!HasBuff" buff="buffIsOnFire"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$waterAmountAdd" operation="add" value="28"/>
+				<display_value name="dStaminaRegen" value=".2"/>
+				<display_value name="dHypothermalResist" value="5"/>
+				<display_value name="dDuration" value="120"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffCoffeeDuration" operation="add" value="123"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffCoffeeDuration" operation="set" value="543">
+					<requirement name="CVarCompare" cvar="$buffCoffeeDuration" operation="GT" value="543"/></triggered_effect>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffProcessConsumables,buffCoffee"/>
+			</effect_group>
+			<effect_group tiered="false">
+				<requirement name="HasBuff" buff="buffIsOnFire"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffExtinguishFire"/>
+			</effect_group>
+		</item>
+		<item name="hsMugTeaYorkie">
+			<property name="Extends" value="hsMugTeaPJ"/>
+			<property name="DescriptionKey" value="hsMugTeaYorkieDesc"/>
+			<effect_group tiered="false" name="Drink Tier 1">
+				<requirement name="!HasBuff" buff="buffIsOnFire"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$waterAmountAdd" operation="add" value="25"/>
+				<display_value name="dStaminaRegen" value=".2"/>
+				<display_value name="dHypothermalResist" value="5"/>
+				<display_value name="dDuration" value="180"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffCoffeeDuration" operation="add" value="183"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffCoffeeDuration" operation="set" value="543">
+					<requirement name="CVarCompare" cvar="$buffCoffeeDuration" operation="GT" value="543"/></triggered_effect>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffProcessConsumables,buffCoffee"/>
+			</effect_group>
+			<effect_group tiered="false">
+				<requirement name="HasBuff" buff="buffIsOnFire"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffExtinguishFire"/>
+			</effect_group>
+		</item>
+		<item name="hsMugCoffee">
+			<property name="Extends" value="hsMugTeaPJ"/>
+			<property name="Meshfile" value="@:Other/Items/Food/masonJarCoffeePrefab.prefab"/>
+			<property name="DescriptionKey" value="hsMugCoffeeDesc"/>
+			<property name="EconomicValue" value="96"/>
+			<effect_group tiered="false" name="Drink Tier 1">
+				<requirement name="!HasBuff" buff="buffIsOnFire"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$waterAmountAdd" operation="add" value="24"/>
+				<display_value name="dStaminaRegen" value=".2"/>
+				<display_value name="dHypothermalResist" value="5"/>
+				<display_value name="dDuration" value="180"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffCoffeeDuration" operation="add" value="183"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="ModifyCVar" cvar="$buffCoffeeDuration" operation="set" value="543">
+					<requirement name="CVarCompare" cvar="$buffCoffeeDuration" operation="GT" value="543"/></triggered_effect>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffProcessConsumables,buffCoffee"/>
+			</effect_group>
+			<effect_group tiered="false">
+				<requirement name="HasBuff" buff="buffIsOnFire"/>
+				<triggered_effect trigger="onSelfPrimaryActionEnd" action="AddBuff" buff="buffExtinguishFire"/>
+			</effect_group>
+		</item>
 	</append>
 
 	<append xpath="/items/item[@name='foodRawMeat']">

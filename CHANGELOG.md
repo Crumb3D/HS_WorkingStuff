@@ -2,6 +2,15 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.27
+
+- **Kettle.** A white electric kettle (10W while boiling). Boils a jar of water straight from murky, and makes mugs of tea.
+- **Toaster.** A two-slot toaster (5W while toasting). Turns a slice of bread into toast.
+- **Wheat.** A new crop. Wheat seed grows in three stages, from short green shoots to tall golden ears, and is harvested like corn (Living Off The Land boosts it). Craft 5 wheat into a seed. Seeds turn up in seed loot and at the traders.
+- **Bread.** 3 wheat grinds into flour, 2 flour and a jar of water make dough, and dough bakes into a loaf on the campfire (cooking pot). Cut a loaf into 8 slices, and toast them.
+- **Mugs and tea.** Fire 4 clay into 2 mugs on the campfire. **PJ Tops** and **Yorkie Brew** tea bags are found in kitchens, coffee machines and the traders. A mug, a tea bag and a jar of water in the kettle make a mug of tea. The coffee maker also brews coffee in a mug. Drinking always gives the mug back; the jar of water is used up.
+- New icons are brighter.
+
 ## 1.0.26
 
 - **Buckets empty down the sink.** Empty a full bucket of water while looking at a sink, shower or bath and it goes down the drain: no water is placed and you get the empty bucket back. Anywhere else it pours out like vanilla. Water coolers and washing machines are not drains.

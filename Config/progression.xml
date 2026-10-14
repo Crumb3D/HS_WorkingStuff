@@ -3,14 +3,14 @@
 
 	<!-- Electrician magazines + Advanced Engineering: cookers, sockets and switches at 25 (rank 1), fridge, fridge-freezer, freezer, boiler and air con at 45 (rank 2). -->
 	<append xpath="/progression/crafting_skills/crafting_skill[@name='craftingElectrician']/effect_group">
-		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="25,100" value="1" tags="hsMicrowave,hsMicrowaveRetro,hsCoffeeMaker,hsCoffeeMakerCommercial,hsStoveOld,hsStoveModern,hsStoveWall,hsSocketUKSingle,hsSocketUKDouble,hsSocketUSSingle,hsSocketUSDouble,hsLightSwitchUK,hsLightSwitchUS,hsCookerSwitchUK,hsRangeOutletUS">
+		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="25,100" value="1" tags="hsMicrowave,hsMicrowaveRetro,hsCoffeeMaker,hsCoffeeMakerCommercial,hsStoveOld,hsStoveModern,hsStoveWall,hsSocketUKSingle,hsSocketUKDouble,hsSocketUSSingle,hsSocketUSDouble,hsLightSwitchUK,hsLightSwitchUS,hsCookerSwitchUK,hsRangeOutletUS,hsKettle,hsToaster">
 			<requirement name="ProgressionLevel" progression_name="perkAdvancedEngineering" operation="GTE" value="1"/>
 		</passive_effect>
 		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="45,100" value="1" tags="hsFridge,hsFridgeWhite,hsFreezer,hsWaterHeater,hsAirCon,hsAirConCeiling">
 			<requirement name="ProgressionLevel" progression_name="perkAdvancedEngineering" operation="GTE" value="2"/>
 		</passive_effect>
 	</append>
-	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingElectrician']/display_entry[@name_key='electricianT1']/unlock_entry/@item" delim="," op="add">hsMicrowave,hsMicrowaveRetro,hsCoffeeMaker,hsCoffeeMakerCommercial,hsStoveOld,hsStoveModern,hsStoveWall,hsSocketUKSingle,hsSocketUKDouble,hsSocketUSSingle,hsSocketUSDouble,hsLightSwitchUK,hsLightSwitchUS,hsCookerSwitchUK,hsRangeOutletUS</csv>
+	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingElectrician']/display_entry[@name_key='electricianT1']/unlock_entry/@item" delim="," op="add">hsMicrowave,hsMicrowaveRetro,hsCoffeeMaker,hsCoffeeMakerCommercial,hsStoveOld,hsStoveModern,hsStoveWall,hsSocketUKSingle,hsSocketUKDouble,hsSocketUSSingle,hsSocketUSDouble,hsLightSwitchUK,hsLightSwitchUS,hsCookerSwitchUK,hsRangeOutletUS,hsKettle,hsToaster</csv>
 	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingElectrician']/display_entry[@name_key='electricianT2']/unlock_entry/@item" delim="," op="add">hsFridge,hsFridgeWhite,hsFreezer,hsWaterHeater,hsAirCon,hsAirConCeiling</csv>
 
 	<!-- Workstation magazines + Advanced Engineering: plumbing and the thermometer with the dew collector (16, rank 1), radiators, shower, bath, washers and dryers with the dew gatherer (26, rank 2). -->
@@ -27,18 +27,18 @@
 
 	<!-- Home Cooking magazines + Master Chef: drying rack, dried meat and charcoal grill at 6, cooler at 10 (rank 1), gas grill at 26 (rank 2). -->
 	<append xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/effect_group">
-		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="6,100" value="1" tags="hsDryingRack,hsDriedMeat,hsCharcoalGrill">
+		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="6,100" value="1" tags="hsDryingRack,hsDriedMeat,hsCharcoalGrill,hsFlour,hsDough,hsBreadLoaf,hsBreadSlice,hsMug">
 			<requirement name="ProgressionLevel" progression_name="perkMasterChef" operation="GTE" value="1"/>
 		</passive_effect>
-		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="10,100" value="1" tags="hsCooler">
+		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="10,100" value="1" tags="hsCooler,hsToast,hsMugTeaPJ,hsMugTeaYorkie,hsMugCoffee">
 			<requirement name="ProgressionLevel" progression_name="perkMasterChef" operation="GTE" value="1"/>
 		</passive_effect>
 		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="26,100" value="1" tags="hsGasGrill">
 			<requirement name="ProgressionLevel" progression_name="perkMasterChef" operation="GTE" value="2"/>
 		</passive_effect>
 	</append>
-	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT1-1')]/unlock_entry[@unlock_tier='3']/@item" delim="," op="add">hsDryingRack,hsDriedMeat,hsCharcoalGrill</csv>
-	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT1-1')]/unlock_entry[@unlock_tier='5']/@item" delim="," op="add">hsCooler</csv>
+	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT1-1')]/unlock_entry[@unlock_tier='3']/@item" delim="," op="add">hsDryingRack,hsDriedMeat,hsCharcoalGrill,hsFlour,hsDough,hsBreadLoaf,hsBreadSlice,hsMug</csv>
+	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT1-1')]/unlock_entry[@unlock_tier='5']/@item" delim="," op="add">hsCooler,hsToast,hsMugTeaPJ,hsMugTeaYorkie,hsMugCoffee</csv>
 	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT2-1')]/unlock_entry[@unlock_tier='5']/@item" delim="," op="add">hsGasGrill</csv>
 
 	<!-- Seed magazines + Living Off The Land: compost at 10 (rank 1). -->
@@ -48,4 +48,12 @@
 		</passive_effect>
 	</append>
 	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingSeeds']/display_entry[contains(@name_key,'seedsT1-1')]/unlock_entry[@unlock_tier='5']/@item" delim="," op="add">hsCompost</csv>
+
+	<!-- Seed magazines + Living Off The Land: wheat seed at 18, alongside corn (rank 1). -->
+	<append xpath="/progression/crafting_skills/crafting_skill[@name='craftingSeeds']/effect_group">
+		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="18,100" value="1" tags="hsPlantedWheat1">
+			<requirement name="ProgressionLevel" progression_name="perkLivingOffTheLand" operation="GTE" value="1"/>
+		</passive_effect>
+	</append>
+	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingSeeds']/display_entry[contains(@name_key,'seedsT2-1')]/unlock_entry[@unlock_tier='4']/@item" delim="," op="add">hsPlantedWheat1</csv>
 </configs>

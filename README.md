@@ -94,6 +94,9 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 - **Washing machine / tumble dryer** — white UK front-loaders (plus the old vanilla-model versions). Put worn clothes and armour in and pick **Wash**: it needs power (15W) and a cold water pipe from a tank like a sink, and uses 4 jars. Clothes come out clean but **wet**, which makes you colder while you wear them, until they dry on you (6 hours) or go through the tumble dryer (power only, 20W, **Dry**).
 - **Wall thermometer** — look at it for the room temperature, the temperature outside, and whether a radiator or air con is working on the room. Shows °F or °C to match your game options.
 - **Sockets and switches** — UK switched sockets (single and double), US outlets (single and duplex, always live, no switch), UK and US light switches, a UK 45A cooker switch and a US 240V range outlet (the US has no cooker switch: a range plugs straight into its own always-live outlet). Wire power into one, then wire from it to the appliance. A socket only takes as many plugs as it has outlets: one wire out of a single, two out of a double, one out of the cooker switch or range outlet; the wire tool says so when it's full. A plug shows in the outlet for each appliance, with a black lead to it. Each outlet of a UK double socket has its own switch (the first appliance wired is the left plug); a UK single socket and the switches turn everything wired from them off and on. The rockers flick up and down with the switch. Hang sockets in the cell above a floor or worktop and switches in the cell one up from the floor.
+- **Kettle** — 10W only while boiling. Boils a jar of water (murky is fine) and makes a **mug of tea** from a mug, a tea bag (**PJ Tops** or **Yorkie Brew**) and a jar of water. Look at it to see what's boiling and the time left.
+- **Toaster** — 5W only while toasting. Turns a slice of bread into toast.
+- **Wheat, bread and tea.** Plant wheat seed like corn: it grows short and green, then tall, then golden and ready to harvest. 5 wheat makes a seed, 3 wheat grinds into flour, 2 flour and a jar of water make dough, and dough bakes into a loaf in the campfire cooking pot. Cut a loaf into 8 slices for the toaster. Mugs are fired from clay on the campfire. Tea bags come from kitchen loot, coffee machines and the traders. The coffee maker also brews coffee in a mug. Drinking from a mug always gives the mug back.
 - **Gas grill / charcoal grill** — barbecue workstations with the vanilla grill menu (corn, grilled meat, steak and potato, wings, jerky, fish tacos) and no grill tool needed. They burn wood or coal like a campfire; a gas can lasts a minute in the gas grill. Same food unlocks as the campfire grill.
 
 ## Living in the house
@@ -108,14 +111,15 @@ Every recipe in the mod needs **both** a magazine level and a perk rank. The cra
 
 | Magazine | Level | Perk | Unlocks |
 | --- | --- | --- | --- |
-| Electrician | 25 | Advanced Engineering 1 | Microwaves, coffee makers, electric cookers, sockets, UK and US light switches, cooker switch, range outlet |
+| Electrician | 25 | Advanced Engineering 1 | Microwaves, coffee makers, kettle, toaster, electric cookers, sockets, UK and US light switches, cooker switch, range outlet |
 | Electrician | 45 | Advanced Engineering 2 | Fridge, white fridge-freezer, chest freezer, combi boiler, wall and ceiling air conditioners |
 | Workstations | 16 | Advanced Engineering 1 | Pipe tool, pipes, intake, tank, sink, rain catch, water cooler, wall thermometer |
 | Workstations | 26 | Advanced Engineering 2 | Radiators, shower, bath, washing machines, tumble dryers |
-| Home Cooking | 6 | Master Chef 1 | Drying rack, dried meat, charcoal grill |
-| Home Cooking | 10 | Master Chef 1 | Cooler |
+| Home Cooking | 6 | Master Chef 1 | Drying rack, dried meat, charcoal grill, flour, dough, bread, mugs |
+| Home Cooking | 10 | Master Chef 1 | Cooler, toast, mugs of tea and coffee |
 | Home Cooking | 26 | Master Chef 2 | Gas grill |
 | Seeds | 10 | Living Off The Land 1 | Compost box |
+| Seeds | 18 | Living Off The Land 1 | Wheat seed |
 
 Food cooked in the microwave, coffee maker and grills uses the vanilla food unlocks.
 

@@ -323,5 +323,63 @@
 			<ingredient name="resourceForgedIron" count="2"/>
 			<ingredient name="resourceMetalPipe" count="1"/>
 		</recipe>
+
+		<!-- Kitchen: kettle, toaster, wheat to bread, mugs and tea -->
+		<recipe name="hsKettle" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceForgedIron" count="2"/>
+			<ingredient name="resourceElectricParts" count="2"/>
+			<ingredient name="resourceScrapPolymers" count="4"/>
+		</recipe>
+		<recipe name="hsToaster" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceForgedIron" count="3"/>
+			<ingredient name="resourceElectricParts" count="2"/>
+			<ingredient name="resourceScrapPolymers" count="2"/>
+		</recipe>
+		<recipe name="hsPlantedWheat1" count="1" craft_time="1" tags="learnable,packMuleCrafting">
+			<ingredient name="hsCropWheat" count="5"/>
+		</recipe>
+		<recipe name="hsFlour" count="1" craft_time="10" tags="learnable,packMuleCrafting">
+			<ingredient name="hsCropWheat" count="3"/>
+		</recipe>
+		<recipe name="hsDough" count="1" craft_time="10" tags="learnable,packMuleCrafting">
+			<ingredient name="hsFlour" count="2"/>
+			<ingredient name="drinkJarRiverWater" count="1"/>
+		</recipe>
+		<recipe name="hsBreadLoaf" count="1" craft_area="campfire" craft_time="120" tags="learnable,perkMasterChef,cookingPotFood">
+			<ingredient name="hsDough" count="1"/>
+		</recipe>
+		<recipe name="hsBreadSlice" count="8" craft_time="2" tags="learnable,packMuleCrafting">
+			<ingredient name="hsBreadLoaf" count="1"/>
+		</recipe>
+		<recipe name="hsMug" count="2" craft_area="campfire" craft_time="30" tags="learnable">
+			<ingredient name="resourceClayLump" count="4"/>
+		</recipe>
+
+		<!-- Toaster menu -->
+		<recipe name="hsToast" count="1" craft_area="hsToaster" craft_time="45" tags="learnable,perkMasterChef">
+			<ingredient name="hsBreadSlice" count="1"/>
+		</recipe>
+
+		<!-- Kettle menu: it boils the water itself, so a plain jar of water goes in. -->
+		<recipe name="drinkJarBoiledWater" count="1" craft_area="hsKettle" craft_time="20" tags="perkMasterChef,perkChefBoiledWater,cookingPotFood">
+			<ingredient name="drinkJarRiverWater" count="1"/>
+		</recipe>
+		<recipe name="hsMugTeaPJ" count="1" craft_area="hsKettle" craft_time="30" tags="learnable,perkMasterChef">
+			<ingredient name="hsMug" count="1"/>
+			<ingredient name="hsTeaBagsPJ" count="1"/>
+			<ingredient name="drinkJarRiverWater" count="1"/>
+		</recipe>
+		<recipe name="hsMugTeaYorkie" count="1" craft_area="hsKettle" craft_time="30" tags="learnable,perkMasterChef">
+			<ingredient name="hsMug" count="1"/>
+			<ingredient name="hsTeaBagsYorkie" count="1"/>
+			<ingredient name="drinkJarRiverWater" count="1"/>
+		</recipe>
+
+		<!-- Coffee maker: a mug instead of a jar -->
+		<recipe name="hsMugCoffee" count="1" craft_area="hsCoffeeMaker" craft_time="20" tags="learnable,perkMasterChef">
+			<ingredient name="hsMug" count="1"/>
+			<ingredient name="resourceCropCoffeeBeans" count="1"/>
+			<ingredient name="drinkJarRiverWater" count="1"/>
+		</recipe>
 	</append>
 </configs>

@@ -206,6 +206,9 @@ public static class HSWorkingStuffBuild
         d["HS_Led"] = Glow("HS_Led", new Color(0.25f, 1f, 0.35f), 2f);
         d["HS_Red"] = Opaque("HS_Red", new Color(0.78f, 0.08f, 0.06f), 0f, 0.55f);
         d["HS_Neon"] = Glow("HS_Neon", new Color(1f, 0.25f, 0.1f), 2f);
+        d["HS_Green"] = Opaque("HS_Green", new Color(0.30f, 0.52f, 0.16f), 0f, 0.25f);
+        d["HS_Straw"] = Opaque("HS_Straw", new Color(0.78f, 0.60f, 0.28f), 0f, 0.2f);
+        d["HS_Wheat"] = Opaque("HS_Wheat", new Color(0.86f, 0.64f, 0.24f), 0f, 0.2f);
         AssetDatabase.SaveAssets();
         return d;
     }

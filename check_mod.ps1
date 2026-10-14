@@ -45,7 +45,7 @@ foreach ($n in ([regex]::Matches($recipeXml, '<recipe name="([^"]+)"') | ForEach
 foreach ($n in ([regex]::Matches($recipeXml, '<ingredient name="([^"]+)"') | ForEach-Object { $_.Groups[1].Value })) {
     if (-not $known.ContainsKey($n)) { Fail "ingredient unknown '$n'" }
 }
-if ($names.Count -ne 64) { Fail "expected 64 recipes, found $($names.Count)" } else { Ok "64 recipes" }
+if ($names.Count -ne 77) { Fail "expected 77 recipes, found $($names.Count)" } else { Ok "77 recipes" }
 $grillRecipes = [regex]::Matches($recipeXml, 'craft_area="hsGrill"').Count
 if ($grillRecipes -ne 6) { Fail "expected 6 grill recipes, found $grillRecipes" } else { Ok "6 grill recipes" }
 if ([regex]::Matches($recipeXml, 'craft_area="hsGrill"[^>]*craft_tool').Count -gt 0) { Fail "grill recipe needs a tool" } else { Ok "grill recipes need no tool" }
@@ -54,7 +54,23 @@ foreach ($m in [regex]::Matches($recipeXml, '<recipe name="(hs[A-Za-z]+)"[^>]*>'
     if ($m.Value -notmatch 'learnable') { Fail "$r is craftable without learning it" } else { Ok "$r is learnable" }
 }
 $coffeeRecipes = [regex]::Matches($recipeXml, 'craft_area="hsCoffeeMaker"').Count
-if ($coffeeRecipes -ne 2) { Fail "expected 2 coffee maker recipes, found $coffeeRecipes" } else { Ok "2 coffee maker recipes" }
+if ($coffeeRecipes -ne 3) { Fail "expected 3 coffee maker recipes, found $coffeeRecipes" } else { Ok "3 coffee maker recipes" }
+foreach ($a in @(@("hsKettle", 3), @("hsToaster", 1))) {
+    $n = [regex]::Matches($recipeXml, "craft_area=`"$($a[0])`"").Count
+    if ($n -ne $a[1]) { Fail "expected $($a[1]) $($a[0]) recipes, found $n" } else { Ok "$n $($a[0]) recipes" }
+    if ($blocksXml -notmatch "CraftingAreaRecipes`" value=`"$($a[0])`"") { Fail "no block crafts in $($a[0])" }
+}
+$tradersXml = Get-Content (Join-Path $Root "Config\traders.xml") -Raw
+try { [xml]$tradersXml | Out-Null; Ok "traders.xml" } catch { Fail "traders.xml: $_" }
+foreach ($m in [regex]::Matches($itemsXml, '<item name="(hs[A-Za-z0-9]+)">([\s\S]*?)</item>')) {
+    $i = $m.Groups[1].Value
+    if ($m.Groups[2].Value -match 'name="CustomIcon"') { continue }
+    if (-not (Test-Path (Join-Path $Root "UIAtlases\ItemIconAtlas\$i.png"))) { Fail "item icon $i.png missing" } else { Ok "item icon $i" }
+}
+foreach ($m in [regex]::Matches($itemsXml, 'name="Create_item" value="([^"]+)"')) {
+    if (-not $known.ContainsKey($m.Groups[1].Value)) { Fail "drink gives back unknown $($m.Groups[1].Value)" }
+}
+if ([regex]::Match($itemsXml, '<item name="hsMugTeaPJ">[\s\S]*?</item>').Value -match 'Use_jar_refund') { Fail "mug tea only sometimes gives the mug back" } else { Ok "mugs always come back" }
 if ([regex]::Matches($recipeXml, 'craft_area="hsCoffeeMaker"[^>]*craft_tool').Count -gt 0) { Fail "coffee maker recipe needs a tool" } else { Ok "coffee maker recipes need no tool" }
 $microRecipes = [regex]::Matches($recipeXml, 'craft_area="hsMicrowave"').Count
 if ($microRecipes -ne 11) { Fail "expected 11 microwave recipes, found $microRecipes" } else { Ok "11 microwave recipes" }
@@ -78,7 +94,7 @@ foreach ($r in ([regex]::Matches($recipeXml, '<recipe name="(hs[A-Za-z]+)"') | F
 }
 if ($progXml -match '<passive_effect name="RecipeTagUnlocked"[^>]*/>') { Fail "an unlock has no perk requirement" } else { Ok "every unlock needs a perk" }
 
-foreach ($cls in @("HSFridge, HSWorkingStuff", "HSStorage, HSWorkingStuff", "HSSink, HSWorkingStuff", "HSTank, HSWorkingStuff", "HSRainCatch, HSWorkingStuff", "HSHeater, HSWorkingStuff", "HSStove, HSWorkingStuff", "HSMicrowave, HSWorkingStuff", "HSRadiator, HSWorkingStuff", "HSCoffeeMaker, HSWorkingStuff", "HSWaterCooler, HSWorkingStuff", "HSShower, HSWorkingStuff", "HSAirCon, HSWorkingStuff")) {
+foreach ($cls in @("HSFridge, HSWorkingStuff", "HSStorage, HSWorkingStuff", "HSSink, HSWorkingStuff", "HSTank, HSWorkingStuff", "HSRainCatch, HSWorkingStuff", "HSHeater, HSWorkingStuff", "HSStove, HSWorkingStuff", "HSMicrowave, HSWorkingStuff", "HSRadiator, HSWorkingStuff", "HSCoffeeMaker, HSWorkingStuff", "HSWaterCooler, HSWorkingStuff", "HSShower, HSWorkingStuff", "HSAirCon, HSWorkingStuff", "HSKettle, HSWorkingStuff", "HSToaster, HSWorkingStuff")) {
     if ($blocksXml -notmatch [regex]::Escape($cls)) { Fail "blocks.xml missing class '$cls'" } else { Ok "class $cls" }
 }
 
@@ -130,11 +146,11 @@ foreach ($p in @(@("hsSocketUKSingle", 1), @("hsSocketUKDouble", 2), @("hsSocket
     $def = [regex]::Match($blocksXml, "<block name=`"$($p[0])`">[\s\S]*?</block>").Value
     if ($def -notmatch "name=`"HSPlugs`" value=`"$($p[1])`"") { Fail "$($p[0]) should take $($p[1]) plugs" } else { Ok "$($p[0]) takes $($p[1]) plugs" }
 }
-foreach ($b in @("hsFridgeWhite", "hsWasher", "hsWasherVanilla", "hsDryer", "hsDryerVanilla", "hsThermometer", "hsSocketUKSingle", "hsSocketUKDouble", "hsSocketUSSingle", "hsSocketUSDouble", "hsLightSwitchUK", "hsLightSwitchUS", "hsCookerSwitchUK", "hsRangeOutletUS")) {
+foreach ($b in @("hsFridgeWhite", "hsWasher", "hsWasherVanilla", "hsDryer", "hsDryerVanilla", "hsThermometer", "hsSocketUKSingle", "hsSocketUKDouble", "hsSocketUSSingle", "hsSocketUSDouble", "hsLightSwitchUK", "hsLightSwitchUS", "hsCookerSwitchUK", "hsRangeOutletUS", "hsKettle", "hsToaster", "hsPlantedWheat1", "hsFlour", "hsDough", "hsBreadLoaf", "hsBreadSlice", "hsToast", "hsMug", "hsMugTeaPJ", "hsMugTeaYorkie", "hsMugCoffee")) {
     if ($locTxt -notmatch "(?m)^$b,") { Fail "missing loc $b" }
     if ($progXml -notmatch "\b$b\b") { Fail "$b is not unlocked anywhere" } else { Ok "$b unlocked" }
 }
-foreach ($k in @("hsWasherDesc", "hsDryerDesc", "hsThermometerDesc", "hsFridgeWhiteDesc", "hsSocketUKDesc", "hsSocketUSDesc", "hsLightSwitchUKDesc", "hsCookerSwitchUKDesc", "blockcommand_hswash", "blockcommand_hsdry", "hsThermoRoom", "hsClothesDirt", "hsClothesWet", "hsWashed", "hsPlugFullOne", "hsPlugUsed", "buffHSSmellyName", "buffHSDirtyClothesName", "buffHSWetClothesName", "hsLightSwitchUSDesc", "blockcommand_washup", "hsLblWash", "hsSinkWashed", "hsWashLakeside", "hsWashTooSoon", "hsWashSoakStart", "hsWashSoakDone", "blockcommand_hsoutlet0", "blockcommand_hsoutlet1", "hsOutletState", "hsRangeOutletUSDesc", "hsSinkDrained")) {
+foreach ($k in @("hsWasherDesc", "hsDryerDesc", "hsThermometerDesc", "hsFridgeWhiteDesc", "hsSocketUKDesc", "hsSocketUSDesc", "hsLightSwitchUKDesc", "hsCookerSwitchUKDesc", "blockcommand_hswash", "blockcommand_hsdry", "hsThermoRoom", "hsClothesDirt", "hsClothesWet", "hsWashed", "hsPlugFullOne", "hsPlugUsed", "buffHSSmellyName", "buffHSDirtyClothesName", "buffHSWetClothesName", "hsLightSwitchUSDesc", "blockcommand_washup", "hsLblWash", "hsSinkWashed", "hsWashLakeside", "hsWashTooSoon", "hsWashSoakStart", "hsWashSoakDone", "blockcommand_hsoutlet0", "blockcommand_hsoutlet1", "hsOutletState", "hsRangeOutletUSDesc", "hsSinkDrained", "hsKettleDesc", "hsToasterDesc", "hsPlantedWheat2", "hsPlantedWheat3", "hsPlantedWheatDesc", "hsCropWheat", "hsCropWheatDesc", "hsTeaBagsPJ", "hsTeaBagsYorkie", "hsTeaBagsPJDesc", "hsTeaBagsYorkieDesc", "hsMugTeaPJDesc", "hsKettlePowered", "hsKettleBoiling", "hsToasterPowered", "hsToasterToasting")) {
     if ($locTxt -notmatch "(?m)^$k,") { Fail "missing loc $k" } else { Ok "loc $k" }
 }
 foreach ($c in @(@("HSSocketUKSingle", "HSSocketUKSingle_Plug0"), @("HSSocketUKDouble", "HSSocketUKDouble_Plug1"), @("HSSocketUKDouble", "HSSocketUKDouble_SwOn1"), @("HSSocketUSDouble", "HSSocketUSDouble_Plug1"), @("HSLightSwitchUS", "HSLightSwitchUS_SwOn"), @("HSLightSwitchUK", "HSLightSwitchUK_SwOff"), @("HSCookerSwitchUK", "HSCookerSwitchUK_Lamp"), @("HSRangeOutletUS", "HSRangeOutletUS_Plug0"))) {
@@ -169,7 +185,7 @@ $dll = Join-Path $Root "HSWorkingStuff.dll"
 if (-not (Test-Path $dll)) { Fail "HSWorkingStuff.dll missing" }
 else {
     $ascii = [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($dll))
-    foreach ($t in @("HSWorkingStuffMod", "HSWorkingStuffSettings", "BlockHSFridge", "TileEntityHSFridge", "HSSpoil", "HSWater", "HSWorkingStuffNet", "HSPatchConnectToIp", "EnableConnectToIp", "HSLoc", "HSPatchLocGet", "BlockHSStove", "HSStovePower", "HideNews", "HSPatchHideNewsSplash", "HSPatchHideNewsCount", "HSJoinHold", "HSPatchJoinHoldAuthorize", "HoldJoinUntilReady", "HSPatchJoinHoldAuthState", "HSPatchJoinHoldGameStarted", "HSPatchJoinHoldAuthStart", "HSItem", "HSInvData", "HSFridgeInv", "IHSFridgeInv", "CreateTe33", "Load33", "HSPatchFridgeRead", "HSRadiatorValve", "GaugeLine", "ColdReason", "FillFromSupply", "UnderSink", "DrainMurky", "XUiC_HSRainCatchWindowGroup", "XUiC_HSRainToolGrid", "BlockHSCoffeeMaker", "HSPatchRainQuickMove", "TryQuickAdd", "HSPatchStoveWireHold", "HSPatchStoveWindowHalt", "HSPatchSwitchText", "EnsureTe33", "BlockHSMicrowave", "HSMicrowaveSound", "BlockHSRainCatch", "FindTaps", "HSPatchRadialGrey", "HSPatchLegacyCollectorTick", "ItemActionHSPipeTool", "HSPipeHud", "HSPipeToolInteract", "HSStovePowerWindow", "HSPowerDemand", "HSPatchIdleDemand", "HSBoiler", "BlockHSRadiator", "HSPipeNet", "TakeUp", "HSModelHit", "RootTransformRefParent", "RepairWorkstation", "NewConnection", "NewSystem", "UseSystem", "Hugs", "Ports", "IntoFixtures", "FindBoiler", "Covers", "FloorCell", "getFacesDrawnFullBitfield", "RouteUnder", "RouteSurface", "UseFloorPipe", "Joins", "Relayout", "SetPreview", "BlockHSWaterCooler", "BlockHSShower", "HSWash", "HSPatchWashedSmell", "SmellUpdateItemsAndBlood", "BlockHSAirCon", "HSAirCon", "HSPatchGasGrillFuel", "GetFuelTime", "BuildCold", "HSRoomTemp", "HSPatchRoomTemp", "BlockHSThermometer", "HSLaundry", "BlockHSLaundry", "HandleLaundry", "HSPlugs", "HSPatchSocketPlugs", "HSPatchSocketPlugShow", "HSOriginalMaterials", "HSOutlets", "HSPatchOutletPower", "HSPatchWaterWash", "HSPatchWaterWashPrompt", "NaturalWash", "QuickWashHours", "BlockHSWallSwitch", "BlockHSWallRelay")) {
+    foreach ($t in @("HSWorkingStuffMod", "HSWorkingStuffSettings", "BlockHSFridge", "TileEntityHSFridge", "HSSpoil", "HSWater", "HSWorkingStuffNet", "HSPatchConnectToIp", "EnableConnectToIp", "HSLoc", "HSPatchLocGet", "BlockHSStove", "HSStovePower", "HideNews", "HSPatchHideNewsSplash", "HSPatchHideNewsCount", "HSJoinHold", "HSPatchJoinHoldAuthorize", "HoldJoinUntilReady", "HSPatchJoinHoldAuthState", "HSPatchJoinHoldGameStarted", "HSPatchJoinHoldAuthStart", "HSItem", "HSInvData", "HSFridgeInv", "IHSFridgeInv", "CreateTe33", "Load33", "HSPatchFridgeRead", "HSRadiatorValve", "GaugeLine", "ColdReason", "FillFromSupply", "UnderSink", "DrainMurky", "XUiC_HSRainCatchWindowGroup", "XUiC_HSRainToolGrid", "BlockHSCoffeeMaker", "HSPatchRainQuickMove", "TryQuickAdd", "HSPatchStoveWireHold", "HSPatchStoveWindowHalt", "HSPatchSwitchText", "EnsureTe33", "BlockHSMicrowave", "HSMicrowaveSound", "BlockHSRainCatch", "FindTaps", "HSPatchRadialGrey", "HSPatchLegacyCollectorTick", "ItemActionHSPipeTool", "HSPipeHud", "HSPipeToolInteract", "HSStovePowerWindow", "HSPowerDemand", "HSPatchIdleDemand", "HSBoiler", "BlockHSRadiator", "HSPipeNet", "TakeUp", "HSModelHit", "RootTransformRefParent", "RepairWorkstation", "NewConnection", "NewSystem", "UseSystem", "Hugs", "Ports", "IntoFixtures", "FindBoiler", "Covers", "FloorCell", "getFacesDrawnFullBitfield", "RouteUnder", "RouteSurface", "UseFloorPipe", "Joins", "Relayout", "SetPreview", "BlockHSWaterCooler", "BlockHSShower", "HSWash", "HSPatchWashedSmell", "SmellUpdateItemsAndBlood", "BlockHSAirCon", "HSAirCon", "HSPatchGasGrillFuel", "GetFuelTime", "BuildCold", "HSRoomTemp", "HSPatchRoomTemp", "BlockHSThermometer", "HSLaundry", "BlockHSLaundry", "HandleLaundry", "HSPlugs", "HSPatchSocketPlugs", "HSPatchSocketPlugShow", "HSOriginalMaterials", "HSOutlets", "HSPatchOutletPower", "HSPatchWaterWash", "HSPatchWaterWashPrompt", "NaturalWash", "QuickWashHours", "BlockHSWallSwitch", "BlockHSWallRelay", "HSPatchSinkDrain", "BlockHSKettle", "BlockHSToaster")) {
         if ($ascii.IndexOf($t) -lt 0) { Fail "DLL missing '$t'" } else { Ok "dll $t" }
     }
 }

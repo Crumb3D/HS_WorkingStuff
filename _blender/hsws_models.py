@@ -13,6 +13,7 @@ import bpy
 import bmesh
 import math
 import os
+import random
 import sys
 from mathutils import Vector, Matrix
 
@@ -31,6 +32,20 @@ MAT_COLORS = {
     "HS_Led": (0.25, 1.0, 0.35, 1.0),
     "HS_Red": (0.78, 0.08, 0.06, 1.0),
     "HS_Neon": (1.0, 0.25, 0.1, 1.0),
+    "HS_Green": (0.30, 0.52, 0.16, 1.0),
+    "HS_Straw": (0.78, 0.60, 0.28, 1.0),
+    "HS_Wheat": (0.86, 0.64, 0.24, 1.0),
+    # icon-only colours (never exported to Unity)
+    "HS_Bread": (1.0, 0.70, 0.30, 1.0),
+    "HS_Crust": (0.62, 0.37, 0.15, 1.0),
+    "HS_Toast": (0.55, 0.27, 0.07, 1.0),
+    "HS_ToastCrust": (0.25, 0.10, 0.02, 1.0),
+    "HS_Dough": (1.0, 0.85, 0.50, 1.0),
+    "HS_Tea": (0.50, 0.29, 0.13, 1.0),
+    "HS_Coffee": (0.16, 0.09, 0.05, 1.0),
+    "HS_Paper": (0.86, 0.78, 0.60, 1.0),
+    "HS_TeaGreen": (0.08, 0.40, 0.20, 1.0),
+    "HS_Gold": (0.92, 0.70, 0.18, 1.0),
 }
 
 WALL = 0.5
@@ -91,6 +106,32 @@ class Piece:
             rot = Matrix.Identity(4)
         bmesh.ops.transform(self.bm, matrix=Matrix.Translation(Vector(center)) @ rot, verts=verts)
         self._finish(list({f for v in verts for f in v.link_faces}), mat, smooth=True)
+
+    # Round bar from p0 to p1, any direction; r1 tapers it towards p1.
+    def seg(self, mat, p0, p1, r0, r1=None, segs=8, smooth=True):
+        p0, p1 = Vector(p0), Vector(p1)
+        d = p1 - p0
+        if d.length < 1e-6:
+            return
+        res = bmesh.ops.create_cone(self.bm, cap_ends=True, cap_tris=False, segments=segs,
+                                    radius1=r0, radius2=r0 if r1 is None else r1, depth=d.length)
+        rot = Vector((0, 0, 1)).rotation_difference(d.normalized()).to_matrix().to_4x4()
+        bmesh.ops.transform(self.bm, matrix=Matrix.Translation((p0 + p1) / 2) @ rot, verts=res["verts"])
+        self._finish(list({f for v in res["verts"] for f in v.link_faces}), mat, smooth=smooth)
+
+    # Squashed sphere: scale (sx, sy, sz) times radius.
+    def ball(self, mat, center, radius, scale=(1, 1, 1), segs=20):
+        res = bmesh.ops.create_uvsphere(self.bm, u_segments=segs, v_segments=segs // 2, radius=radius)
+        m = Matrix.Translation(Vector(center)) @ Matrix.Diagonal((scale[0], scale[1], scale[2], 1.0))
+        bmesh.ops.transform(self.bm, matrix=m, verts=res["verts"])
+        self._finish(list({f for v in res["verts"] for f in v.link_faces}), mat, smooth=True)
+
+    # Box turned by `rot` (a 3x3 or 4x4 rotation) about its centre.
+    def obox(self, mat, center, size, rot):
+        res = bmesh.ops.create_cube(self.bm, size=1.0)
+        m = Matrix.Translation(Vector(center)) @ rot.to_4x4() @ Matrix.Diagonal((size[0], size[1], size[2], 1.0))
+        bmesh.ops.transform(self.bm, matrix=m, verts=res["verts"])
+        self._finish(list({f for v in res["verts"] for f in v.link_faces}), mat)
 
     def collider(self, center, size):
         self.cols.append((tuple(center), tuple(size)))
@@ -612,9 +653,273 @@ def cooker_switch_uk():
     return p
 
 
+# ---------------------------------------------------------------- worktop appliances
+# These stand on a worktop: place them in the cell above it. They sit a little towards the wall.
+
+def kettle():
+    """Cordless jug kettle on its power base: water window at the front, handle right, spout left."""
+    p = Piece("HSKettle")
+    yc = 0.08
+    p.rod("HS_Dark", (0, yc, 0.01), 0.088, 0.02, "Z", 32)
+    p.rod("HS_White", (0, yc, 0.024), 0.084, 0.008, "Z", 32)
+    p.seg("HS_White", (0, yc, 0.028), (0, yc, 0.235), 0.082, 0.066, 32)
+    p.rod("HS_White", (0, yc, 0.241), 0.062, 0.012, "Z", 32)
+    p.rod("HS_Grey", (0, yc, 0.25), 0.04, 0.006, "Z", 24)
+    p.box("HS_Grey", (0.012, yc, 0.256), (0.03, 0.014, 0.012))
+    # water window with the level marks
+    p.obox("HS_Display", (0.0, yc - 0.075, 0.13), (0.022, 0.006, 0.15), Matrix.Rotation(math.radians(-4.5), 3, "X"))
+    for i in range(4):
+        p.box("HS_White", (0.0, yc - 0.0795, 0.08 + i * 0.035), (0.012, 0.002, 0.003))
+    # handle on the right with the switch and light under it
+    p.box("HS_White", (0.112, yc, 0.15), (0.022, 0.032, 0.17))
+    p.box("HS_White", (0.09, yc, 0.225), (0.05, 0.032, 0.024))
+    p.box("HS_White", (0.092, yc, 0.07), (0.05, 0.032, 0.024))
+    p.box("HS_Grey", (0.105, yc, 0.045), (0.03, 0.026, 0.016))
+    p.box("HS_Led", (0.105, yc - 0.014, 0.045), (0.012, 0.003, 0.006))
+    # spout
+    p.obox("HS_White", (-0.083, yc, 0.222), (0.05, 0.042, 0.024), Matrix.Rotation(math.radians(-18), 3, "Y"))
+    p.box("HS_Grey", (-0.1, yc, 0.205), (0.012, 0.03, 0.02))
+    p.collider((0, yc, 0.13), (0.26, 0.2, 0.27))
+    return p
+
+
+def toaster():
+    """Brushed steel two-slice toaster: slots on top, lever and browning dial on the right end."""
+    p = Piece("HSToaster")
+    yc = 0.06
+    w, d, h = 0.28, 0.17, 0.19
+    p.box("HS_Chrome", (0, yc, 0.012 + h / 2), (w, d - 0.02, h))
+    for s in (-1, 1):
+        p.rod("HS_Chrome", (0, yc + s * (d / 2 - 0.01), 0.012 + h / 2), 0.01, w, "X", 12)
+        p.rod("HS_Chrome", (0, yc + s * (d / 2 - 0.01), 0.012 + h - 0.01), 0.01, w, "X", 12)
+    p.box("HS_Chrome", (0, yc, 0.012 + h - 0.002), (w, d - 0.02, 0.004))
+    # black end caps
+    for s in (-1, 1):
+        p.box("HS_Dark", (s * (w / 2 + 0.006), yc, 0.012 + h / 2), (0.012, d, h))
+    # bread slots
+    for s in (-1, 1):
+        p.box("HS_Dark", (0, yc + s * 0.035, 0.012 + h + 0.0005), (0.22, 0.024, 0.002))
+        p.box("HS_Grey", (0, yc + s * 0.035, 0.012 + h + 0.0002), (0.226, 0.03, 0.001))
+    # lever in its slot, browning dial, cancel button
+    xe = w / 2 + 0.012
+    p.box("HS_Grey", (xe + 0.001, yc - 0.02, 0.11), (0.002, 0.01, 0.13))
+    p.box("HS_Dark", (xe + 0.016, yc - 0.02, 0.16), (0.03, 0.03, 0.018))
+    p.rod("HS_Grey", (xe + 0.005, yc + 0.035, 0.07), 0.016, 0.01, "X", 20)
+    p.box("HS_White", (xe + 0.0105, yc + 0.035, 0.08), (0.001, 0.003, 0.01))
+    p.box("HS_Red", (xe + 0.004, yc + 0.035, 0.12), (0.008, 0.016, 0.01))
+    # crumb tray and feet
+    p.box("HS_Dark", (0, yc - d / 2 - 0.001, 0.025), (0.12, 0.004, 0.012))
+    for x in (-0.11, 0.11):
+        for y in (-0.06, 0.06):
+            p.rod("HS_Dark", (x, yc + y, 0.006), 0.01, 0.012, "Z", 10)
+    p.collider((0, yc, 0.1), (0.31, 0.19, 0.21))
+    return p
+
+
+# ---------------------------------------------------------------- wheat crop (Collide=melee: walk through it)
+
+def _wheat(name, height, stalk_mat, ear_mat, n, ears, seed):
+    p = Piece(name)
+    rnd = random.Random(seed)
+    for _ in range(n):
+        base = Vector((rnd.uniform(-0.36, 0.36), rnd.uniform(-0.36, 0.36), 0.0))
+        h = height * rnd.uniform(0.8, 1.1)
+        lean = Vector((rnd.uniform(-0.1, 0.1), rnd.uniform(-0.1, 0.1), 1.0)).normalized()
+        top = base + lean * h
+        p.seg(stalk_mat, base, top, 0.0045, 0.003, 5)
+        # two leaves curving out from the lower stalk
+        for k in range(2):
+            a = rnd.uniform(0, 2 * math.pi)
+            lb = base + lean * (h * (0.15 + 0.2 * k))
+            out = Vector((math.cos(a), math.sin(a), 0.0))
+            lt = lb + out * h * 0.22 + Vector((0, 0, h * 0.18))
+            p.seg(stalk_mat, lb, lt, 0.006, 0.001, 4)
+        if ears:
+            ear_top = top + lean * 0.09
+            p.seg(ear_mat, top, ear_top, 0.011, 0.006, 6)
+            for j in range(3):
+                q = top + lean * (0.03 * j + 0.03)
+                aw = q + Vector((rnd.uniform(-0.03, 0.03), rnd.uniform(-0.03, 0.03), 0.07))
+                p.seg(ear_mat, q, aw, 0.0012, 0.0006, 3)
+    p.collider((0, 0, height / 2), (0.8, 0.8, max(height, 0.2)))
+    return p
+
+
+def wheat_1():
+    """Wheat seedlings."""
+    return _wheat("HSWheat1", 0.16, "HS_Green", "HS_Green", 45, False, 11)
+
+
+def wheat_2():
+    """Green wheat in ear."""
+    return _wheat("HSWheat2", 0.6, "HS_Green", "HS_Green", 55, True, 12)
+
+
+def wheat_3():
+    """Ripe golden wheat, ready to harvest."""
+    return _wheat("HSWheat3", 0.9, "HS_Straw", "HS_Wheat", 60, True, 13)
+
+
+# ---------------------------------------------------------------- icon-only pieces (inventory pictures, not exported)
+
+def _mug(name, drink=None, tag=None):
+    p = Piece(name)
+    r, h = 0.12, 0.26
+    p.seg("HS_White", (0, 0, 0), (0, 0, h), r, r * 1.04, 40)
+    p.rod("HS_Grey" if drink is None else drink, (0, 0, h + 0.002), r * 0.9, 0.004, "Z", 40)
+    # handle: a ring of short bars on the right
+    pts = []
+    for i in range(9):
+        a = math.radians(-80 + i * 20)
+        pts.append(Vector((r + 0.02 + 0.06 * math.cos(a), 0, h * 0.5 + 0.075 * math.sin(a))))
+    for a_, b_ in zip(pts, pts[1:]):
+        p.seg("HS_White", a_, b_, 0.016, None, 12)
+    if tag is not None:
+        # tea bag string over the rim and its paper tag hanging outside
+        p.seg("HS_White", (-r * 0.5, -r * 0.3, h - 0.03), (-r * 1.02, -r * 0.4, h + 0.01), 0.002, None, 4)
+        p.seg("HS_White", (-r * 1.02, -r * 0.4, h + 0.01), (-r * 1.1, -r * 0.45, h - 0.07), 0.002, None, 4)
+        p.box(tag, (-r * 1.12, -r * 0.46, h - 0.1), (0.008, 0.05, 0.06))
+    return p
+
+
+def icon_mug():
+    return _mug("HSIconMug")
+
+
+def icon_mug_tea_pj():
+    return _mug("HSIconMugTeaPJ", "HS_Tea", "HS_TeaGreen")
+
+
+def icon_mug_tea_yorkie():
+    return _mug("HSIconMugTeaYorkie", "HS_Tea", "HS_Red")
+
+
+def icon_mug_coffee():
+    return _mug("HSIconMugCoffee", "HS_Coffee")
+
+
+def _tea_box(name, body, band, stripe):
+    p = Piece(name)
+    w, d, h = 0.3, 0.16, 0.36
+    p.box(body, (0, 0, h / 2), (w, d, h))
+    p.box(band, (0, -d / 2 - 0.001, h * 0.32), (w + 0.002, 0.002, 0.07))
+    p.box(stripe, (0, -d / 2 - 0.002, h * 0.32), (w + 0.002, 0.002, 0.015))
+    p.rod("HS_White", (0, -d / 2 - 0.003, h * 0.66), 0.075, 0.003, "Y", 32)
+    # a leaf on the label
+    p.obox(body, (0, -d / 2 - 0.0055, h * 0.66), (0.03, 0.002, 0.08), Matrix.Rotation(math.radians(30), 3, "Y"))
+    p.box(band, (-d * 0.5, 0, h + 0.001), (0.12, 0.08, 0.002))
+    return p
+
+
+def icon_tea_pj():
+    """PJ Tops: green box, red band."""
+    return _tea_box("HSIconTeaPJ", "HS_TeaGreen", "HS_Red", "HS_Gold")
+
+
+def icon_tea_yorkie():
+    """Yorkie Brew: red box, gold band."""
+    return _tea_box("HSIconTeaYorkie", "HS_Red", "HS_Gold", "HS_TeaGreen")
+
+
+def _ear(p, base, d, mat, size=1.0):
+    """Ear of wheat: two rows of plump grains up a stem, whiskers off the top grains."""
+    side = d.cross(Vector((0, 1, 0)))
+    if side.length < 1e-4:
+        side = Vector((1, 0, 0))
+    side.normalize()
+    p.seg(mat, base, base + d * 0.13 * size, 0.003 * size, None, 6)
+    for j in range(7):
+        q = base + d * (0.012 + 0.017 * j) * size
+        for s in (-1, 1):
+            g = q + side * s * 0.009 * size + d * 0.004 * s * size
+            p.ball(mat, tuple(g), 0.0105 * size * (1.0 - 0.06 * j), (0.8, 0.8, 1.35), 10)
+            if j >= 3:
+                p.seg(mat, g, g + (d * 1.0 + side * s * 0.35).normalized() * 0.07 * size, 0.0014 * size, 0.0006, 3)
+
+
+def icon_wheat():
+    """Sheaf of harvested wheat tied with twine."""
+    p = Piece("HSIconWheat")
+    for i in range(9):
+        a = (i - 4) * 0.06
+        d = Vector((math.sin(a), 0.0, math.cos(a)))
+        base = Vector((math.sin(a) * 0.02, (i % 3 - 1) * 0.02, 0.0))
+        top = base + d * 0.34
+        p.seg("HS_Straw", base, top, 0.006, None, 6)
+        _ear(p, top, d, "HS_Wheat")
+    p.rod("HS_Paper", (0, 0, 0.12), 0.04, 0.03, "Z", 20)
+    return p
+
+
+def icon_flour():
+    """Paper bag of flour with a wheat ear on the label."""
+    p = Piece("HSIconFlour")
+    w, d, h = 0.24, 0.14, 0.32
+    p.box("HS_Paper", (0, 0, h / 2), (w, d, h))
+    p.obox("HS_Paper", (0, 0, h + 0.02), (w, 0.02, 0.05), Matrix.Rotation(math.radians(8), 3, "X"))
+    p.box("HS_White", (0, -d / 2 - 0.001, h * 0.45), (w * 0.8, 0.002, h * 0.5))
+    p.box("HS_Display", (0, -d / 2 - 0.002, h * 0.75), (w * 0.8, 0.002, 0.025))
+    _ear(p, Vector((0, -d / 2 - 0.01, h * 0.28)), Vector((0, 0, 1)), "HS_Wheat", 1.0)
+    return p
+
+
+def icon_dough():
+    p = Piece("HSIconDough")
+    p.ball("HS_Dough", (0, 0, 0.09), 0.17, (1.0, 0.9, 0.55), 32)
+    p.ball("HS_White", (0.05, -0.05, 0.17), 0.02, (1, 1, 0.3), 10)
+    return p
+
+
+def icon_loaf():
+    """Tin loaf: domed top, scored."""
+    p = Piece("HSIconLoaf")
+    w, d, h = 0.34, 0.18, 0.14
+    p.box("HS_Crust", (0, 0, h / 2), (w, d, h))
+    # the top rises over the tin edges
+    p.seg("HS_Crust", (-w / 2 - 0.004, 0, h), (w / 2 + 0.004, 0, h), d / 2 + 0.006, None, 40)
+    for i in range(3):
+        p.obox("HS_ToastCrust", (-0.09 + i * 0.09, 0, h + d / 2 + 0.004), (0.018, d * 0.45, 0.006), Matrix.Rotation(math.radians(30), 3, "Z"))
+    return p
+
+
+def _slice(name, face, crust):
+    p = Piece(name)
+    s, t = 0.26, 0.03
+    zt = s * 0.62
+    p.box(crust, (0, 0, zt / 2), (s, t, zt))
+    p.seg(crust, (0, -t / 2, zt), (0, t / 2, zt), s * 0.54, None, 48, smooth=False)
+    p.box(face, (0, 0, zt / 2 + 0.008), (s - 0.024, t + 0.006, zt - 0.008))
+    p.seg(face, (0, -t / 2 - 0.003, zt), (0, t / 2 + 0.003, zt), s * 0.54 - 0.013, None, 48, smooth=False)
+    return p
+
+
+def icon_slice():
+    return _slice("HSIconSlice", "HS_Bread", "HS_Crust")
+
+
+def icon_toast():
+    return _slice("HSIconToast", "HS_Toast", "HS_ToastCrust")
+
+
+def icon_wheat_seed():
+    """Seed packet with a wheat ear on the front."""
+    p = Piece("HSIconWheatSeed")
+    w, d, h = 0.24, 0.03, 0.34
+    p.box("HS_Paper", (0, 0, h / 2), (w, d, h))
+    p.box("HS_Green", (0, -d / 2 - 0.001, h * 0.85), (w, 0.002, 0.06))
+    p.box("HS_White", (0, -d / 2 - 0.001, h * 0.42), (w * 0.8, 0.002, h * 0.55))
+    _ear(p, Vector((0, -d / 2 - 0.012, h * 0.2)), Vector((0, 0, 1)), "HS_Wheat", 1.3)
+    p.seg("HS_Straw", (0, -d / 2 - 0.012, h * 0.15), (0, -d / 2 - 0.012, h * 0.2), 0.005, None, 6)
+    return p
+
+
 PIECES = [combi_boiler, panel_radiator, chest_freezer, split_air_con, ceiling_air_con, wall_thermometer,
           washing_machine, tumble_dryer, fridge_freezer,
-          socket_uk_single, socket_uk_double, socket_us_single, socket_us_double, light_switch_uk, light_switch_us, cooker_switch_uk, range_outlet_us]
+          socket_uk_single, socket_uk_double, socket_us_single, socket_us_double, light_switch_uk, light_switch_us, cooker_switch_uk, range_outlet_us,
+          kettle, toaster, wheat_1, wheat_2, wheat_3]
+
+ICON_PIECES = [icon_mug, icon_mug_tea_pj, icon_mug_tea_yorkie, icon_mug_coffee, icon_tea_pj, icon_tea_yorkie,
+               icon_wheat, icon_flour, icon_dough, icon_loaf, icon_slice, icon_toast, icon_wheat_seed]
 
 
 def clear_scene():
@@ -653,15 +958,18 @@ def main():
     scene.unit_settings.system = 'METRIC'
     scene.unit_settings.scale_length = 1.0
     log = []
-    for i, make in enumerate(PIECES):
+    for i, make in enumerate(PIECES + ICON_PIECES):
         piece = make()
         coll = bpy.data.collections.new(piece.name)
         scene.collection.children.link(coll)
         root = piece.build(coll)
         bpy.context.view_layer.update()
-        path = os.path.join(OUT_DIR, piece.name + ".fbx")
-        export_piece(root, path)
-        log.append("%s verts=%d cols=%d -> %s" % (piece.name, len(root.data.vertices), len(root.children), path))
+        if make in PIECES:
+            path = os.path.join(OUT_DIR, piece.name + ".fbx")
+            export_piece(root, path)
+            log.append("%s verts=%d cols=%d -> %s" % (piece.name, len(root.data.vertices), len(root.children), path))
+        else:
+            log.append("%s verts=%d (icon only)" % (piece.name, len(root.data.vertices)))
         root.location.x = i * 3.0
     bpy.ops.wm.save_as_mainfile(filepath=BLEND_OUT)
     with open(os.path.join(OUT_DIR, "_export_log.txt"), "w") as f:

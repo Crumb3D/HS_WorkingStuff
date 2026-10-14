@@ -341,6 +341,95 @@
 			<property name="CustomIcon" value="cntCoffeeMakerCommercial" />
 		</block>
 
+		<!-- Worktop appliances: place them in the cell above a worktop. -->
+		<block name="hsKettle">
+			<property name="Extends" value="hsCoffeeMaker" />
+			<property name="Class" value="HSKettle, HSWorkingStuff" />
+			<property class="Workstation">
+				<property name="CraftingAreaRecipes" value="hsKettle" />
+				<property name="Modules" value="output" />
+			</property>
+			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSKettle" />
+			<property name="ModelOffset" value="0,0,0" />
+			<property name="DescriptionKey" value="hsKettleDesc" />
+			<property name="RequiredPower" value="10" />
+			<property name="WorkstationIcon" value="ui_game_symbol_water" />
+			<property name="CraftIcon" value="ui_game_symbol_water" />
+			<property name="CustomIcon" value="hsKettle" />
+		</block>
+
+		<block name="hsToaster">
+			<property name="Extends" value="hsCoffeeMaker" />
+			<property name="Class" value="HSToaster, HSWorkingStuff" />
+			<property class="Workstation">
+				<property name="CraftingAreaRecipes" value="hsToaster" />
+				<property name="Modules" value="output" />
+			</property>
+			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSToaster" />
+			<property name="ModelOffset" value="0,0,0" />
+			<property name="DescriptionKey" value="hsToasterDesc" />
+			<property name="RequiredPower" value="5" />
+			<property name="WorkstationIcon" value="ui_game_symbol_fork" />
+			<property name="CraftIcon" value="ui_game_symbol_spatula" />
+			<property name="CustomIcon" value="hsToaster" />
+		</block>
+
+		<!-- Wheat: planted on a farm plot like corn. The seed is the planted block. -->
+		<block name="hsPlantedWheat1">
+			<property name="Extends" value="cropsGrowingMaster" param1="CustomIcon" />
+			<property name="CreativeMode" value="Player" />
+			<property class="PlantGrowing">
+				<property name="Next" value="hsPlantedWheat2" />
+			</property>
+			<property name="UnlockedBy" value="craftingSeeds,perkLivingOffTheLand" />
+			<property name="DescriptionKey" value="hsPlantedWheatDesc" />
+			<property name="Material" value="Mcorn" />
+			<property name="Shape" value="ModelEntity" />
+			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSWheat1" />
+			<property name="ModelOffset" value="0,0,0" />
+			<property name="MultiBlockDim" value="1,1,1" />
+			<property name="Place" value="Door" />
+			<property name="PlaceAsRandomRotation" value="true" />
+			<property name="CustomIcon" value="hsPlantedWheat1" />
+			<drop event="Destroy" name="hsPlantedWheat1" count="1" />
+			<property name="SortOrder1" value="B961" />
+			<property name="Tags" value="seedSkill,seedMulti" />
+			<property name="SoundPickup" value="seeds_corn_grab" />
+			<property name="SoundPlace" value="seeds_corn_place" />
+		</block>
+
+		<block name="hsPlantedWheat2">
+			<property name="Extends" value="hsPlantedWheat1" />
+			<property name="CreativeMode" value="None" />
+			<property class="PlantGrowing">
+				<property name="Next" value="hsPlantedWheat3" />
+			</property>
+			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSWheat2" />
+			<drop event="Destroy" name="hsPlantedWheat1" count="1" />
+			<property name="SortOrder2" value="0001" />
+		</block>
+
+		<block name="hsPlantedWheat3">
+			<property name="Extends" value="cropsHarvestableMaster" />
+			<property name="CreativeMode" value="None" />
+			<property name="DescriptionKey" value="hsPlantedWheatRipeDesc" />
+			<property name="Material" value="Mcorn" />
+			<property name="Shape" value="ModelEntity" />
+			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSWheat3" />
+			<property name="ModelOffset" value="0,0,0" />
+			<property name="MultiBlockDim" value="1,1,1" />
+			<property name="Place" value="Door" />
+			<property name="PlaceAsRandomRotation" value="true" />
+			<property name="CustomIcon" value="hsPlantedWheat1" />
+			<drop event="Harvest" name="hsCropWheat" count="3" tag="cropHarvest" />
+			<drop event="Harvest" name="hsCropWheat" count="1" prob="0.5" tag="bonusCropHarvest" />
+			<drop event="Harvest" name="hsCropWheat" count="1" tag="farmerBonusHarvest" />
+			<drop event="Harvest" name="hsPlantedWheat1" count="1" tag="farmerBonusSeed" />
+			<drop event="Destroy" name="hsPlantedWheat1" count="1" prob="0.5" />
+			<property name="SortOrder1" value="B961" />
+			<property name="SortOrder2" value="0002" />
+		</block>
+
 		<block name="hsFreezer">
 			<property name="Class" value="HSFridge, HSWorkingStuff" />
 			<property name="CreativeMode" value="Player" />

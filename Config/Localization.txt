@@ -305,3 +305,44 @@ hsOutletOn,UI,tooltip,,,K,On
 hsOutletOff,UI,tooltip,,,K,Off
 hsRangeOutletUS,blocks,Block,,,,US Range Outlet (240V)
 hsRangeOutletUSDesc,blocks,Block,,,,"The US way to power a cooker: a big 240V range outlet, always live with no switch. Wire power into it and from it to one cooker."
+hsKettle,blocks,Block,,,,Electric Kettle
+hsKettleDesc,blocks,Block,,,,"A cordless electric kettle. Stand it on a worktop and plug it into a socket (10W, only while it boils). Put in a jar of water and it boils it; add a mug and a tea bag and it makes a proper cuppa. You still have to know the recipe."
+hsToaster,blocks,Block,,,,Toaster
+hsToasterDesc,blocks,Block,,,,"A two-slice toaster for the worktop. Plug it into a socket (5W, only while it toasts) and put in slices of bread to make toast."
+hsPlantedWheat1,blocks,Block,,,,Wheat Seed
+hsPlantedWheat2,blocks,Block,,,,Wheat
+hsPlantedWheat3,blocks,Block,,,,Ripe Wheat
+hsPlantedWheatDesc,blocks,Block,,,,"Plant it on a farm plot. It grows like corn into wheat you can harvest for grain, which you grind into flour."
+hsPlantedWheatRipeDesc,blocks,Block,,,,"Ripe wheat. Harvest it for grain and a chance of seed."
+hsCropWheat,items,Item,,,,Wheat Grain
+hsCropWheatDesc,items,Item,,,,"Harvested wheat. Grind 3 into a bag of flour, or turn 5 into a wheat seed."
+hsFlour,items,Item,,,,Flour
+hsFlourDesc,items,Item,,,,"Plain flour, ground from wheat. Mix 2 bags with a jar of water to make bread dough."
+hsDough,items,Item,,,,Bread Dough
+hsDoughDesc,items,Item,,,,"Bake it in a cooker or on a campfire for a loaf of bread."
+hsBreadLoaf,items,Item,,,,Loaf of Bread
+hsBreadLoafDesc,items,Item,,,,"A fresh baked loaf. Eat it whole or cut it into 8 slices. It goes stale in about 5 days."
+hsBreadSlice,items,Item,,,,Slice of Bread
+hsBreadSliceDesc,items,Item,,,,"Eat it as it is or put it in a toaster."
+hsToast,items,Item,,,,Toast
+hsToastDesc,items,Item,,,,"Hot toast from the toaster. Best eaten fresh: it goes soggy in a couple of days."
+hsMug,items,Item,,,,Mug
+hsMugDesc,items,Item,,,,"A tea mug. Put it in a kettle with a tea bag and a jar of water for a cuppa, or in a coffee maker with coffee beans. You get the mug back when you drink."
+hsTeaBagsPJ,items,Item,,,,PJ Tops Tea Bag
+hsTeaBagsPJDesc,items,Item,,,,"PJ Tops: the pyramid bag for a smooth everyday brew. One bag, a mug and a jar of water make a mug of tea in a kettle."
+hsTeaBagsYorkie,items,Item,,,,Yorkie Brew Tea Bag
+hsTeaBagsYorkieDesc,items,Item,,,,"Yorkie Brew: a proper strong builder's blend from up north. One bag, a mug and a jar of water make a mug of tea in a kettle."
+hsMugTeaPJ,items,Item,,,,Mug of PJ Tops
+hsMugTeaPJDesc,items,Item,,,,"A nice smooth cuppa. It quenches more thirst than coffee, with a shorter pick-me-up. You keep the mug."
+hsMugTeaYorkie,items,Item,,,,Mug of Yorkie Brew
+hsMugTeaYorkieDesc,items,Item,,,,"Strong enough to stand a spoon in: as much of a lift as coffee. You keep the mug."
+hsMugCoffee,items,Item,,,,Mug of Coffee
+hsMugCoffeeDesc,items,Item,,,,"Coffee in a mug. Same as a jar of coffee, and you keep the mug."
+hsKettleDone,UI,tooltip,,,K,Boiled: your drink is ready
+hsKettlePowered,UI,tooltip,,,K,"Powered: add a jar of water, and a mug and tea bag for a cuppa"
+hsKettleUnpowered,UI,tooltip,,,K,No power: plug this kettle in to boil
+hsKettleBoiling,UI,tooltip,,,K,Boiling for {0}: {1} left
+hsToasterDone,UI,tooltip,,,K,Popped up: your toast is ready
+hsToasterPowered,UI,tooltip,,,K,Powered: add slices of bread
+hsToasterUnpowered,UI,tooltip,,,K,No power: plug this toaster in to toast
+hsToasterToasting,UI,tooltip,,,K,Toasting: {0} left

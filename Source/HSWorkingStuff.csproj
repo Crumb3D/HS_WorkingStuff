@@ -94,6 +94,7 @@
     <Compile Include="HSStovePower.cs" />
     <Compile Include="BlockHSMicrowave.cs" />
     <Compile Include="BlockHSCoffeeMaker.cs" />
+    <Compile Include="BlockHSKettle.cs" />
     <Compile Include="BlockHSWaterCooler.cs" />
     <Compile Include="BlockHSShower.cs" />
     <Compile Include="HSWash.cs" />
