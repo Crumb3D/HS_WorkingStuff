@@ -667,7 +667,8 @@ public class HSHifiPlayer : MonoBehaviour
         }
     }
 
-    // Vanilla wires only show with the wire tool out; speaker cable is always there, from the back of the set.
+    // Vanilla wires only show with the wire tool out; speaker cable is always there.
+    // It is fitted to the walls: out of the set, up the wall, along the ceiling, and down to the speaker.
     void Cables(World world, List<Vector3i> speakers)
     {
         Material mat = null;
@@ -683,6 +684,7 @@ public class HSHifiPlayer : MonoBehaviour
                 continue;
             Vector3 a = HSPlugs.LeadEnd(transform, ebcd.transform.position + Vector3.up * 0.05f);
             Vector3 b = HSPlugs.LeadEnd(ebcd.transform, a);
+            List<Vector3> pts = CablePoints(world, Pos, s, a, b);
             if (n >= cables.Count)
             {
                 var go = new GameObject("HSHifiCable" + n);
@@ -692,6 +694,7 @@ public class HSHifiPlayer : MonoBehaviour
                 line.useWorldSpace = false;
                 line.startWidth = line.endWidth = 0.006f;
                 line.numCapVertices = 2;
+                line.numCornerVertices = 2;
                 line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 cables.Add(go);
             }
@@ -699,19 +702,200 @@ public class HSHifiPlayer : MonoBehaviour
             cable.SetActive(true);
             var lr = cable.GetComponent<LineRenderer>();
             lr.sharedMaterial = mat;
-            const int steps = 12;
-            float sag = 0.02f + 0.03f * Vector3.Distance(a, b);
-            lr.positionCount = steps + 1;
-            for (int k = 0; k <= steps; k++)
-            {
-                float f = k / (float)steps;
-                Vector3 p = Vector3.Lerp(a, b, f) + Vector3.down * (sag * 4f * f * (1f - f));
-                lr.SetPosition(k, transform.InverseTransformPoint(p));
-            }
+            lr.positionCount = pts.Count;
+            for (int k = 0; k < pts.Count; k++)
+                lr.SetPosition(k, transform.InverseTransformPoint(pts[k]));
         }
         for (int i = n; i < cables.Count; i++)
             if (cables[i].activeSelf)
                 cables[i].SetActive(false);
+    }
+
+    // Open air is allowed only to reach a wall; once on a wall the cheap path is up, along the ceiling, and down.
+    static List<Vector3> CablePoints(World world, Vector3i from, Vector3i to, Vector3 a, Vector3 b)
+    {
+        List<Vector3i> cells = CableRoute(world, from, to);
+        var pts = new List<Vector3>();
+        pts.Add(a);
+        if (cells != null)
+        {
+            for (int i = 0; i < cells.Count; i++)
+            {
+                Vector3i c = cells[i];
+                if (c == from || c == to)
+                    continue;
+                if (!OnWall(world, c) && !OnCeil(world, c))
+                    continue;
+                pts.Add(Against(world, c));
+            }
+        }
+        pts.Add(b);
+        if (pts.Count < 3)
+        {
+            pts.Clear();
+            pts.Add(a);
+            Vector3 upA = new Vector3(a.x, a.y + 2.4f, a.z);
+            Vector3 upB = new Vector3(b.x, b.y + 2.4f, b.z);
+            pts.Add(upA);
+            pts.Add(new Vector3(upA.x, upA.y, upB.z));
+            pts.Add(upB);
+            pts.Add(b);
+        }
+        int k = 1;
+        while (k < pts.Count - 1)
+        {
+            Vector3 ab = pts[k] - pts[k - 1];
+            Vector3 bc = pts[k + 1] - pts[k];
+            if (ab.sqrMagnitude < 1e-6f || Vector3.Cross(ab, bc).sqrMagnitude < 1e-5f)
+                pts.RemoveAt(k);
+            else
+                k++;
+        }
+        return pts;
+    }
+
+    static List<Vector3i> CableRoute(World world, Vector3i from, Vector3i to)
+    {
+        const int reach = 16;
+        Vector3i min = Vector3i.Min(from, to) - new Vector3i(reach, 1, reach);
+        Vector3i max = Vector3i.Max(from, to) + new Vector3i(reach, 10, reach);
+        if (min.y < 1)
+            min.y = 1;
+        if (max.y > 253)
+            max.y = 253;
+        var cost = new Dictionary<long, int>();
+        var prev = new Dictionary<long, Vector3i>();
+        var open = new List<Vector3i>();
+        long fk = HSWater.Key(from);
+        cost[fk] = 0;
+        open.Add(from);
+        Vector3i[] dirs = HSWater.Dirs;
+        long tk = HSWater.Key(to);
+        int found = int.MaxValue;
+        int steps = 0;
+        while (open.Count > 0 && steps++ < 8000)
+        {
+            int bestI = 0;
+            int bestC = cost[HSWater.Key(open[0])];
+            for (int i = 1; i < open.Count; i++)
+            {
+                int c = cost[HSWater.Key(open[i])];
+                if (c < bestC)
+                {
+                    bestC = c;
+                    bestI = i;
+                }
+            }
+            Vector3i cur = open[bestI];
+            open.RemoveAt(bestI);
+            long ck = HSWater.Key(cur);
+            if (bestC != cost[ck] || bestC >= found)
+                continue;
+            if (ck == tk)
+            {
+                found = bestC;
+                continue;
+            }
+            Vector3i came = Vector3i.zero;
+            Vector3i back;
+            if (prev.TryGetValue(ck, out back))
+                came = cur - back;
+            for (int d = 0; d < dirs.Length; d++)
+            {
+                Vector3i n = cur + dirs[d];
+                if (n.x < min.x || n.y < min.y || n.z < min.z || n.x > max.x || n.y > max.y || n.z > max.z)
+                    continue;
+                int step = CableStep(world, from, to, n, dirs[d], came);
+                if (step < 0)
+                    continue;
+                int nc = bestC + step;
+                long nk = HSWater.Key(n);
+                int old;
+                if (cost.TryGetValue(nk, out old) && old <= nc)
+                    continue;
+                cost[nk] = nc;
+                prev[nk] = cur;
+                open.Add(n);
+            }
+        }
+        if (!cost.ContainsKey(tk))
+            return null;
+        var path = new List<Vector3i>();
+        Vector3i at = to;
+        path.Add(at);
+        int guard = 0;
+        while (at != from && guard++ < 512)
+        {
+            if (!prev.TryGetValue(HSWater.Key(at), out at))
+                return null;
+            path.Add(at);
+        }
+        path.Reverse();
+        return path;
+    }
+
+    static int CableStep(World world, Vector3i start, Vector3i end, Vector3i to, Vector3i dir, Vector3i came)
+    {
+        if (to != start && to != end)
+        {
+            BlockValue bv = world.GetBlock(to);
+            if (!bv.isair)
+                return -1;
+        }
+        bool wall = OnWall(world, to);
+        bool ceil = OnCeil(world, to);
+        bool vert = dir.y != 0;
+        int c;
+        if (wall && ceil && !vert)
+            c = 6;
+        else if (wall && vert)
+            c = 8;
+        else if (wall)
+            c = 12;
+        else if (ceil && !vert)
+            c = 55;
+        else if (vert)
+            c = 90;
+        else
+            c = 110;
+        if (came != Vector3i.zero && came != dir)
+            c += 4;
+        return c;
+    }
+
+    static bool Solid(World world, Vector3i p)
+    {
+        BlockValue bv = world.GetBlock(p);
+        return !bv.isair && !bv.ischild && bv.Block != null;
+    }
+
+    static bool OnWall(World world, Vector3i c)
+    {
+        return Solid(world, c + new Vector3i(1, 0, 0)) || Solid(world, c + new Vector3i(-1, 0, 0))
+            || Solid(world, c + new Vector3i(0, 0, 1)) || Solid(world, c + new Vector3i(0, 0, -1));
+    }
+
+    static bool OnCeil(World world, Vector3i c)
+    {
+        return Solid(world, c + new Vector3i(0, 1, 0));
+    }
+
+    static Vector3 Against(World world, Vector3i c)
+    {
+        Vector3 p = c.ToVector3() + new Vector3(0.5f, 0.5f, 0.5f) - Origin.position;
+        const float d = 0.44f;
+        Vector3 o = Vector3.zero;
+        if (Solid(world, c + new Vector3i(1, 0, 0)))
+            o.x += d;
+        if (Solid(world, c + new Vector3i(-1, 0, 0)))
+            o.x -= d;
+        if (Solid(world, c + new Vector3i(0, 0, 1)))
+            o.z += d;
+        if (Solid(world, c + new Vector3i(0, 0, -1)))
+            o.z -= d;
+        if (Solid(world, c + new Vector3i(0, 1, 0)))
+            o.y += d;
+        return p + o;
     }
 
     void OnDestroy()

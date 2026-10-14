@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.38
+
+- **Speaker cables stay on the walls.** They no longer hang across the room. Each run goes from the hi-fi to the wall, up to the ceiling, along the ceiling, and down to the speaker.
+
 ## 1.0.37
 
 - **The kettle is made by hand now.** Fill it with jars of water (one jar is one cup, up to 3, and you get the jar back), switch it on and it bubbles until it boils, then clicks off. Put a mug down on the worktop (right-click with it), drop a tea bag in, pick it up and pour the boiled kettle onto it for the brew. An empty jar takes a jar of boiled water. Boiled water goes cold after a while. The kettle no longer has a crafting menu; anything left in an old kettle's output can still be taken out. New settings: `KettleBoilSeconds`, `KettleHotMinutes`.
