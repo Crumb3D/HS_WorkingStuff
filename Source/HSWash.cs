@@ -70,7 +70,7 @@ public static class HSPatchWaterWash
             if (p == null)
                 return true;
             if (HSLaundry.NaturalWash(p))
-                HSSinkCmds.DrinkAnim(p, __instance.soundStart);
+                HSSinkCmds.DrinkAnim(p, "hsStream");
             return false;
         }
         catch

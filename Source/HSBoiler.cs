@@ -305,6 +305,12 @@ public static class HSBoiler
                 q.Enqueue(np);
             }
         }
+        for (int i = found.Count - 1; i >= 0; i--)
+        {
+            Vector3i? owner = FindBoiler(world, found[i]);
+            if (!owner.HasValue || owner.Value != boiler)
+                found.RemoveAt(i);
+        }
         radiatorCache[k] = found;
         nextScan[k] = now + ScanSeconds;
         return found;
@@ -529,7 +535,12 @@ public static class HSBoiler
         return lookedBoiler;
     }
 
-    // Same walk as Radiators, from the radiator end: bare pipe, laid pipe and other radiators lead on.
+    public static Vector3i? OwnerOf(World world, Vector3i radiator)
+    {
+        return FindBoiler(world, radiator);
+    }
+
+    // Nearest boiler on heating pipe only. Shared tank / cold pipe is a wall, so two boilers on one tank stay apart.
     static Vector3i? FindBoiler(World world, Vector3i radiator)
     {
         int limit = HSWorkingStuffSettings.PipeSearchLimit * 2;

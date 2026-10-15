@@ -149,10 +149,14 @@ public static class HSSinkCmds
     {
         if (player == null)
             return;
-        if (kind == HSWorkingStuffNet.SinkDrink || kind == HSWorkingStuffNet.SinkDrinkHot
-            || kind == HSWorkingStuffNet.SinkWash || kind == HSWorkingStuffNet.Wash)
+        if (kind == HSWorkingStuffNet.SinkDrink || kind == HSWorkingStuffNet.SinkDrinkHot)
         {
             DrinkAnim(player);
+            return;
+        }
+        if (kind == HSWorkingStuffNet.SinkWash || kind == HSWorkingStuffNet.Wash)
+        {
+            DrinkAnim(player, "hsStream");
             return;
         }
         try

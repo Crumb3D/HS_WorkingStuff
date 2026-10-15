@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.47
+
+- **A radiator belongs to the nearest boiler on the heating pipes.** Sharing a tank still left the upstairs boiler claiming the downstairs rads when the cold pipes teed together. Each radiator is counted only on the boiler it actually reaches first.
+- **Wash no longer plays the drinking sound.** Sink wash-up, shower, bath and a lakeside wash keep the drink animation and use a water splash (`hsStream`) instead.
+
 ## 1.0.46
 
 - **Each boiler only counts its own radiators.** Sharing a tank (or sinks, shower, bath, washer) no longer makes the upstairs boiler claim the downstairs heating loop. Central heating stays on the pipes from that boiler to its radiators.

@@ -244,6 +244,16 @@ public static class HSThermostat
                 q.Enqueue(np);
             }
         }
+        if (loop.Boiler.HasValue)
+        {
+            Vector3i boiler = loop.Boiler.Value;
+            for (int i = loop.Radiators.Count - 1; i >= 0; i--)
+            {
+                Vector3i? owner = HSBoiler.OwnerOf(world, loop.Radiators[i]);
+                if (!owner.HasValue || owner.Value != boiler)
+                    loop.Radiators.RemoveAt(i);
+            }
+        }
         return loop;
     }
 }
