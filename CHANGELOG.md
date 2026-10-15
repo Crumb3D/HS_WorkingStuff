@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.55
+
+- **Nailgun / hammer / stone axe can repair appliances.** Those tools only allowed wood, iron and building mats, so a toaster, microwave or coffee maker showed an X even with electric parts in the bag. Electric parts and mechanical parts are now allowed. Hold the nailgun (right click) and 2 electric parts.
+- **Open and wall cabinets repair into closed ones.** Ajar base cabinets, hanging doors, hollow under-sink cabinets (open or broken), wall cupboards, and open medicine cabinets take a few wood (or scrap iron for the metal bathroom ones) and become the closed, usable cupboard.
+
 ## 1.0.54
 
 - **Bladder and bowels idle much slower.** Empty fill is 24 game hours for the bladder and 72 for the bowels (about an hour / three hours of real time at default 60-minute days). Drinking and eating still add the usual amount.

@@ -222,6 +222,9 @@ if ($blocksXml -notmatch 'cntCoffeeMaker[\s\S]{0,400}resourceElectricParts') { F
 if ($blocksXml -notmatch 'cntBathTubEmpty[\s\S]{0,400}HSShower') { Fail "empty bath is not a working bath" } else { Ok "empty bath" }
 if ($blocksXml -notmatch 'decoClawFootBathTub[\s\S]{0,400}HSShower') { Fail "clawfoot bath is not a working bath" } else { Ok "clawfoot bath" }
 if ($blocksXml -notmatch 'cntCabinetBottomBrokenDoor[\s\S]{0,500}resourceWood') { Fail "broken cabinets do not repair with wood" } else { Ok "broken cabinets" }
+if ($blocksXml -notmatch 'cntCabinetBottomOpen[\s\S]{0,500}ToBlock" value="cntCabinetBottom"') { Fail "open cabinets are not repairable" } else { Ok "open cabinets" }
+if ($blocksXml -notmatch 'cntCupboardCabinetOldTopOpen[\s\S]{0,500}ToBlock" value="cntCupboardCabinetOldTopClosed"') { Fail "wall cupboards are not repairable" } else { Ok "wall cupboards" }
+if ($itemsXml -notmatch 'resourceElectricParts,resourceMechanicalParts') { Fail "repair tools still reject electric parts" } else { Ok "repair tools allow electric parts" }
 if ($blocksXml -notmatch 'waterHeaterWhite[\s\S]{0,500}hsWaterHeaterVanilla') { Fail "POI water heater is not repairable" } else { Ok "POI water heater" }
 if ($blocksXml -notmatch 'radiatorHouse01Player[\s\S]{0,500}hsRadiatorCastIron') { Fail "house radiator is not repairable" } else { Ok "house radiator" }
 $heater = [regex]::Match($blocksXml, '<block name="hsWaterHeaterVanilla">[\s\S]*?</block>').Value

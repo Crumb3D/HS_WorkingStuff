@@ -472,4 +472,8 @@
 	<append xpath="/items/item[@name='foodRoadrunnerChickenJerky']">
 		<property name="SpoilDays" value="21" />
 	</append>
+	<!-- Nailgun / hammer / stone axe only upgrade with this allow-list. Electric parts were missing, so POI appliances showed an X. -->
+	<csv xpath="/items/item[@name='meleeToolRepairT0StoneAxe']/property[@class='Action1']/property[@name='Allowed_upgrade_items']/@value" delim="," op="add">resourceElectricParts,resourceMechanicalParts</csv>
+	<csv xpath="/items/item[@name='meleeToolRepairT1ClawHammer']/property[@class='Action1']/property[@name='Allowed_upgrade_items']/@value" delim="," op="add">resourceElectricParts,resourceMechanicalParts</csv>
+	<csv xpath="/items/item[@name='meleeToolRepairT3Nailgun']/property[@class='Action1']/property[@name='Allowed_upgrade_items']/@value" delim="," op="add">resourceElectricParts,resourceMechanicalParts</csv>
 </configs>
