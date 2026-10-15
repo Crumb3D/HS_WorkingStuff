@@ -1,6 +1,6 @@
 # HS Working Stuff
 
-**Player guide:** open `Handbook.html` in this folder (Make a house a home). Repair a POI and live in it; craft white goods and a consumer unit later.
+**Player guide:** `PLAYER_HANDBOOK.md` in this folder, or open `Handbook.html` to print. Make a house a home: repair a POI and live in it; craft white goods and a consumer unit later.
 
 Food spoils in about 7 days. Craft a powered fridge, chest freezer, cooler, stoves, microwave, coffee maker, grills, pipes, sink, water cooler, shower, bath, tank, rain catch, combi boiler, radiators, air conditioners, washing machine, tumble dryer, wall thermometer, and UK/US sockets and switches. Rooms follow the weather, you get smelly, and clothes get dirty. Everything has to be learned: a magazine level and a perk rank. Works on 7 Days To Die **3.2 and 3.3**. Load it on the dedicated server and on every client.
 

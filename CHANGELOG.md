@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.60
+
+- **Player guide in markdown too.** `PLAYER_HANDBOOK.md` sits next to `Handbook.html` — same walkthrough: repair the POI first, use loos on jobs, craft white goods and breakers later.
+
 ## 1.0.59
 
 - **Player guide.** `Handbook.html` in the mod folder: make a house a home, repair the POI first, use loos while you’re out on jobs, craft white goods and breakers later.

@@ -47,9 +47,12 @@ foreach ($n in ([regex]::Matches($recipeXml, '<ingredient name="([^"]+)"') | For
 }
 if ($names.Count -ne 96) { Fail "expected 96 recipes, found $($names.Count)" } else { Ok "96 recipes" }
 if (-not (Test-Path (Join-Path $Root "TV\README.txt"))) { Fail "TV\README.txt missing" } else { Ok "TV folder" }
-if (-not (Test-Path (Join-Path $Root "Handbook.html"))) { Fail "Handbook.html missing" } else { Ok "player handbook" }
+if (-not (Test-Path (Join-Path $Root "Handbook.html"))) { Fail "Handbook.html missing" } else { Ok "player handbook html" }
+if (-not (Test-Path (Join-Path $Root "PLAYER_HANDBOOK.md"))) { Fail "PLAYER_HANDBOOK.md missing" } else { Ok "player handbook md" }
 $hb = Get-Content (Join-Path $Root "Handbook.html") -Raw
-if ($hb -notmatch 'Make a house a home' -or $hb -notmatch 'white goods') { Fail "handbook is missing the house-a-home guide" } else { Ok "handbook house-a-home" }
+if ($hb -notmatch 'Make a house a home' -or $hb -notmatch 'white goods') { Fail "handbook html is missing the house-a-home guide" } else { Ok "handbook html house-a-home" }
+$md = Get-Content (Join-Path $Root "PLAYER_HANDBOOK.md") -Raw
+if ($md -notmatch 'Make a house a home' -or $md -notmatch 'white goods') { Fail "handbook md is missing the house-a-home guide" } else { Ok "handbook md house-a-home" }
 foreach ($i in @("hsFuse", "hsFuseBlown", "hsBreaker")) {
     if (-not (Test-Path (Join-Path $Root "UIAtlases\ItemIconAtlas\$i.png"))) { Fail "item icon $i.png missing" } else { Ok "item icon $i" }
 }
