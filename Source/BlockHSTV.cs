@@ -52,13 +52,14 @@ public class BlockHSTV : BlockPowered
         var screen = _ebcd.transform.GetComponent<HSTVScreen>();
         if (screen == null)
             screen = _ebcd.transform.gameObject.AddComponent<HSTVScreen>();
-        screen.Pos = _blockPos;
+        screen.Pos = ParentPos(_blockPos, _blockValue);
     }
 
     public override BlockActivationCommand[] GetBlockActivationCommands(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
-        bool mine = _world.IsMyLandProtectedBlock(_blockPos, _world.GetGameManager().GetPersistentLocalPlayer());
-        bool on = HSTV.IsOn(_blockValue);
+        Vector3i pos = ParentPos(_blockPos, _blockValue);
+        bool mine = _world.IsMyLandProtectedBlock(pos, _world.GetGameManager().GetPersistentLocalPlayer());
+        bool on = HSTV.IsOn(_world.GetBlock(pos));
         tvCmds[1].enabled = on;
         tvCmds[2].enabled = on;
         tvCmds[3].enabled = mine && TakeDelay > 0f;
@@ -67,8 +68,10 @@ public class BlockHSTV : BlockPowered
 
     public override bool OnBlockActivated(string _commandName, WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, EntityPlayerLocal _player)
     {
+        Vector3i pos = ParentPos(_blockPos, _blockValue);
+        _blockValue = _world.GetBlock(pos);
         if (_commandName != "hstvpower" && _commandName != "hstvnext" && _commandName != "hstvprev")
-            return base.OnBlockActivated(_commandName, _world, _blockPos, _blockValue, _player);
+            return base.OnBlockActivated(_commandName, _world, pos, _blockValue, _player);
         bool on = HSTV.IsOn(_blockValue);
         int ch = HSTV.Channel(_blockValue);
         int count = HSTV.Channels().Count;
@@ -77,16 +80,25 @@ public class BlockHSTV : BlockPowered
         else if (count > 0)
             ch = ((ch % count) + (_commandName == "hstvnext" ? 1 : count - 1)) % count;
         _blockValue.meta2and1 = (byte)((on ? 0x80 : 0) | (ch & 0x7F));
-        _world.SetBlockRPC(_blockPos, _blockValue);
-        Audio.Manager.BroadcastPlay(_blockPos.ToVector3(), _commandName == "hstvpower" && !on ? "switch_down" : "switch_up");
+        _world.SetBlockRPC(pos, _blockValue);
+        Audio.Manager.BroadcastPlay(pos.ToVector3(), _commandName == "hstvpower" && !on ? "switch_down" : "switch_up");
         return true;
     }
 
     public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
-        string circuit = HSCircuits.CircuitLine(_world, _blockPos);
-        return _blockValue.Block.GetLocalizedBlockName() + "\n" + HSTV.Status(_world, _blockPos, _blockValue)
+        Vector3i pos = ParentPos(_blockPos, _blockValue);
+        _blockValue = _world.GetBlock(pos);
+        string circuit = HSCircuits.CircuitLine(_world, pos);
+        return _blockValue.Block.GetLocalizedBlockName() + "\n" + HSTV.Status(_world, pos, _blockValue)
             + (string.IsNullOrEmpty(circuit) ? "" : "\n" + circuit);
+    }
+
+    public static Vector3i ParentPos(Vector3i pos, BlockValue bv)
+    {
+        if (bv.ischild && bv.Block != null)
+            return bv.Block.multiBlockPos.GetParentPos(pos, bv);
+        return pos;
     }
 }
 
@@ -376,6 +388,25 @@ public class HSTVScreen : MonoBehaviour
             {
                 screen = r;
                 break;
+            }
+        }
+        if (screen == null)
+        {
+            float best = -1f;
+            foreach (var r in GetComponentsInChildren<Renderer>(true))
+            {
+                string n = r.name.ToLowerInvariant();
+                if (n.IndexOf("screen") >= 0 || n.IndexOf("display") >= 0 || n.IndexOf("glass") >= 0)
+                {
+                    screen = r;
+                    break;
+                }
+                float size = r.bounds.size.sqrMagnitude;
+                if (size > best)
+                {
+                    best = size;
+                    screen = r;
+                }
             }
         }
         if (screen == null)

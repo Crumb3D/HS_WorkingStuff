@@ -382,6 +382,16 @@ hsDefrostNone,UI,tooltip,,,K,Nothing frozen on you
 hsDefrosted,UI,tooltip,,,K,Defrosted {0} frozen food
 hsTVStand,blocks,Block,,,,Flat-screen TV (Stand)
 hsTVWall,blocks,Block,,,,Flat-screen TV (Wall)
+hsTVSmallStand1x1,blocks,Block,,,,Flat-screen TV (Stand)
+hsTVSmallWall1x1,blocks,Block,,,,Flat-screen TV (Wall)
+hsTVSmallStand2x1,blocks,Block,,,,Flat-screen TV (Stand)
+hsTVSmallWall2x1,blocks,Block,,,,Flat-screen TV (Wall)
+hsTVLargeStand2x2,blocks,Block,,,,Flat-screen TV (Stand)
+hsTVLargeWall2x2,blocks,Block,,,,Flat-screen TV (Wall)
+hsTVLargeStand3x2,blocks,Block,,,,Flat-screen TV (Stand)
+hsTVLargeWall3x2,blocks,Block,,,,Flat-screen TV (Wall)
+hsTVExtraSmallStand1x1,blocks,Block,,,,Flat-screen TV (Stand)
+hsTVExtraSmallWall1x1,blocks,Block,,,,Flat-screen TV (Wall)
 hsTVDesc,blocks,Block,,,,"A 43 inch flat-screen TV. Wire it from a socket (15W while it is on). Hold E to switch it on and change channel. Every video file in the TV folder is a channel: put .mp4 files in AppData\Roaming\7DaysToDie\HSWorkingStuff\TV or the mod's TV folder."
 hsTVNoSocket,UI,tooltip,,,K,Not plugged in: wire it from a socket
 hsTVNoPower,UI,tooltip,,,K,No power at the socket

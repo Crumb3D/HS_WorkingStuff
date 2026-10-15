@@ -75,7 +75,11 @@ public static class HSSalvage
         "hsWasher", "hsWasherVanilla", "hsDryer", "hsDryerVanilla",
         "hsToilet", "hsUrinal", "hsBath", "hsShower",
         "cntBathTubEmpty", "decoClawFootBathTub",
-        "hsToasterUS", "hsWaterHeaterVanilla", "hsRadiatorCastIron", "hsWaterHeater"
+        "hsToasterUS", "hsWaterHeaterVanilla", "hsRadiatorCastIron", "hsWaterHeater",
+        "hsTVStand", "hsTVWall",
+        "hsTVSmallStand1x1", "hsTVSmallWall1x1", "hsTVSmallStand2x1", "hsTVSmallWall2x1",
+        "hsTVLargeStand2x2", "hsTVLargeWall2x2", "hsTVLargeStand3x2", "hsTVLargeWall3x2",
+        "hsTVExtraSmallStand1x1", "hsTVExtraSmallWall1x1"
     };
 
     public static bool LootEmpty(WorldBase world, Vector3i pos)

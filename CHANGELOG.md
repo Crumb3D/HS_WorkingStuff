@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.58
+
+- **POI TVs repair into working TVs.** Wall and stand sets (including the big 2x2 wall screen) take 2 electric parts and keep the vanilla size and model. Wire them from a socket like the crafted TVs.
+- **US toaster stays put when repaired.** It was inheriting the coffee maker's offset, so repairing the vanilla toaster shoved it into the counter. It now uses the vanilla toaster placement.
+
 ## 1.0.57
 
 - **Repaired furniture is empty storage.** Cupboards, desks and drawers repair shut as empty containers you can use. They are not unsearched loot and they do not roll kitchen junk into the drawers.

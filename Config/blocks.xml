@@ -395,10 +395,32 @@
 		</block>
 
 		<block name="hsToasterUS">
-			<property name="Extends" value="hsToaster" />
+			<property name="Extends" value="cntToaster" param1="Class,CreativeMode,Tags,FilterTags" />
+			<property name="Class" value="HSToaster, HSWorkingStuff" />
+			<property class="Workstation">
+				<property name="CraftingAreaRecipes" value="hsToaster" />
+				<property name="Modules" value="output" />
+			</property>
+			<property name="WorkstationWindow" value="workstation_hsMicrowave" />
+			<property name="CreativeMode" value="Player" />
 			<property name="DescriptionKey" value="hsToasterUSDesc" />
 			<property name="Model" value="@:Entities/Appliances/toasterPrefab.prefab" />
+			<property name="ModelOffset" value="0,0,0" />
+			<property name="RequiredPower" value="5" />
+			<property name="DisplayType" value="blockElectrical" />
+			<property name="UnlockedBy" value="craftingElectrician,perkAdvancedEngineering" />
+			<property name="WorkstationIcon" value="ui_game_symbol_fork" />
+			<property name="CraftIcon" value="ui_game_symbol_spatula" />
+			<property name="CraftActionName" value="lblContextActionCook" />
+			<property name="TakeDelay" value="5" />
 			<property name="CustomIcon" value="cntToaster" />
+			<property class="RepairItems">
+				<property name="resourceForgedIron" value="1" />
+				<property name="resourceElectricParts" value="1" />
+			</property>
+			<property name="Group" value="Food/Cooking,Science,Building" />
+			<property name="Tags" value="electricianSkill,workstationSkill" />
+			<property name="FilterTags" value="MC_playerBlocks,SC_electrical,SC_decor" />
 		</block>
 
 		<!-- A mug put down on the worktop (right-click with a mug). Drop a tea bag in, pick it up, pour the kettle on it. -->
@@ -455,6 +477,98 @@
 			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSTVWall" />
 			<property name="StabilityIgnore" value="true" />
 			<property name="CustomIcon" value="hsTVWall" />
+		</block>
+
+		<!-- POI TVs repair into these: same vanilla size and model, Class HSTV so they play. -->
+		<block name="hsTVSmallStand1x1">
+			<property name="Extends" value="tvSmallStand1x1" param1="Class,IndexName,CreativeMode" />
+			<property name="Class" value="HSTV, HSWorkingStuff" />
+			<property name="CreativeMode" value="Player" />
+			<property name="DescriptionKey" value="hsTVDesc" />
+			<property name="RequiredPower" value="15" />
+			<property name="DisplayType" value="blockElectrical" />
+			<property name="TakeDelay" value="3" />
+		</block>
+		<block name="hsTVSmallWall1x1">
+			<property name="Extends" value="tvSmallWall1x1" param1="Class,IndexName,CreativeMode" />
+			<property name="Class" value="HSTV, HSWorkingStuff" />
+			<property name="CreativeMode" value="Player" />
+			<property name="DescriptionKey" value="hsTVDesc" />
+			<property name="RequiredPower" value="15" />
+			<property name="DisplayType" value="blockElectrical" />
+			<property name="TakeDelay" value="3" />
+		</block>
+		<block name="hsTVSmallStand2x1">
+			<property name="Extends" value="tvSmallStand2x1" param1="Class,IndexName,CreativeMode" />
+			<property name="Class" value="HSTV, HSWorkingStuff" />
+			<property name="CreativeMode" value="Player" />
+			<property name="DescriptionKey" value="hsTVDesc" />
+			<property name="RequiredPower" value="15" />
+			<property name="DisplayType" value="blockElectrical" />
+			<property name="TakeDelay" value="3" />
+		</block>
+		<block name="hsTVSmallWall2x1">
+			<property name="Extends" value="tvSmallWall2x1" param1="Class,IndexName,CreativeMode" />
+			<property name="Class" value="HSTV, HSWorkingStuff" />
+			<property name="CreativeMode" value="Player" />
+			<property name="DescriptionKey" value="hsTVDesc" />
+			<property name="RequiredPower" value="15" />
+			<property name="DisplayType" value="blockElectrical" />
+			<property name="TakeDelay" value="3" />
+		</block>
+		<block name="hsTVLargeStand2x2">
+			<property name="Extends" value="tvLargeStand2x2" param1="Class,IndexName,CreativeMode" />
+			<property name="Class" value="HSTV, HSWorkingStuff" />
+			<property name="CreativeMode" value="Player" />
+			<property name="DescriptionKey" value="hsTVDesc" />
+			<property name="RequiredPower" value="15" />
+			<property name="DisplayType" value="blockElectrical" />
+			<property name="TakeDelay" value="3" />
+		</block>
+		<block name="hsTVLargeWall2x2">
+			<property name="Extends" value="tvLargeWall2x2" param1="Class,IndexName,CreativeMode" />
+			<property name="Class" value="HSTV, HSWorkingStuff" />
+			<property name="CreativeMode" value="Player" />
+			<property name="DescriptionKey" value="hsTVDesc" />
+			<property name="RequiredPower" value="15" />
+			<property name="DisplayType" value="blockElectrical" />
+			<property name="TakeDelay" value="3" />
+		</block>
+		<block name="hsTVLargeStand3x2">
+			<property name="Extends" value="tvLargeStand3x2" param1="Class,IndexName,CreativeMode" />
+			<property name="Class" value="HSTV, HSWorkingStuff" />
+			<property name="CreativeMode" value="Player" />
+			<property name="DescriptionKey" value="hsTVDesc" />
+			<property name="RequiredPower" value="15" />
+			<property name="DisplayType" value="blockElectrical" />
+			<property name="TakeDelay" value="3" />
+		</block>
+		<block name="hsTVLargeWall3x2">
+			<property name="Extends" value="tvLargeWall3x2" param1="Class,IndexName,CreativeMode" />
+			<property name="Class" value="HSTV, HSWorkingStuff" />
+			<property name="CreativeMode" value="Player" />
+			<property name="DescriptionKey" value="hsTVDesc" />
+			<property name="RequiredPower" value="15" />
+			<property name="DisplayType" value="blockElectrical" />
+			<property name="TakeDelay" value="3" />
+		</block>
+		<block name="hsTVExtraSmallStand1x1">
+			<property name="Extends" value="tvExtraSmallStand1x1" param1="Class,IndexName,CreativeMode" />
+			<property name="Class" value="HSTV, HSWorkingStuff" />
+			<property name="CreativeMode" value="Player" />
+			<property name="DescriptionKey" value="hsTVDesc" />
+			<property name="RequiredPower" value="15" />
+			<property name="DisplayType" value="blockElectrical" />
+			<property name="TakeDelay" value="3" />
+		</block>
+		<block name="hsTVExtraSmallWall1x1">
+			<property name="Extends" value="tvExtraSmallWall1x1" param1="Class,IndexName,CreativeMode" />
+			<property name="Class" value="HSTV, HSWorkingStuff" />
+			<property name="CreativeMode" value="Player" />
+			<property name="DescriptionKey" value="hsTVDesc" />
+			<property name="RequiredPower" value="15" />
+			<property name="DisplayType" value="blockElectrical" />
+			<property name="TakeDelay" value="3" />
 		</block>
 
 		<!-- Micro hi-fi: plug it into a socket and wire speakers out of it; the music only comes out of the speakers. -->
@@ -1478,6 +1592,86 @@
 			<property name="ToBlock" value="cntWoodenChestMilitaryClosed" />
 			<property name="Item" value="resourceWood" />
 			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='tvSmallStand1x1' or @name='tvSmallStand1x1EBS' or @name='tvSmallStand1x1Fallen']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsTVSmallStand1x1" />
+			<property name="Item" value="resourceElectricParts" />
+			<property name="ItemCount" value="2" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='tvSmallWall1x1' or @name='tvSmallWall1x1EBS']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsTVSmallWall1x1" />
+			<property name="Item" value="resourceElectricParts" />
+			<property name="ItemCount" value="2" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='tvSmallStand2x1' or @name='tvSmallStand2x1EBS']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsTVSmallStand2x1" />
+			<property name="Item" value="resourceElectricParts" />
+			<property name="ItemCount" value="2" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='tvSmallWall2x1' or @name='tvSmallWall2x1EBS']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsTVSmallWall2x1" />
+			<property name="Item" value="resourceElectricParts" />
+			<property name="ItemCount" value="2" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='tvLargeStand2x2' or @name='tvLargeStand2x2EBS']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsTVLargeStand2x2" />
+			<property name="Item" value="resourceElectricParts" />
+			<property name="ItemCount" value="2" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='tvLargeWall2x2' or @name='tvLargeWall2x2EBS']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsTVLargeWall2x2" />
+			<property name="Item" value="resourceElectricParts" />
+			<property name="ItemCount" value="2" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='tvLargeStand3x2' or @name='tvLargeStand3x2EBS']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsTVLargeStand3x2" />
+			<property name="Item" value="resourceElectricParts" />
+			<property name="ItemCount" value="2" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='tvLargeWall3x2' or @name='tvLargeWall3x2EBS']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsTVLargeWall3x2" />
+			<property name="Item" value="resourceElectricParts" />
+			<property name="ItemCount" value="2" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='tvExtraSmallStand1x1' or @name='tvExtraSmallStand1x1EBS' or @name='tvExtraSmallStandFallen1x1']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsTVExtraSmallStand1x1" />
+			<property name="Item" value="resourceElectricParts" />
+			<property name="ItemCount" value="2" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='tvExtraSmallWall1x1' or @name='tvExtraSmallWall1x1EBS']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsTVExtraSmallWall1x1" />
+			<property name="Item" value="resourceElectricParts" />
+			<property name="ItemCount" value="2" />
 			<property name="UpgradeHitCount" value="4" />
 		</property>
 	</append>
