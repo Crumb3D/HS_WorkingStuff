@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.59
+
+- **Player guide.** `Handbook.html` in the mod folder: make a house a home, repair the POI first, use loos while you’re out on jobs, craft white goods and breakers later.
+
 ## 1.0.58
 
 - **POI TVs repair into working TVs.** Wall and stand sets (including the big 2x2 wall screen) take 2 electric parts and keep the vanilla size and model. Wire them from a socket like the crafted TVs.
