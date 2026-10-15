@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Audio;
 using UnityEngine;
 
 // Clothes and armour you wear get dirty, and you get smelly, as the hours go by. An unwashed body and dirty clothes
@@ -26,12 +28,37 @@ public static class HSLaundry
     static float quickUntil, soakUntil;
     static float soakStart, soakTarget;
 
+    struct Run
+    {
+        public float Until;
+        public bool Dryer;
+        public int PlayerId;
+    }
+
+    static readonly Dictionary<long, Run> runs = new Dictionary<long, Run>();
+
+    public const string WasherHum = "hsWasherHum";
+
     public static void Clear()
     {
         lastTick = 0UL;
         nextTick = 0f;
         sinkSeen = showerSeen = bathSeen = inWater = soaking = false;
         quickUntil = soakUntil = soakStart = soakTarget = 0f;
+        runs.Clear();
+    }
+
+    public static bool Busy(Vector3i pos)
+    {
+        return runs.ContainsKey(HSWater.Key(pos));
+    }
+
+    public static int SecondsLeft(Vector3i pos)
+    {
+        Run run;
+        if (!runs.TryGetValue(HSWater.Key(pos), out run))
+            return 0;
+        return Mathf.Max(0, Mathf.CeilToInt(run.Until - Time.time));
     }
 
     // Hours of body smell worth 5 m of smell radius on the BodySmellStartHours..FullHours ramp.
@@ -390,8 +417,99 @@ public static class HSLaundry
                 iv.SetMetadata(MetaDirt, 0f);
                 iv.SetMetadata(MetaWet, nowH);
             }
+            HSItem.SetVal(items[i], iv);
             n++;
         }
         return n;
+    }
+
+    public static void ServerTick()
+    {
+        if (!HSWorkingStuffNet.IsAuthority || runs.Count == 0)
+            return;
+        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+        if (world == null)
+            return;
+        float now = Time.time;
+        var done = new List<long>();
+        foreach (var kv in runs)
+        {
+            if (now >= kv.Value.Until)
+                done.Add(kv.Key);
+        }
+        for (int i = 0; i < done.Count; i++)
+            Finish(world, done[i]);
+    }
+
+    public static bool TryStart(World world, Vector3i pos, EntityPlayer player, bool dryer)
+    {
+        long k = HSWater.Key(pos);
+        if (runs.ContainsKey(k))
+        {
+            HSWorkingStuffNet.Tell(player, HSLoc.Get("hsWasherBusy", "Already running"));
+            return false;
+        }
+        IHSFridgeInv inv = HSFridgeInv.Of(world.GetTileEntity(pos));
+        if (inv == null || !inv.IsPowered)
+        {
+            HSWorkingStuffNet.Tell(player, HSLoc.Get("hsLaundryNoPower", "No power: wire it up first"));
+            return false;
+        }
+        inv.EnsureItems();
+        float nowH = NowHours(world);
+        if (Count(inv.Items, dryer, nowH) == 0)
+        {
+            HSWorkingStuffNet.Tell(player, dryer
+                ? HSLoc.Get("hsDryerEmpty", "Nothing wet to dry")
+                : HSLoc.Get("hsWasherEmpty", "Nothing to wash: put clothes or armour in first"));
+            return false;
+        }
+        if (!dryer && HSWorkingStuffSettings.EnablePlumbing)
+        {
+            HSWater.Taps taps = HSWater.FindTaps(world, pos);
+            HSWater.Source src = taps.Cold;
+            if (!src.Ok)
+            {
+                HSWorkingStuffNet.Tell(player, HSWater.ColdReason(taps));
+                return false;
+            }
+            int jars = HSWorkingStuffSettings.WasherJars;
+            if (!HSWater.TakeFromSource(ref src, jars))
+            {
+                HSWorkingStuffNet.Tell(player, HSLoc.Format("hsWasherShort", "Not enough water: a wash needs {0} jars", jars));
+                return false;
+            }
+            if (!src.Infinite)
+                HSWorkingStuffNet.BroadcastTank(src.TankPos);
+        }
+        float secs = Mathf.Max(1f, HSWorkingStuffSettings.WasherSeconds);
+        runs[k] = new Run { Until = Time.time + secs, Dryer = dryer, PlayerId = player != null ? player.entityId : -1 };
+        Vector3 at = pos.ToVector3() + new Vector3(0.5f, 0.5f, 0.5f);
+        Audio.Manager.BroadcastPlay(at, WasherHum);
+        HSWorkingStuffNet.Tell(player, HSLoc.Format("hsWasherStarted", "Running: about {0} seconds", Mathf.RoundToInt(secs)));
+        return true;
+    }
+
+    static void Finish(World world, long k)
+    {
+        Run run;
+        runs.TryGetValue(k, out run);
+        runs.Remove(k);
+        Vector3i pos = HSWater.FromKey(k);
+        Vector3 at = pos.ToVector3() + new Vector3(0.5f, 0.5f, 0.5f);
+        Audio.Manager.BroadcastStop(at, WasherHum);
+        IHSFridgeInv inv = HSFridgeInv.Of(world.GetTileEntity(pos));
+        EntityPlayer player = world.GetEntity(run.PlayerId) as EntityPlayer;
+        if (inv == null)
+            return;
+        inv.EnsureItems();
+        int n = Process(inv.Items, run.Dryer, NowHours(world));
+        inv.SetModified();
+        Audio.Manager.BroadcastPlay(at, run.Dryer ? "hsDryerDone" : "hsWasherDone");
+        if (player == null)
+            return;
+        HSWorkingStuffNet.Tell(player, run.Dryer
+            ? HSLoc.Format("hsDried", "Dried {0} items", n)
+            : HSLoc.Format("hsWashed", "Washed {0} items. They are wet: dry them in a dryer, or they dry on you in {1} hours", n, HSWorkingStuffSettings.AirDryHours.ToString("0")));
     }
 }

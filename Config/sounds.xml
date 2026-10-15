@@ -49,6 +49,9 @@
 		<SoundDataNode name="hsBoilerFire"> <AudioSource name="@:Sounds/Prefabs/AudioSource_FridgeLP.prefab"/>
 			<AudioClip ClipName="@:Sounds/Ambient_Loops/a_fire_sm_lp.wav" Loop="true"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="8"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
+		<SoundDataNode name="hsWasherHum"> <AudioSource name="@:Sounds/Prefabs/AudioSource_FridgeLP.prefab"/>
+			<AudioClip ClipName="@:Sounds/Crafting/cement_mixer_lp.wav" Loop="true"/>
+			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="8"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
 		<SoundDataNode name="hsWasherDone"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Interact.prefab"/>
 			<AudioClip ClipName="@:Sounds/TriggeredEvents/elevator_ding2.wav"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="8"/> <MaxRepeatRate value="0"/> </SoundDataNode>

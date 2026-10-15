@@ -135,8 +135,24 @@ public static class HSPlugs
         return n;
     }
 
-    // Plug count, the onward socket or switch link and the circuit it is on, for hover text.
-    public static string Usage(WorldBase world, Vector3i pos, int limit)
+    public static bool HoldingWire(EntityAlive who)
+    {
+        var p = who as EntityPlayer;
+        if (p == null || p.inventory == null)
+            return false;
+        ItemClass ic = p.inventory.holdingItem;
+        if (ic == null || ic.Actions == null)
+            return false;
+        for (int i = 0; i < ic.Actions.Length; i++)
+        {
+            if (ic.Actions[i] is ItemActionConnectPower)
+                return true;
+        }
+        return false;
+    }
+
+    // Everyday: what's on this plate. Wire tool: the run and the circuit name as well.
+    public static string Usage(WorldBase world, Vector3i pos, int limit, EntityAlive who)
     {
         var te = world != null ? world.GetTileEntity(pos) as TileEntityPowered : null;
         string text = "";
@@ -145,6 +161,8 @@ public static class HSPlugs
             int used = te != null ? Mathf.Min(Leads(world, te).Count, limit) : 0;
             text = HSLoc.Format("hsPlugUsed", "Plugs: {0} of {1} in use", used, limit);
         }
+        if (!HoldingWire(who))
+            return text;
         bool light = te != null && IsLightSwitch(te.blockValue.Block);
         if (Chained(world, te))
         {
@@ -190,14 +208,14 @@ public static class HSPlugs
         return denied != null && Time.time < deniedUntil ? denied : null;
     }
 
-    public static string Status(WorldBase world, Vector3i pos, Block block)
+    public static string Status(WorldBase world, Vector3i pos, Block block, EntityAlive who)
     {
         int limit = Limit(block);
         var te = world != null ? world.GetTileEntity(pos) as TileEntityPowered : null;
         string power = te != null && te.IsPowered
             ? HSLoc.Get("hsPlugPowered", "Live")
             : HSLoc.Get("hsPlugNoPower", "No power: wire it from a generator, battery bank or solar bank");
-        string usage = Usage(world, pos, limit);
+        string usage = Usage(world, pos, limit, who);
         return string.IsNullOrEmpty(usage) ? power : power + "\n" + usage;
     }
 
@@ -740,10 +758,10 @@ public class BlockHSWallSwitch : BlockSwitch
             return GetLocalizedBlockName() + "\n"
                 + HSLoc.Format("hsOutletState", "Left socket: {0}    Right socket: {1}",
                     HSOutlets.On(_blockValue, 0) ? onText : offText, HSOutlets.On(_blockValue, 1) ? onText : offText) + "\n"
-                + HSPlugs.Usage(_world, _blockPos, 2);
+                + HSPlugs.Usage(_world, _blockPos, 2, _entityFocusing);
         }
         string text = base.GetActivationText(_world, _blockValue, _blockPos, _entityFocusing);
-        string usage = HSPlugs.Usage(_world, _blockPos, HSPlugs.Limit(this));
+        string usage = HSPlugs.Usage(_world, _blockPos, HSPlugs.Limit(this), _entityFocusing);
         return string.IsNullOrEmpty(usage) ? text : text + "\n" + usage;
     }
 }
@@ -761,7 +779,7 @@ public class BlockHSWallRelay : BlockPowered
 
     public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
-        return _blockValue.Block.GetLocalizedBlockName() + "\n" + HSPlugs.Status(_world, _blockPos, this);
+        return _blockValue.Block.GetLocalizedBlockName() + "\n" + HSPlugs.Status(_world, _blockPos, this, _entityFocusing);
     }
 }
 

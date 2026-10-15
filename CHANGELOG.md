@@ -2,6 +2,12 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.48
+
+- **Washing machine (and dryer) run for 30 seconds.** They hum, then ding, then the clothes are clean (and wet). A splash and instant finish was skipping the cycle, so dirt often stayed.
+- **A tank only feeds what is in it.** Pipes on one side of the tank no longer join pipes on the other. Look at a tank and it only says how much water it holds.
+- **Socket and switch hover is short unless you hold the wire tool.** Everyday: live or not, on or off, and what's plugged into that plate. Wire tool: the run count and circuit name as well.
+
 ## 1.0.47
 
 - **A radiator belongs to the nearest boiler on the heating pipes.** Sharing a tank still left the upstairs boiler claiming the downstairs rads when the cold pipes teed together. Each radiator is counted only on the boiler it actually reaches first.

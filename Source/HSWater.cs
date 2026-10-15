@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-// Rain catch collects and pushes down its pipes into tanks. Tanks only store.
+// Rain catch collects and pushes down its pipes into tanks. A tank only feeds what is in it;
+// it does not join the pipes on one side to the pipes on the other.
 // Sinks have a cold tap (straight from a tank or intake) and a hot tap (through a powered heater).
 public static class HSWater
 {
@@ -261,6 +262,7 @@ public static class HSWater
                     taps.HotEmpty = true;
                 else
                     taps.ColdEmpty = true;
+                continue;
             }
             HashSet<long> seen = hot ? seenHot : seenCold;
             for (int i = 0; i < dirs.Length; i++)
@@ -394,7 +396,6 @@ public static class HSWater
                                 return got;
                         }
                     }
-                    q.Enqueue(np);
                     continue;
                 }
                 if (!IsBarePipe(nn) && !HSPipeNet.Has(np))

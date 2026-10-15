@@ -50,6 +50,7 @@
   "ClothesDirtyHours": 72,
   "DirtyClothesSmell": 6,
   "WasherJars": 4,
+  "WasherSeconds": 30,
   "AirDryHours": 6,
   "LineDryHours": 2,
   "AirerDryHours": 3,

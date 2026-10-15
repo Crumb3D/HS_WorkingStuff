@@ -172,7 +172,7 @@ public static class HSWorkingStuffNet
         ToClients(Pkg().OfTank(pos, t.Units, (t.Quality & 0xF) | (t.Mods << 4)));
     }
 
-    static void Tell(EntityPlayer player, string text)
+    public static void Tell(EntityPlayer player, string text)
     {
         var local = player as EntityPlayerLocal;
         if (local != null)
@@ -354,7 +354,7 @@ public static class HSWorkingStuffNet
             HSInv.NotifyPlayer(player);
     }
 
-    // Washer: power and a cold tap, uses WasherJars. Dryer: power only.
+    // Washer: power and a cold tap, uses WasherJars, then hums for WasherSeconds. Dryer: power only, same wait.
     static void HandleLaundry(World world, Vector3i pos, EntityPlayer player)
     {
         BlockValue bv = world.GetBlock(pos);
@@ -362,47 +362,7 @@ public static class HSWorkingStuffNet
         if (block == null)
             return;
         pos = HSWater.Parent(pos, bv);
-        bool dryer = block.IsDryer;
-        IHSFridgeInv inv = HSFridgeInv.Of(world.GetTileEntity(pos));
-        if (inv == null || !inv.IsPowered)
-        {
-            Tell(player, HSLoc.Get("hsLaundryNoPower", "No power: wire it up first"));
-            return;
-        }
-        inv.EnsureItems();
-        float nowH = HSLaundry.NowHours(world);
-        if (HSLaundry.Count(inv.Items, dryer, nowH) == 0)
-        {
-            Tell(player, dryer
-                ? HSLoc.Get("hsDryerEmpty", "Nothing wet to dry")
-                : HSLoc.Get("hsWasherEmpty", "Nothing to wash: put clothes or armour in first"));
-            return;
-        }
-        if (!dryer && HSWorkingStuffSettings.EnablePlumbing)
-        {
-            HSWater.Taps taps = HSWater.FindTaps(world, pos);
-            HSWater.Source src = taps.Cold;
-            if (!src.Ok)
-            {
-                Tell(player, HSWater.ColdReason(taps));
-                return;
-            }
-            int jars = HSWorkingStuffSettings.WasherJars;
-            if (!HSWater.TakeFromSource(ref src, jars))
-            {
-                Tell(player, HSLoc.Format("hsWasherShort", "Not enough water: a wash needs {0} jars", jars));
-                return;
-            }
-            if (!src.Infinite)
-                BroadcastTank(src.TankPos);
-        }
-        int n = HSLaundry.Process(inv.Items, dryer, nowH);
-        inv.SetModified();
-        Vector3 at = pos.ToVector3() + new Vector3(0.5f, 0.5f, 0.5f);
-        Audio.Manager.BroadcastPlay(at, dryer ? "hsDryerDone" : "hsWasherDone");
-        Tell(player, dryer
-            ? HSLoc.Format("hsDried", "Dried {0} items", n)
-            : HSLoc.Format("hsWashed", "Washed {0} items. They are wet: dry them in a dryer, or they dry on you in {1} hours", n, HSWorkingStuffSettings.AirDryHours.ToString("0")));
+        HSLaundry.TryStart(world, pos, player, block.IsDryer);
     }
 
     public static void HandleSync(Vector3i pos, int units, int packed)

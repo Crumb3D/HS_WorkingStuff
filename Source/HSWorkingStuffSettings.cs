@@ -51,6 +51,7 @@ public static class HSWorkingStuffSettings
     public static float ClothesDirtyHours = 72f;
     public static float DirtyClothesSmell = 6f;
     public static int WasherJars = 4;
+    public static float WasherSeconds = 30f;
     public static float AirDryHours = 6f;
     public static float LineDryHours = 2f;
     public static float AirerDryHours = 3f;
@@ -131,6 +132,7 @@ public static class HSWorkingStuffSettings
         ClothesDirtyHours = 72f;
         DirtyClothesSmell = 6f;
         WasherJars = 4;
+        WasherSeconds = 30f;
         AirDryHours = 6f;
         LineDryHours = 2f;
         AirerDryHours = 3f;
@@ -234,6 +236,7 @@ public static class HSWorkingStuffSettings
         ReadFloat(text, "ClothesDirtyHours", ref ClothesDirtyHours);
         ReadFloat(text, "DirtyClothesSmell", ref DirtyClothesSmell);
         ReadInt(text, "WasherJars", ref WasherJars);
+        ReadFloat(text, "WasherSeconds", ref WasherSeconds);
         ReadFloat(text, "AirDryHours", ref AirDryHours);
         ReadFloat(text, "LineDryHours", ref LineDryHours);
         ReadFloat(text, "AirerDryHours", ref AirerDryHours);

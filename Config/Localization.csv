@@ -253,6 +253,9 @@ hsLaundryNoPower,UI,tooltip,,,K,No power: wire it up first
 hsWasherHolds,UI,tooltip,,,K,{0} clothes or armour inside
 hsDryerHolds,UI,tooltip,,,K,{0} wet items inside
 hsWasherEmpty,UI,tooltip,,,K,Nothing to wash: put clothes or armour in first
+hsWasherStarted,UI,tooltip,,,K,Running: about {0} seconds
+hsWasherRunning,UI,tooltip,,,K,Running: {0}s left
+hsWasherBusy,UI,tooltip,,,K,Already running
 hsDryerEmpty,UI,tooltip,,,K,Nothing wet to dry
 hsWasherShort,UI,tooltip,,,K,Not enough water: a wash needs {0} jars
 hsWashed,UI,tooltip,,,K,"Washed {0} items. They are wet: dry them in a dryer, or they dry on you in {1} hours"

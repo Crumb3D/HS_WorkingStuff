@@ -57,6 +57,7 @@ public class HSWorkingStuffMod : IModApi
             HSAirCon.ClientTick();
             HSAirCon.SoundTick();
             HSLaundry.ClientTick();
+            HSLaundry.ServerTick();
             HSTV.ServerTick();
             HSKettle.ServerTick();
             HSCircuits.ServerTick();

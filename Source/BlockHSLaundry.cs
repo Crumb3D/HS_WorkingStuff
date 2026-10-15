@@ -30,6 +30,8 @@ public class BlockHSLaundry : BlockHSFridge
             if (!taps.Cold.Ok)
                 text += "\n" + HSWater.ColdReason(taps);
         }
+        if (HSLaundry.Busy(_blockPos))
+            text += "\n" + HSLoc.Format("hsWasherRunning", "Running: {0}s left", HSLaundry.SecondsLeft(_blockPos));
         if (te != null)
         {
             int n = HSLaundry.Count(te.Items, IsDryer, HSLaundry.NowHours(world));
@@ -68,12 +70,6 @@ public class BlockHSLaundry : BlockHSFridge
         if (_commandName == "hswash" || _commandName == "hsdry")
         {
             HSWorkingStuffNet.SendWater(HSWorkingStuffNet.Laundry, _blockPos, _player);
-            try
-            {
-                if (_player != null)
-                    _player.PlayOneShot(IsDryer ? HSMicrowaveSound.Hum : "bucketfill_water");
-            }
-            catch { }
             return true;
         }
         if (HSSinkCmds.IsOff(_commandName))
