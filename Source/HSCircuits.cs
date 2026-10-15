@@ -874,9 +874,18 @@ public class XUiC_HSCircuitNameWindowGroup : XUiController
 [HarmonyPatch(typeof(PowerTrigger), "HandlePowerReceived")]
 public static class HSPatchCutTrigger
 {
-    static bool Prefix(PowerItem __instance)
+    static bool Prefix(PowerTrigger __instance, ref ushort power)
     {
-        return HSPatchOutletPower.Prefix(__instance);
+        try
+        {
+            if (HSOutlets.FeedPlate(__instance, ref power))
+                return false;
+            return HSPatchOutletPower.Prefix(__instance);
+        }
+        catch
+        {
+            return true;
+        }
     }
 }
 
@@ -900,32 +909,20 @@ public static class HSPatchCutTimer
 
 // Sockets and light switches chain: a switched-off plate still feeds the next socket or switch along.
 // Only the lights / plugs on this plate go dead; the rest of the run stays live.
-[HarmonyPatch(typeof(PowerTrigger), "HandlePowerReceived")]
-public static class HSPatchSocketChain
+[HarmonyPatch(typeof(PowerItem), "HandlePowerReceived")]
+public static class HSPatchSocketPass
 {
-    static void Postfix(PowerTrigger __instance, ref ushort power)
+    static bool Prefix(PowerItem __instance, ref ushort power)
     {
         try
         {
-            if (power <= 0 || !__instance.isPowered || __instance.IsActive || __instance.Children == null || __instance.Children.Count == 0)
-                return;
-            bool socket = HSPlugs.IsSocketAt(__instance.Position);
-            bool light = HSPlugs.IsLightSwitchAt(__instance.Position);
-            if (!socket && !light)
-                return;
-            for (int i = 0; i < __instance.Children.Count && power > 0; i++)
-            {
-                PowerItem ch = __instance.Children[i];
-                if (socket && !HSPlugs.IsSocketAt(ch.Position))
-                    continue;
-                if (light && !HSPlugs.IsLightSwitchAt(ch.Position))
-                    continue;
-                ch.HandlePowerReceived(ref power);
-                // Vanilla only passes the power update on to switch children while this switch is off.
-                if (!(ch is PowerTrigger))
-                    ch.HandlePowerUpdate(true);
-            }
+            if (__instance is PowerTrigger)
+                return true;
+            return !HSOutlets.FeedPlate(__instance, ref power);
         }
-        catch { }
+        catch
+        {
+            return true;
+        }
     }
 }

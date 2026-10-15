@@ -327,7 +327,64 @@ public static class HSOutlets
 
     public static bool On(BlockValue bv, int i)
     {
+        // Bit 7 means the player has flicked an outlet. Before that both sides are live,
+        // so a newly placed (or already-placed) double does not sit dead while the plate says Live.
+        if ((bv.meta2 & 0x80) == 0)
+            return true;
         return (bv.meta2 & (1 << i)) != 0;
+    }
+
+    // Wall plates must not eat the last watt. Vanilla takes RequiredPower then returns if
+    // nothing is left, so a new socket on a kitchen run goes Live and every plug on that
+    // plate (and sometimes the rest of the run) stays dead.
+    public static bool FeedPlate(PowerItem item, ref ushort power)
+    {
+        if (item == null)
+            return false;
+        if (Off(item))
+        {
+            if (item.isPowered)
+                item.HandleDisconnect();
+            return true;
+        }
+        bool socket = HSPlugs.IsSocketAt(item.Position);
+        bool light = HSPlugs.IsLightSwitchAt(item.Position);
+        if (!socket && !light)
+            return false;
+        bool live = power > 0;
+        item.isPowered = live;
+        if (!live || item.Children == null)
+            return true;
+        var trig = item as PowerTrigger;
+        bool active = trig == null || trig.IsActive;
+        if (trig != null && !active && socket)
+        {
+            World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+            if (world != null)
+            {
+                BlockValue bv = world.GetBlock(item.Position);
+                if (IsDouble(bv.Block) && (bv.meta2 & 0x80) == 0)
+                {
+                    trig.IsTriggered = true;
+                    active = true;
+                }
+            }
+        }
+        for (int i = 0; i < item.Children.Count; i++)
+        {
+            PowerItem ch = item.Children[i];
+            if (ch == null || Off(ch))
+                continue;
+            bool onward = (socket && HSPlugs.IsSocketAt(ch.Position)) || (light && HSPlugs.IsLightSwitchAt(ch.Position));
+            if (!active && !onward)
+                continue;
+            if (power == 0 && ch.RequiredPower > 0)
+                continue;
+            ch.HandlePowerReceived(ref power);
+            if (!active && !(ch is PowerTrigger))
+                ch.HandlePowerUpdate(true);
+        }
+        return true;
     }
 
     public static bool Off(PowerItem item)
@@ -563,6 +620,20 @@ public static class HSPatchSocketPlugs
 // The rocker flicks: "<Model>_SwOn*" / "_SwOff*" children swap with the switch, "_Lamp*" lights when on and powered.
 public class BlockHSWallSwitch : BlockSwitch
 {
+    public override void OnBlockAdded(WorldBase world, Chunk _chunk, Vector3i _blockPos, BlockValue _blockValue, PlatformUserIdentifierAbs _addedByPlayer)
+    {
+        base.OnBlockAdded(world, _chunk, _blockPos, _blockValue, _addedByPlayer);
+        if (!HSPlugs.IsSocket(this) || !HSWorkingStuffNet.IsAuthority)
+            return;
+        var te = world.GetTileEntity(_blockPos) as TileEntityPoweredTrigger;
+        if (te != null)
+            te.IsTriggered = true;
+        if ((_blockValue.meta & 2) != 0)
+            return;
+        _blockValue.meta = (byte)((_blockValue.meta & -3) | 2);
+        world.SetBlockRPC(_blockPos, _blockValue);
+    }
+
     public override void OnBlockEntityTransformAfterActivated(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, BlockEntityData _ebcd)
     {
         if (_ebcd != null && _ebcd.transform != null)
@@ -604,7 +675,7 @@ public class BlockHSWallSwitch : BlockSwitch
             return false;
         int i = _commandName == "hsoutlet0" ? 0 : 1;
         int bits = (_blockValue.meta2 ^ (1 << i)) & 3;
-        _blockValue.meta2 = (byte)bits;
+        _blockValue.meta2 = (byte)(0x80 | bits);
         _blockValue.meta = (byte)((_blockValue.meta & -3) | (bits != 0 ? 2 : 0));
         _world.SetBlockRPC(_blockPos, _blockValue);
         Audio.Manager.BroadcastPlay(_blockPos.ToVector3(), (bits & (1 << i)) != 0 ? "switch_up" : "switch_down");

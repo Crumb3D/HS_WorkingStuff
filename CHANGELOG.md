@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.44
+
+- **Kitchen sockets feed their plugs again.** A new socket on a run no longer eats the last watt and leaves every appliance saying no power while the plate and the consumer unit still look live. Double sockets that were never flicked now start with both outlets on. New UK sockets start switched on.
+
 ## 1.0.43
 
 - **Microwave hum is close and quiet.** You only hear the low hum when you are next to it while it cooks. It still dings when the queue is done. Opening the door stops the hum.
