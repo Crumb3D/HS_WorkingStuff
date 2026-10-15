@@ -1425,4 +1425,60 @@
 			<property name="UpgradeHitCount" value="4" />
 		</property>
 	</append>
+	<append xpath="/blocks/block[@name='cntDeskWoodEmpty']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="cntDeskWoodFull" />
+			<property name="Item" value="resourceWood" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntBookcaseEmpty']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="cntBookcaseFull" />
+			<property name="Item" value="resourceWood" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntBookcaseCornerEmpty']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="cntBookcaseCornerFull" />
+			<property name="Item" value="resourceWood" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntModularClosetOpen']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="cntModularClosetClosed" />
+			<property name="Item" value="resourceWood" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntWoodenChestOpen']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="cntWoodenChestClosed" />
+			<property name="Item" value="resourceWood" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntWoodenChestRottenOpen']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="cntWoodenChestRottenClosed" />
+			<property name="Item" value="resourceWood" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntWoodenChestMilitaryOpen']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="cntWoodenChestMilitaryClosed" />
+			<property name="Item" value="resourceWood" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
 </configs>

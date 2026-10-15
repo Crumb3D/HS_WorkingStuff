@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.56
+
+- **Repaired cupboards already have loot in them.** Shutting a cabinet, desk or drawer no longer makes a fresh unsearched POI crate. It fills from that furniture's loot list and counts as searched, so you open it to take the stuff, not to ping it.
+- **House furniture repairs shut.** Open nightstands, empty wood and metal desks, armoire drawers, empty bookcases, lockers, file cabinets, wooden chests, footlockers, modular closets and pill cases take wood (or scrap iron for the metal ones) and become the closed/full vanilla furniture.
+
 ## 1.0.55
 
 - **Nailgun / hammer / stone axe can repair appliances.** Those tools only allowed wood, iron and building mats, so a toaster, microwave or coffee maker showed an X even with electric parts in the bag. Electric parts and mechanical parts are now allowed. Hold the nailgun (right click) and 2 electric parts.

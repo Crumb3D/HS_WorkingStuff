@@ -63,6 +63,7 @@ public class HSWorkingStuffMod : IModApi
             HSCircuits.ServerTick();
             HSDrying.ServerTick();
             HSNeeds.ClientTick();
+            HSFlipper.Tick();
         }
         catch (Exception e)
         {
@@ -82,6 +83,7 @@ public class HSWorkingStuffMod : IModApi
         }
         HSWorkingStuffNet.RegisterPackage();
         HSLaundryCraft.Register();
+        HSFlipper.InjectFurniture();
         HSJoinHold.Tick();
     }
 
@@ -103,5 +105,6 @@ public class HSWorkingStuffMod : IModApi
         HSDrying.Clear();
         HSNeeds.Clear();
         HSRoomTemp.Clear();
+        HSFlipper.Clear();
     }
 }

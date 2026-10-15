@@ -94,6 +94,7 @@
     <Compile Include="HSDrying.cs" />
     <Compile Include="HSToilet.cs" />
     <Compile Include="HSSalvage.cs" />
+    <Compile Include="HSFlipper.cs" />
     <Compile Include="HSThermostat.cs" />
     <Compile Include="HSHifi.cs" />
     <Compile Include="HSKettle.cs" />

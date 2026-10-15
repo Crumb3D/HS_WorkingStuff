@@ -219,7 +219,7 @@ public static class HSPatchGodBuff
 [HarmonyPatch(typeof(Block), "OnBlockDamaged")]
 public static class HSPatchSalvagePlaced
 {
-    static void Postfix(WorldBase _world, BlockValueRef _bvRef, int _damagePoints)
+    static void Postfix(WorldBase _world, BlockValueRef _bvRef, int _damagePoints, int _entityIdThatDamaged)
     {
         if (_damagePoints >= 0 || _world == null)
             return;
@@ -227,5 +227,6 @@ public static class HSPatchSalvagePlaced
         BlockValue now = _world.GetBlock(pos);
         if (now.Block != null && HSSalvage.IsWorking(now.Block.GetBlockName()))
             HSSalvage.MarkPlaced(_world, pos);
+        HSFlipper.AfterUpgrade(_world, pos, _entityIdThatDamaged);
     }
 }
