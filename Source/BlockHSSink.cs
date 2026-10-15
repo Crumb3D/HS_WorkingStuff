@@ -121,23 +121,68 @@ public static class HSSinkCmds
         return true;
     }
 
-    // Same arm swing and sounds as filling a jar or bucket at a lake, or drinking a jar.
-    static void Animate(EntityPlayerLocal player, byte kind)
+    // Same as empty-hand drink from a lake (meleeHandPlayer Action2 Eat): UseItem + player_drinking.
+    public static void DrinkAnim(EntityPlayerLocal player)
+    {
+        DrinkAnim(player, "player_drinking");
+    }
+
+    public static void DrinkAnim(EntityPlayerLocal player, string sound)
     {
         if (player == null)
             return;
         try
         {
-            if (kind == HSWorkingStuffNet.SinkDrink || kind == HSWorkingStuffNet.SinkDrinkHot)
-            {
-                player.PlayOneShot("player_drinking");
-                return;
-            }
-            if (kind == HSWorkingStuffNet.SinkFill || kind == HSWorkingStuffNet.SinkFillHot || kind == HSWorkingStuffNet.SinkWash)
+            if (player.emodel != null && player.emodel.avatarController != null)
+                player.emodel.avatarController.SetMeleeAttackSpeed(1f);
+            player.RightArmAnimationUse = true;
+            player.PlayOneShot(string.IsNullOrEmpty(sound) ? "player_drinking" : sound);
+        }
+        catch { }
+    }
+
+    static void Animate(EntityPlayerLocal player, byte kind)
+    {
+        if (player == null)
+            return;
+        if (kind == HSWorkingStuffNet.SinkDrink || kind == HSWorkingStuffNet.SinkDrinkHot
+            || kind == HSWorkingStuffNet.SinkWash || kind == HSWorkingStuffNet.Wash)
+        {
+            DrinkAnim(player);
+            return;
+        }
+        try
+        {
+            if (kind == HSWorkingStuffNet.SinkFill || kind == HSWorkingStuffNet.SinkFillHot)
                 player.RightArmAnimationUse = true;
             player.PlayOneShot("bucketfill_water");
         }
         catch { }
+    }
+}
+
+// Vanilla handleBlockCommand uses `_commandIndex < Commands.Length` so -1 still indexes Commands[-1].
+[HarmonyPatch(typeof(XUiC_Radial), "handleBlockCommand")]
+public static class HSPatchRadialBlockCommand
+{
+    static bool Prefix(int _commandIndex, XUiC_Radial.RadialContextAbs _context)
+    {
+        try
+        {
+            var ctx = _context as XUiC_Radial.RadialContextBlock;
+            if (ctx == null)
+                return true;
+            int n = ctx.Commands != null ? ctx.Commands.Length : 0;
+            if (_commandIndex >= 0 && _commandIndex < n)
+                return true;
+            int custom = ctx.CustomCommands != null ? ctx.CustomCommands.Length : 0;
+            int at = _commandIndex - n;
+            return at >= 0 && at < custom;
+        }
+        catch
+        {
+            return true;
+        }
     }
 }
 

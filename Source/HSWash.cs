@@ -70,10 +70,7 @@ public static class HSPatchWaterWash
             if (p == null)
                 return true;
             if (HSLaundry.NaturalWash(p))
-            {
-                p.RightArmAnimationUse = true;
-                p.PlayOneShot("bucketfill_water");
-            }
+                HSSinkCmds.DrinkAnim(p, __instance.soundStart);
             return false;
         }
         catch

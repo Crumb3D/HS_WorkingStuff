@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.42
+
+- **Wash uses the drink animation.** Sink wash-up, shower, bath, and crouching at a lake all play the same empty-hand drink as a tap or water source (`player_drinking`), not the jar-fill swing.
+
 ## 1.0.41
 
 - **Appliance sounds, except the fridge and freezer.** The toaster buzzes and pops when it finishes. The coffee maker gurgles and dings, cookers hiss while they cook, the washer and dryer ding when a load is done, air con hums, and the boiler whooshes while it fires. Microwave and kettle sounds are unchanged.
