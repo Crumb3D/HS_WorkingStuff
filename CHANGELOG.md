@@ -2,6 +2,13 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.53
+
+- **Looted toilets and baths become usable.** Empty a POI toilet (or the gore bath) and it turns into a working one. An empty bathtub is Hold E to use. POI urinals work as soon as you find them.
+- **Looted kitchen appliances repair into working ones.** After you empty a fridge, cooker, wall oven, microwave, coffee maker, washer or dryer, hit it with a wrench and its repair parts (forged iron / electric parts). Inside a land claim you can then pick it up.
+- **A looted toilet takes a few pees before it needs a flush.** Three wees, then hold a jar of water and flush. A poo always needs a jar (or a pipe). Piped toilets still flush as they go.
+- **Washing in a lake rinses worn clothes a bit.** A sink wash-up does the same. It is not a washing machine, but day-one dirt comes off.
+
 ## 1.0.52
 
 - **Fridge and freezer only take food that spoils.** Blocks, tools and anything else bounce back. Junk already in there is handed back when you open it. Spoiled leftovers can still sit in there until you take them out.

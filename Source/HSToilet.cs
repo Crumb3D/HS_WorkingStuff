@@ -8,11 +8,14 @@ using UnityEngine;
 public class BlockHSToilet : Block
 {
     public bool Urinal;
+    public float TakeDelay = 5f;
 
     public override void Init()
     {
         base.Init();
         Properties.ParseBool("HSUrinal", ref Urinal);
+        if (Properties.Values.ContainsKey("TakeDelay"))
+            TakeDelay = StringParsers.ParseFloat(Properties.Values["TakeDelay"]);
     }
 
     public override bool HasBlockActivationCommands(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
@@ -32,11 +35,23 @@ public class BlockHSToilet : Block
 
     public override BlockActivationCommand[] GetBlockActivationCommands(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
-        return HSNeeds.Commands(_world as World, _blockPos, _blockValue, Urinal, _entityFocusing as EntityPlayerLocal);
+        BlockActivationCommand[] use = HSNeeds.Commands(_world as World, _blockPos, _blockValue, Urinal, _entityFocusing as EntityPlayerLocal);
+        bool land = _world.IsMyLandProtectedBlock(_blockPos, _world.GetGameManager().GetPersistentLocalPlayer());
+        int n = use != null ? use.Length : 0;
+        var all = new BlockActivationCommand[n + 1];
+        for (int i = 0; i < n; i++)
+            all[i] = use[i];
+        all[n] = new BlockActivationCommand("take", "hand", land && TakeDelay > 0f);
+        return all;
     }
 
     public override bool OnBlockActivated(string _commandName, WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, EntityPlayerLocal _player)
     {
+        if (_commandName == "take")
+        {
+            takeItemWithTimer(_blockPos, _blockValue, _player, TakeDelay > 0f ? TakeDelay : 5f);
+            return true;
+        }
         return HSNeeds.Run(_commandName, _world as World, _blockPos, _blockValue, Urinal, _player);
     }
 }
@@ -92,18 +107,30 @@ public static class HSNeeds
         return (bv.meta2 & 8) != 0;
     }
 
+    public static int DryPees(BlockValue bv)
+    {
+        return (bv.meta2 >> 4) & 7;
+    }
+
+    static int PeeCap()
+    {
+        return Mathf.Clamp(HSWorkingStuffSettings.ToiletPeesBeforeFlush, 1, 7);
+    }
+
     static int Cap(bool urinal)
     {
         int cap = Mathf.Clamp(HSWorkingStuffSettings.CisternJars, 1, urinal ? 3 : 7);
         return cap;
     }
 
-    static byte Pack(bool urinal, bool dirty, int cistern, bool half)
+    static byte Pack(bool urinal, bool dirty, int cistern, bool half, int dryPees)
     {
         cistern = Mathf.Clamp(cistern, 0, urinal ? 3 : 7);
         int bits = (dirty ? 1 : 0) | (cistern << 1);
         if (urinal && half)
             bits |= 8;
+        if (!urinal)
+            bits |= (Mathf.Clamp(dryPees, 0, 7) << 4);
         return (byte)bits;
     }
 
@@ -275,8 +302,7 @@ public static class HSNeeds
                     BlockValue bv = world.GetBlock(x, y, z);
                     if (!Dirty(bv) || bv.Block == null)
                         continue;
-                    string n = bv.Block.GetBlockName();
-                    if (n == "hsToilet" || n == "hsUrinal")
+                    if (bv.Block is BlockHSToilet)
                     {
                         cachedSmell = HSWorkingStuffSettings.DirtyToiletSmell;
                         break;
@@ -298,12 +324,18 @@ public static class HSNeeds
                 ? "The urinal hasn't flushed. It smells until it does"
                 : "The bowl is dirty and it smells. Flush it before you can go again"));
         int cistern = Cistern(bv) & (urinal ? 3 : 7);
+        int dry = urinal ? 0 : DryPees(bv);
+        int peeCap = PeeCap();
+        if (!urinal && dry > 0 && dry < peeCap)
+            lines.Add(HSLoc.Format("hsToiletDryPees", "Wees without a flush: {0} of {1}", dry, peeCap));
+        if (!urinal && dry >= peeCap)
+            lines.Add(HSLoc.Get("hsToiletNeedsFlush", "Needs a flush. Hold a jar of water and flush"));
         if (cistern > 0)
             lines.Add(HSLoc.Format("hsCisternJars", "Cistern: {0} jars", cistern));
         if (HasPipe(world, pos, FlushNeed()))
             lines.Add(HSLoc.Get("hsToiletPiped", "Piped: a flush takes water from the tank"));
-        else if (cistern <= 0)
-            lines.Add(HSLoc.Get("hsToiletDry", "No water. Pipe it, or pour a jar or bucket into the cistern"));
+        else if (cistern <= 0 && dry < peeCap && !Dirty(bv))
+            lines.Add(HSLoc.Get("hsToiletDry", "No water. A few pees are fine; a poo or a flush needs a jar"));
         return string.Join("\n", lines.ToArray());
     }
 
@@ -322,7 +354,8 @@ public static class HSNeeds
             }
         }
         int cistern = Cistern(bv) & (urinal ? 3 : 7);
-        bool canFlush = Dirty(bv) || cistern > 0 || HasPipe(world, pos, FlushNeed());
+        int dry = urinal ? 0 : DryPees(bv);
+        bool canFlush = Dirty(bv) || dry > 0 || cistern > 0 || HasPipe(world, pos, FlushNeed()) || HoldingWater(who);
         list.Add(new BlockActivationCommand(canFlush ? "hsflush" : "hsflushnone", "water", true));
         int held = HSWater.HoldingKind(who);
         if (held == 3 || held == 4)
@@ -346,9 +379,15 @@ public static class HSNeeds
                     Tell(player, HSLoc.Get("hsNeedNone", "You don't need to go"));
                     return true;
                 }
+                if (!urinal && DryPees(bv) >= PeeCap() && !HasFlushWater(world, pos, bv, FlushNeed(), player))
+                {
+                    Tell(player, HSLoc.Get("hsPeeNeedsFlush", "Needs a flush first. Hold a jar of water and flush"));
+                    return true;
+                }
                 PlayAt(pos, "hsStream");
                 bool flushNow = !urinal || HSWorkingStuffSettings.UrinalUsesPerJar <= 1 || Half(bv);
-                if (flushNow && HasFlushWater(world, pos, bv, FlushNeed()))
+                bool atCap = !urinal && DryPees(bv) >= PeeCap();
+                if (flushNow && HasFlushWater(world, pos, bv, FlushNeed(), atCap ? player : null))
                     PlayAt(pos, "hsFlush");
                 Relieve(player, BladderCVar, PeeBuff);
                 Tell(player, HSLoc.Get(urinal ? "hsUrinalUsed" : "hsPeed", urinal ? "Used the urinal" : "That's better"));
@@ -368,17 +407,17 @@ public static class HSNeeds
                     return true;
                 }
                 PlayAt(pos, "hsSoil");
-                if (HasFlushWater(world, pos, bv, FlushNeed()))
+                if (HasFlushWater(world, pos, bv, FlushNeed(), player))
                     PlayAt(pos, "hsFlush");
                 else
-                    Tell(player, HSLoc.Get("hsNoFlush", "No water to flush. The bowl stays dirty until you flush it"));
+                    Tell(player, HSLoc.Get("hsNoFlush", "No water to flush. Hold a jar of water and flush"));
                 Relieve(player, BowelCVar, PooBuff);
                 arg = Poo;
                 break;
             case "hsflush":
-                if (!HasFlushWater(world, pos, bv, FlushNeed()))
+                if (!HasFlushWater(world, pos, bv, FlushNeed(), player))
                 {
-                    Tell(player, HSLoc.Get("hsNoFlush", "No water to flush. The bowl stays dirty until you flush it"));
+                    Tell(player, HSLoc.Get("hsNoFlush", "No water to flush. Hold a jar of water and flush"));
                     return true;
                 }
                 PlayAt(pos, "hsFlush");
@@ -446,19 +485,20 @@ public static class HSNeeds
                 return;
             }
             cistern += Mathf.Min(room, got);
-            Write(world, pos, bv, urinal, dirty, cistern, half);
+            Write(world, pos, bv, urinal, dirty, cistern, half, DryPees(bv));
             Tell(player, HSLoc.Format("hsCisternFilled", "Cistern filled: {0} jars", cistern));
             HSInv.NotifyPlayer(player);
             return;
         }
+        int dry = urinal ? 0 : DryPees(bv);
         if (arg == Flush)
         {
-            if (!TryFlush(world, pos, ref cistern, need))
+            if (!TryFlush(world, pos, player, ref cistern, need, true))
             {
-                Tell(player, HSLoc.Get("hsNoFlush", "No water to flush. The bowl stays dirty until you flush it"));
+                Tell(player, HSLoc.Get("hsNoFlush", "No water to flush. Hold a jar of water and flush"));
                 return;
             }
-            Write(world, pos, bv, urinal, false, cistern, false);
+            Write(world, pos, bv, urinal, false, cistern, false, 0);
             Tell(player, HSLoc.Get("hsFlushed", "Flushed"));
             return;
         }
@@ -472,11 +512,11 @@ public static class HSNeeds
                 return;
             }
             dirty = true;
-            if (TryFlush(world, pos, ref cistern, need))
+            if (TryFlush(world, pos, player, ref cistern, need, true))
                 dirty = false;
             else
-                Tell(player, HSLoc.Get("hsNoFlush", "No water to flush. The bowl stays dirty until you flush it"));
-            Write(world, pos, bv, false, dirty, cistern, false);
+                Tell(player, HSLoc.Get("hsNoFlush", "No water to flush. Hold a jar of water and flush"));
+            Write(world, pos, bv, false, dirty, cistern, false, 0);
             return;
         }
         if (arg == PeeToilet || arg == PeeUrinal)
@@ -486,7 +526,7 @@ public static class HSNeeds
                 bool share = HSWorkingStuffSettings.UrinalUsesPerJar > 1;
                 if (share && !half)
                     half = true;
-                else if (TryFlush(world, pos, ref cistern, need))
+                else if (TryFlush(world, pos, player, ref cistern, need, true))
                 {
                     half = false;
                     dirty = false;
@@ -494,9 +534,16 @@ public static class HSNeeds
                 else
                     dirty = true;
             }
-            else if (TryFlush(world, pos, ref cistern, need))
+            else if (TryFlush(world, pos, player, ref cistern, need, dry >= PeeCap()))
+            {
                 dirty = false;
-            Write(world, pos, bv, urinal, dirty, cistern, half);
+                dry = 0;
+            }
+            else
+            {
+                dry = Mathf.Min(PeeCap(), dry + 1);
+            }
+            Write(world, pos, bv, urinal, dirty, cistern, half, dry);
         }
     }
 
@@ -517,17 +564,23 @@ public static class HSNeeds
         return HSWater.GetTank(src.TankPos).Units >= jars;
     }
 
-    static bool HasFlushWater(World world, Vector3i pos, BlockValue bv, int jars)
+    static bool HoldingWater(EntityPlayer player)
+    {
+        int kind = HSWater.HoldingKind(player);
+        return kind == 3 || kind == 4;
+    }
+
+    static bool HasFlushWater(World world, Vector3i pos, BlockValue bv, int jars, EntityPlayer who = null)
     {
         int cistern = Cistern(bv);
         var block = bv.Block as BlockHSToilet;
         if (block != null && block.Urinal)
             cistern &= 3;
-        return cistern >= jars || HasPipe(world, pos, jars);
+        return cistern >= jars || HasPipe(world, pos, jars) || HoldingWater(who);
     }
 
-    // Pipe water first, then the cistern. cistern is reduced when the cistern pays.
-    static bool TryFlush(World world, Vector3i pos, ref int cistern, int jars)
+    // Pipe water first, then the cistern, then a jar or bucket in hand when takeHeld is set.
+    static bool TryFlush(World world, Vector3i pos, EntityPlayer player, ref int cistern, int jars, bool takeHeld)
     {
         if (HSWorkingStuffSettings.EnablePlumbing)
         {
@@ -539,10 +592,18 @@ public static class HSNeeds
                 return true;
             }
         }
-        if (cistern < jars)
-            return false;
-        cistern -= jars;
-        return true;
+        if (cistern >= jars)
+        {
+            cistern -= jars;
+            return true;
+        }
+        int got;
+        if (takeHeld && TakeHeld(player, out got) && got >= 1)
+        {
+            HSInv.NotifyPlayer(player);
+            return true;
+        }
+        return false;
     }
 
     static bool TakeHeld(EntityPlayer player, out int jars)
@@ -560,9 +621,9 @@ public static class HSNeeds
         return true;
     }
 
-    static void Write(World world, Vector3i pos, BlockValue bv, bool urinal, bool dirty, int cistern, bool half)
+    static void Write(World world, Vector3i pos, BlockValue bv, bool urinal, bool dirty, int cistern, bool half, int dryPees)
     {
-        bv.meta2 = Pack(urinal, dirty, cistern, half);
+        bv.meta2 = Pack(urinal, dirty, cistern, half, dryPees);
         world.SetBlockRPC(pos, bv);
     }
 

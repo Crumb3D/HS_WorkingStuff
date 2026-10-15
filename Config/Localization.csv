@@ -470,7 +470,7 @@ hsDryEmpty,UI,tooltip,,,K,"Nothing hung up: put wet clothes or armour in to dry 
 hsSocketRun,UI,tooltip,,,K,"Socket {0} of {1} on this run (most {2})"
 hsChainMax,UI,tooltip,,,K,"A run takes at most {0} sockets: start a new circuit from the consumer unit"
 hsToilet,blocks,Block,,,,Toilet
-hsToiletDesc,blocks,Block,,,,"A plumbed toilet. Pipe it like a sink and a flush takes 1 jar from the tank, or pour a jar or bucket into the cistern. Pee or poo here. Poo only works in a toilet, and a dirty bowl has to be flushed before you can go again. It smells until you flush it."
+hsToiletDesc,blocks,Block,,,,"Loot a POI toilet and it becomes this. A few pees before it needs a flush; hold a jar of water and flush. A poo always needs that jar, or a pipe. Pipe it like a sink and a flush takes 1 jar from the tank."
 hsUrinal,blocks,Block,,,,Urinal
 hsUrinalDesc,blocks,Block,,,,"A wall urinal, plumbed like a sink. Pee only: two pees share one jar. It will not do for a poo."
 blockcommand_hspee,UI,radial,,,K,Pee
@@ -487,14 +487,22 @@ hsBowlDirty,UI,tooltip,,,K,"The bowl is dirty and it smells. Flush it before you
 hsUrinalDirty,UI,tooltip,,,K,The urinal hasn't flushed. It smells until it does
 hsCisternJars,UI,tooltip,,,K,Cistern: {0} jars
 hsToiletPiped,UI,tooltip,,,K,Piped: a flush takes water from the tank
-hsToiletDry,UI,tooltip,,,K,"No water. Pipe it, or pour a jar or bucket into the cistern"
+hsToiletDry,UI,tooltip,,,K,"No water. A few pees are fine; a poo or a flush needs a jar"
+hsToiletDryPees,UI,tooltip,,,K,Wees without a flush: {0} of {1}
+hsToiletNeedsFlush,UI,tooltip,,,K,Needs a flush. Hold a jar of water and flush
+hsPeeNeedsFlush,UI,tooltip,,,K,Needs a flush first. Hold a jar of water and flush
+hsSalvageToilet,UI,tooltip,,,K,The toilet is usable. A few pees before it needs a jar to flush; a poo always does
+hsSalvageBath,UI,tooltip,,,K,The bath is usable. Pipe hot water to it when you can
+blockcommand_hsuse,UI,radial,,,K,Use
+hsWashLakesideClothes,UI,tooltip,,,K,"Splashed yourself clean: about 5 m less smell, and a bit of dirt off your clothes"
+hsSinkWashedClothes,UI,tooltip,,,K,"Washed up at the sink: about 5 m less smell, and a bit of dirt off your clothes"
 hsNeedNone,UI,tooltip,,,K,You don't need to go
 hsNeedNonePoo,UI,tooltip,,,K,You don't need the toilet
 hsBowlFull,UI,tooltip,,,K,The bowl is dirty. Flush it before you can go again
 hsFlushNone,UI,tooltip,,,K,Nothing to flush
 hsPeed,UI,tooltip,,,K,That's better
 hsUrinalUsed,UI,tooltip,,,K,Used the urinal
-hsNoFlush,UI,tooltip,,,K,No water to flush. The bowl stays dirty until you flush it
+hsNoFlush,UI,tooltip,,,K,No water to flush. Hold a jar of water and flush
 hsFlushed,UI,tooltip,,,K,Flushed
 hsCisternHold,UI,tooltip,,,K,Hold a jar or bucket of water to fill the cistern
 hsCisternFull,UI,tooltip,,,K,The cistern is full

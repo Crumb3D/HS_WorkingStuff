@@ -91,7 +91,32 @@ public static class HSLaundry
         float body = Mathf.Max(0f, Body(p) - QuickWashHours());
         p.Buffs.SetCustomVar(BodyCVar, body);
         quickUntil = NowHours(world) + 1f;
-        GameManager.ShowTooltip(p, HSLoc.Get(key, text));
+        int rinsed = RinseWorn(p, HSWorkingStuffSettings.WaterWashClothes);
+        if (rinsed > 0)
+            GameManager.ShowTooltip(p, HSLoc.Get(key + "Clothes", text + ", and a bit of dirt off your clothes"));
+        else
+            GameManager.ShowTooltip(p, HSLoc.Get(key, text));
+    }
+
+    // Lakeside / sink splash: a little dirt comes off worn clothes. A washer still does the proper job.
+    public static int RinseWorn(EntityPlayerLocal p, float amount)
+    {
+        if (p == null || p.equipment == null || amount <= 0f || !HSWorkingStuffSettings.EnableLaundry)
+            return 0;
+        int n = 0;
+        int slots = p.equipment.GetSlotCount();
+        for (int i = 0; i < slots; i++)
+        {
+            ItemValue iv = p.equipment.GetSlotItem(i);
+            if (!IsClothing(iv))
+                continue;
+            float d = Dirt(iv);
+            if (d <= 0f)
+                continue;
+            iv.SetMetadata(MetaDirt, Mathf.Max(0f, d - amount));
+            n++;
+        }
+        return n;
     }
 
     public static bool Immersed(EntityPlayerLocal p)
@@ -144,6 +169,8 @@ public static class HSLaundry
         {
             float rate = (soakStart - soakTarget) / Mathf.Max(0.05f, HSWorkingStuffSettings.WaterWashHours);
             body = Mathf.Max(soakTarget, body - rate * hours);
+            float clothes = HSWorkingStuffSettings.WaterWashClothes * hours / Mathf.Max(0.05f, HSWorkingStuffSettings.WaterWashHours);
+            RinseWorn(p, clothes);
             if (body <= soakTarget + 0.001f)
             {
                 soaking = false;

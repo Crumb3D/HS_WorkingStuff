@@ -82,7 +82,9 @@ public static class HSWorkingStuffSettings
     public static int FlushJars = 1;
     public static int UrinalUsesPerJar = 2;
     public static int CisternJars = 4;
+    public static int ToiletPeesBeforeFlush = 3;
     public static float DirtyToiletSmell = 8f;
+    public static float WaterWashClothes = 0.2f;
 
     public static void Load(string modPath)
     {
@@ -164,7 +166,9 @@ public static class HSWorkingStuffSettings
         FlushJars = 1;
         UrinalUsesPerJar = 2;
         CisternJars = 4;
+        ToiletPeesBeforeFlush = 3;
         DirtyToiletSmell = 8f;
+        WaterWashClothes = 0.2f;
         if (!string.IsNullOrEmpty(modPath))
             TryRead(Path.Combine(modPath, "HSWorkingStuffSettings.json"));
         try
@@ -269,7 +273,9 @@ public static class HSWorkingStuffSettings
         ReadInt(text, "FlushJars", ref FlushJars);
         ReadInt(text, "UrinalUsesPerJar", ref UrinalUsesPerJar);
         ReadInt(text, "CisternJars", ref CisternJars);
+        ReadInt(text, "ToiletPeesBeforeFlush", ref ToiletPeesBeforeFlush);
         ReadFloat(text, "DirtyToiletSmell", ref DirtyToiletSmell);
+        ReadFloat(text, "WaterWashClothes", ref WaterWashClothes);
         Log.Out("[HSWorkingStuff] Read " + path);
     }
 

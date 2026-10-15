@@ -85,5 +85,7 @@
   "FlushJars": 1,
   "UrinalUsesPerJar": 2,
   "CisternJars": 4,
-  "DirtyToiletSmell": 8
+  "ToiletPeesBeforeFlush": 3,
+  "DirtyToiletSmell": 8,
+  "WaterWashClothes": 0.2
 }

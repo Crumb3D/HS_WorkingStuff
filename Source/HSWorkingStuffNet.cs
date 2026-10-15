@@ -38,6 +38,7 @@ public static class HSWorkingStuffNet
     public const byte CircuitName = 29;
     public const byte CircuitAsk = 30;
     public const byte Toilet = 31;
+    public const byte Salvage = 32;
 
     public static bool IsAuthority
     {
@@ -199,6 +200,11 @@ public static class HSWorkingStuffNet
         if (kind == Toilet)
         {
             HSNeeds.Handle(world, pos, player, arg);
+            return;
+        }
+        if (kind == Salvage)
+        {
+            HSSalvage.Convert(world, pos, player);
             return;
         }
         if (!HSWorkingStuffSettings.EnablePlumbing)

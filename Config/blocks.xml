@@ -1127,4 +1127,115 @@
 			<property name="CustomIcon" value="cntCharcoalGrillClosed" />
 		</block>
 	</append>
+
+	<!-- After looting, POI appliances repair into the working ones. Toilets convert in code when emptied. -->
+	<append xpath="/blocks/block[@name='urinalCommercialMounted']">
+		<property name="Class" value="HSToilet, HSWorkingStuff" />
+		<property name="HSUrinal" value="true" />
+		<property name="TakeDelay" value="5" />
+	</append>
+	<append xpath="/blocks/block[@name='cntRetroFridgeVer1Closed']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsFridge" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntStoveOldVer1Closed']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsStoveOld" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntStoveModernVer1Closed']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsStoveModern" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntwallOvenEmptyWhite']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsStoveWall" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntMicrowaveOvenVer1Closed']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsMicrowave" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntMicrowaveOvenVer1Open']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsMicrowave" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntMicrowaveOvenVer2Closed']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsMicrowaveRetro" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntMicrowaveOvenVer2Open']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsMicrowaveRetro" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntCoffeeMaker']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsCoffeeMaker" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntCoffeeMakerCommercial']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsCoffeeMakerCommercial" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntWasherOpen']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsWasherVanilla" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntDryerOpen']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsDryerVanilla" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
+	<append xpath="/blocks/block[@name='cntDryerClosed']">
+		<property class="UpgradeBlock">
+			<property name="ToBlock" value="hsDryerVanilla" />
+			<property name="Item" value="r" />
+			<property name="ItemCount" value="4" />
+			<property name="UpgradeHitCount" value="4" />
+		</property>
+	</append>
 </configs>
