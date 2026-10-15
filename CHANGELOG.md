@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.43
+
+- **Microwave hum is close and quiet.** You only hear the low hum when you are next to it while it cooks. It still dings when the queue is done. Opening the door stops the hum.
+
 ## 1.0.42
 
 - **Wash uses the drink animation.** Sink wash-up, shower, bath, and crouching at a lake all play the same empty-hand drink as a tap or water source (`player_drinking`), not the jar-fill swing.

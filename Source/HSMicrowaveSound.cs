@@ -88,6 +88,7 @@ public static class HSMicrowaveSound
         if (microwave && te.IsUserAccessing())
         {
             serverState.Remove(pos);
+            StopHum(pos);
             return;
         }
         bool queued = HasQueued(te.Queue);

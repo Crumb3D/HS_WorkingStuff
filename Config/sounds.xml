@@ -1,8 +1,8 @@
 <configs>
 	<append xpath="/Sounds">
-		<SoundDataNode name="hsMicrowaveHum"> <AudioSource name="@:Sounds/Prefabs/AudioSource_FridgeLP.prefab"/>
+		<SoundDataNode name="hsMicrowaveHum"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Amb_XSmall.prefab"/>
 			<AudioClip ClipName="@:Sounds/Ambient_Loops/a_coolerbev_lp.wav" Loop="true"/>
-			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="18"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
+			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0"/> <NoiseScale value="0"/> <MaxVoices value="18"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
 
 		<SoundDataNode name="hsMicrowaveDing"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Interact.prefab"/>
 			<AudioClip ClipName="@:Sounds/TriggeredEvents/elevator_ding1.wav"/>
