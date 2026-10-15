@@ -55,6 +55,18 @@ public static class HSBoiler
             || name == "radiatorHouse01" || name == "radiatorHouse01Player";
     }
 
+    // POI house radiators only join the heating loop after the pipe tool has laid into them.
+    public static bool PipedRadiator(World world, Vector3i pos)
+    {
+        if (HSPipeNet.Has(pos))
+            return true;
+        if (world == null)
+            return false;
+        BlockValue bv = world.GetBlock(pos);
+        Vector3i parent = HSWater.Parent(pos, bv);
+        return parent != pos && HSPipeNet.Has(parent);
+    }
+
     // Laid pipe sits in the tank, sinks and the other boiler too. Those are cold water, not this heating loop.
     public static bool BlocksHeat(Block block)
     {
@@ -291,6 +303,8 @@ public static class HSBoiler
                 if (IsRadiator(nn))
                 {
                     Vector3i rp = HSWater.Parent(np, nbv);
+                    if (!PipedRadiator(world, np) && !PipedRadiator(world, rp))
+                        continue;
                     seen.Add(nk);
                     if (rp != np)
                         seen.Add(HSWater.Key(rp));
@@ -543,6 +557,8 @@ public static class HSBoiler
     // Nearest boiler on heating pipe only. Shared tank / cold pipe is a wall, so two boilers on one tank stay apart.
     static Vector3i? FindBoiler(World world, Vector3i radiator)
     {
+        if (!PipedRadiator(world, radiator))
+            return null;
         int limit = HSWorkingStuffSettings.PipeSearchLimit * 2;
         var q = new Queue<Vector3i>();
         var seen = new HashSet<long>();
@@ -566,6 +582,8 @@ public static class HSBoiler
                 string nn = nb.GetBlockName();
                 if (IsBoiler(nn))
                     return HSWater.Parent(np, nbv);
+                if (IsRadiator(nn) && !PipedRadiator(world, np) && !PipedRadiator(world, HSWater.Parent(np, nbv)))
+                    continue;
                 if (BlocksHeat(nb) || (!IsRadiator(nn) && !HSWater.IsBarePipe(nn) && !HSPipeNet.Has(np)))
                     continue;
                 seen.Add(nk);

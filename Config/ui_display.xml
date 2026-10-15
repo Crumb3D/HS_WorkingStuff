@@ -1,0 +1,16 @@
+<configs>
+	<append xpath="/ui_display_info/crafting_category_display">
+		<crafting_category_list display_type="hsWasher">
+			<crafting_category name="" icon="ui_game_symbol_armor_iron" display_name="lblCategoryArmor" />
+		</crafting_category_list>
+		<crafting_category_list display_type="hsWasherVanilla">
+			<crafting_category name="" icon="ui_game_symbol_armor_iron" display_name="lblCategoryArmor" />
+		</crafting_category_list>
+		<crafting_category_list display_type="hsDryer">
+			<crafting_category name="" icon="ui_game_symbol_armor_iron" display_name="lblCategoryArmor" />
+		</crafting_category_list>
+		<crafting_category_list display_type="hsDryerVanilla">
+			<crafting_category name="" icon="ui_game_symbol_armor_iron" display_name="lblCategoryArmor" />
+		</crafting_category_list>
+	</append>
+</configs>

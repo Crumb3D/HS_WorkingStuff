@@ -14,11 +14,17 @@ public static class HSLaundryCraft
     static int alreadyTaken;
     static ItemValue pendingOut;
     static readonly FieldInfo infoRecipe = AccessTools.Field(typeof(XUiC_CraftingInfoWindow), "recipe");
+    static readonly MethodInfo cacheVisible = AccessTools.Method(typeof(CraftingManager), "cacheNonScrapableRecipes");
 
     public static void Register()
     {
-        if (registered || !HSWorkingStuffSettings.EnableLaundry)
+        if (!HSWorkingStuffSettings.EnableLaundry)
             return;
+        if (registered)
+        {
+            ShowInUi();
+            return;
+        }
         ItemClass[] list = ItemClass.list;
         if (list == null || list.Length == 0)
             return;
@@ -33,14 +39,27 @@ public static class HSLaundryCraft
             n++;
         }
         registered = true;
+        ShowInUi();
         if (n > 0)
             Log.Out("[HSWorkingStuff] laundry recipes for " + n + " clothes and armour");
+    }
+
+    public static void ResetForNewGame()
+    {
+        registered = false;
     }
 
     public static void Clear()
     {
         alreadyTaken = 0;
         pendingOut = null;
+    }
+
+    // The cooker list reads CraftingManager.NonScrapableRecipes, which AddRecipe does not update.
+    static void ShowInUi()
+    {
+        if (cacheVisible != null)
+            cacheVisible.Invoke(null, null);
     }
 
     static void Add(ItemClass ic, bool dryer)
@@ -621,5 +640,40 @@ public static class HSPatchLaundryClientOut
             grid.UpdateData(slots);
             return;
         }
+    }
+}
+
+[HarmonyPatch(typeof(CraftingManager), "PostInit")]
+public static class HSPatchLaundryPostInit
+{
+    static void Postfix()
+    {
+        HSLaundryCraft.Register();
+    }
+}
+
+[HarmonyPatch(typeof(CraftingManager), "InitForNewGame")]
+public static class HSPatchLaundryNewGame
+{
+    static void Postfix()
+    {
+        HSLaundryCraft.ResetForNewGame();
+    }
+}
+
+// Leftover Basics/Food category from the last workstation would hide every clothing recipe.
+[HarmonyPatch(typeof(XUiM_Recipes), "FilterRecipesByCategory")]
+public static class HSPatchLaundryCategory
+{
+    static bool Prefix(ref List<Recipe> recipeList)
+    {
+        if (recipeList == null || recipeList.Count == 0)
+            return true;
+        for (int i = 0; i < recipeList.Count; i++)
+        {
+            if (HSLaundryCraft.IsLaundry(recipeList[i]))
+                return false;
+        }
+        return true;
     }
 }

@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.50
+
+- **Washer and dryer show every clothing and armour recipe.** Runtime recipes are now added to the cooker's visible list. Worn or carried dirty/wet pieces highlight; the rest stay dimmed. Click one to wash or dry.
+- **Boilers only count radiators you actually piped.** A house radiator sitting next to the boiler (or on a floor the heating pipe runs under) no longer counts as one radiator each.
+
 ## 1.0.49
 
 - **Washer and dryer open like the cooker.** Clothes and armour you wear or carry highlight as washable. Click one to see how dirty or wet it is and how long it will take, then queue it. The same piece comes out the other side clean (and wet) or dry. Hats and gloves are quicker than a coat; 20% dirty takes a fifth of the time of filthy. One jar of cold water per wash. A tumble is faster than a wash (`DryerSeconds` 20, `WasherSeconds` 30 at 100%).

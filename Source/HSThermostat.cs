@@ -193,7 +193,10 @@ public static class HSThermostat
                     BlockValue bv = world.GetBlock(p);
                     if (bv.isair || bv.Block == null || !HSBoiler.IsRadiator(bv.Block.GetBlockName()))
                         continue;
-                    best = HSWater.Parent(p, bv);
+                    Vector3i parent = HSWater.Parent(p, bv);
+                    if (!HSBoiler.PipedRadiator(world, p) && !HSBoiler.PipedRadiator(world, parent))
+                        continue;
+                    best = parent;
                     bestD = d;
                 }
         return best;
@@ -235,6 +238,8 @@ public static class HSThermostat
                 if (HSBoiler.IsRadiator(nn))
                 {
                     Vector3i rp = HSWater.Parent(np, nbv);
+                    if (!HSBoiler.PipedRadiator(world, np) && !HSBoiler.PipedRadiator(world, rp))
+                        continue;
                     seen.Add(HSWater.Key(rp));
                     if (!loop.Radiators.Contains(rp))
                         loop.Radiators.Add(rp);
