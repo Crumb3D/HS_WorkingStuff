@@ -22,7 +22,7 @@ Nailgun, claw hammer or stone axe, **right click**. Look for the upgrade hits, n
 
 ## Day one in a house
 
-1. Loot the toilets and the gore bath. An empty POI toilet becomes usable. Urinals already work. Empty tubs and clawfoot baths work as soon as you find them (they’ll tell you they need pipes and a boiler for a proper wash).
+1. Loot the toilets and the gore bath. An empty POI toilet becomes usable. Urinals already work. Empty tubs, clawfoot baths and shower heads work as soon as you find them (they’ll tell you they need pipes and a boiler for a proper wash).
 2. Empty the fridge, cooker, microwave, coffee maker, toaster, washer or dryer, then repair them with **2 electric parts**.
 3. Shut open cabinets, desks, nightstands, lockers and chests with **wood** (scrap iron for metal bathroom cabinets). They repair to **empty** cupboards you can fill yourself — not a fresh unsearched loot ping.
 4. Repair the wall TV and the house radiator the same way. Wire the TV from a socket when you have one. The POI cylinder water heater repairs into a working boiler.
@@ -41,6 +41,7 @@ Nailgun, claw hammer or stone axe, **right click**. Look for the upgrade hits, n
 | House radiator | Forged iron | Working cast-iron radiator. Pipe it to a boiler |
 | POI water heater | Forged iron | Working boiler (vanilla tank) |
 | POI toilet (loot it) / gore bath (loot it) | — | Working toilet / empty tub |
+| POI shower head | — | Working shower (same head). Pipe hot water |
 
 Empty the loot first on kitchen appliances. Inside a land claim you can pick the working ones up later if you want to rearrange.
 
@@ -52,6 +53,7 @@ You will not always be home when you need a pee or a wash. That’s fine.
 
 - **Toilet / urinal** in any POI: loot the toilet once, then Hold E to pee (and poo on a toilet). A dry toilet takes about three wees before it needs a jar to flush. A poo always needs that jar, or a pipe.
 - **Sink** if it’s plumbed, or any sink you can use to wash up with a jar.
+- **Shower / bath** in a POI: the head and the empty tub already work. They still need pipes and a boiler for a proper wash.
 - **Lake or river:** crouch and use the drink key to wash. Standing in water up to your waist washes more off slowly, and rinses a bit of dirt off your clothes.
 - **Tree:** look at the trunk, Hold E, have a pee. Not for a poo.
 

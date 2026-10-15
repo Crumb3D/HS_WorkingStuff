@@ -75,6 +75,7 @@ public static class HSSalvage
         "hsWasher", "hsWasherVanilla", "hsDryer", "hsDryerVanilla",
         "hsToilet", "hsUrinal", "hsBath", "hsShower",
         "cntBathTubEmpty", "decoClawFootBathTub",
+        "showerHead", "showerHead02",
         "hsToasterUS", "hsWaterHeaterVanilla", "hsRadiatorCastIron", "hsWaterHeater",
         "hsTVStand", "hsTVWall",
         "hsTVSmallStand1x1", "hsTVSmallWall1x1", "hsTVSmallStand2x1", "hsTVSmallWall2x1",

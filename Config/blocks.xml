@@ -1278,6 +1278,14 @@
 		<property name="HSBath" value="true" />
 		<property name="TakeDelay" value="5" />
 	</append>
+	<append xpath="/blocks/block[@name='showerHead']">
+		<property name="Class" value="HSShower, HSWorkingStuff" />
+		<property name="TakeDelay" value="5" />
+	</append>
+	<append xpath="/blocks/block[@name='showerHead02']">
+		<property name="Class" value="HSShower, HSWorkingStuff" />
+		<property name="TakeDelay" value="5" />
+	</append>
 	<append xpath="/blocks/block[@name='cntRetroFridgeVer1Closed']">
 		<property class="UpgradeBlock">
 			<property name="ToBlock" value="hsFridge" />
