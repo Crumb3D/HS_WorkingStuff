@@ -50,7 +50,7 @@ public static class HSPatchSwitchText
         for (int i = 0; i < te.wireDataList.Count; i++)
         {
             Block block = world.GetBlock(te.wireDataList[i]).Block;
-            if (block == null)
+            if (block == null || block is BlockSwitch)
                 continue;
             string name = block.GetLocalizedBlockName();
             if (!string.IsNullOrEmpty(name) && !names.Contains(name))

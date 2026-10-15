@@ -23,6 +23,24 @@ public static class HSPlugs
         return Limit(block) > 0;
     }
 
+    // Light switches have HSPlugs 0: they are not outlets. They chain to other switches the way sockets do.
+    public static bool IsLightSwitch(Block block)
+    {
+        return block is BlockHSWallSwitch && Limit(block) == 0;
+    }
+
+    public static bool IsLightSwitchAt(Vector3i pos)
+    {
+        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+        return world != null && IsLightSwitch(world.GetBlock(pos).Block);
+    }
+
+    static bool Onward(Block parent, Block child)
+    {
+        return parent != null && child != null
+            && ((IsSocket(parent) && IsSocket(child)) || (IsLightSwitch(parent) && IsLightSwitch(child)));
+    }
+
     // The server only updates PowerItem.Parent when a wire is laid, so parentPosition there is whatever was last loaded.
     public static bool Parent(TileEntityPowered te, out Vector3i parent)
     {
@@ -49,17 +67,18 @@ public static class HSPlugs
         return world != null && IsSocket(world.GetBlock(pos).Block);
     }
 
-    // Plug leads out of a socket, in wire order. A wire on to the next socket in a chain is not a plug,
+    // Plug leads out of a socket, in wire order. A wire on to the next socket (or switch) in a chain is not a plug,
     // and neither is a thermostat: it shares the socket with whatever is plugged in.
     public static List<Vector3i> Leads(WorldBase world, TileEntityPowered te)
     {
         var list = new List<Vector3i>();
         if (world == null || te == null || te.wireDataList == null)
             return list;
+        Block parent = te.blockValue.Block;
         for (int i = 0; i < te.wireDataList.Count; i++)
         {
             Block b = world.GetBlock(te.wireDataList[i]).Block;
-            if (!IsSocket(b) && !(b is BlockHSWallThermostat))
+            if (!Onward(parent, b) && !(b is BlockHSWallThermostat))
                 list.Add(te.wireDataList[i]);
         }
         return list;
@@ -67,35 +86,37 @@ public static class HSPlugs
 
     public static bool Chained(WorldBase world, TileEntityPowered te)
     {
-        if (world == null || te == null || te.wireDataList == null)
-            return false;
-        for (int i = 0; i < te.wireDataList.Count; i++)
-            if (IsSocket(world.GetBlock(te.wireDataList[i]).Block))
-                return true;
-        return false;
+        return NextInRun(world, te) != null;
     }
 
     static TileEntityPowered NextInRun(WorldBase world, TileEntityPowered te)
     {
         if (world == null || te == null || te.wireDataList == null)
             return null;
+        Block parent = te.blockValue.Block;
         for (int i = 0; i < te.wireDataList.Count; i++)
-            if (IsSocket(world.GetBlock(te.wireDataList[i]).Block))
+            if (Onward(parent, world.GetBlock(te.wireDataList[i]).Block))
                 return world.GetTileEntity(te.wireDataList[i]) as TileEntityPowered;
         return null;
     }
 
-    // Sockets from the start of the run up to and including this one.
+    // Sockets or light switches from the start of the run up to and including this one.
     public static int RunPosition(WorldBase world, TileEntityPowered te)
     {
         int n = 0;
-        for (int guard = 0; te != null && guard < 64 && IsSocket(te.blockValue.Block); guard++)
+        for (int guard = 0; te != null && guard < 64; guard++)
         {
+            Block b = te.blockValue.Block;
+            if (!IsSocket(b) && !IsLightSwitch(b))
+                break;
             n++;
             Vector3i parent;
             if (!Parent(te, out parent))
                 break;
-            te = world.GetTileEntity(parent) as TileEntityPowered;
+            var pte = world.GetTileEntity(parent) as TileEntityPowered;
+            if (pte == null || !Onward(pte.blockValue.Block, b))
+                break;
+            te = pte;
         }
         return n;
     }
@@ -114,7 +135,7 @@ public static class HSPlugs
         return n;
     }
 
-    // Plug count, the onward socket link and the circuit it is on, for socket hover text.
+    // Plug count, the onward socket or switch link and the circuit it is on, for hover text.
     public static string Usage(WorldBase world, Vector3i pos, int limit)
     {
         var te = world != null ? world.GetTileEntity(pos) as TileEntityPowered : null;
@@ -123,12 +144,25 @@ public static class HSPlugs
         {
             int used = te != null ? Mathf.Min(Leads(world, te).Count, limit) : 0;
             text = HSLoc.Format("hsPlugUsed", "Plugs: {0} of {1} in use", used, limit);
-            if (Chained(world, te))
-                text += "\n" + HSLoc.Get("hsSocketChained", "Linked on to the next socket");
-            int at = RunPosition(world, te);
-            int total = at + RunAfter(world, te);
-            if (total > 1)
-                text += "\n" + HSLoc.Format("hsSocketRun", "Socket {0} of {1} on this run (most {2})", at, total, HSWorkingStuffSettings.MaxSocketsPerRun);
+        }
+        bool light = te != null && IsLightSwitch(te.blockValue.Block);
+        if (Chained(world, te))
+        {
+            if (text.Length > 0)
+                text += "\n";
+            text += light
+                ? HSLoc.Get("hsSwitchChained", "Linked on to the next switch")
+                : HSLoc.Get("hsSocketChained", "Linked on to the next socket");
+        }
+        int at = RunPosition(world, te);
+        int total = at + RunAfter(world, te);
+        if (total > 1)
+        {
+            if (text.Length > 0)
+                text += "\n";
+            text += light
+                ? HSLoc.Format("hsSwitchRun", "Switch {0} of {1} on this run (most {2})", at, total, HSWorkingStuffSettings.MaxSocketsPerRun)
+                : HSLoc.Format("hsSocketRun", "Socket {0} of {1} on this run (most {2})", at, total, HSWorkingStuffSettings.MaxSocketsPerRun);
         }
         string circuit = HSCircuits.CircuitLine(world, pos);
         if (!string.IsNullOrEmpty(circuit))
@@ -471,9 +505,28 @@ public static class HSPatchSocketPlugs
                 }
                 return;
             }
+            World world = GameManager.Instance.World;
+            if (HSPlugs.IsLightSwitch(parent.blockValue.Block))
+            {
+                if (HSPlugs.IsLightSwitch(__instance.blockValue.Block))
+                {
+                    if (HSPlugs.Chained(world, parent))
+                    {
+                        __result = false;
+                        HSPlugs.DenyReason(HSLoc.Get("hsSwitchChainFull", "This switch already links on to another switch: one onward link per switch"));
+                        return;
+                    }
+                    int maxSw = HSWorkingStuffSettings.MaxSocketsPerRun;
+                    if (maxSw > 0 && HSPlugs.RunPosition(world, parent) + 1 + HSPlugs.RunAfter(world, __instance) > maxSw)
+                    {
+                        __result = false;
+                        HSPlugs.DenyReason(HSLoc.Format("hsSwitchChainMax", "A run takes at most {0} switches: start a new circuit from the consumer unit", maxSw));
+                    }
+                }
+                return;
+            }
             if (limit <= 0)
                 return;
-            World world = GameManager.Instance.World;
             if (HSPlugs.IsSocket(__instance.blockValue.Block))
             {
                 if (HSPlugs.Chained(world, parent))

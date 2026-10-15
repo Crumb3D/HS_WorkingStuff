@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.39
+
+- **Light switches chain like sockets.** Wire switch to switch and power always goes through, whether that switch is on or off. Each switch only turns its own lights or air con on and off; looking at it says "Switch on Fluorescent Light", not the next switch as well. One onward switch per plate, same run limit as sockets.
+
 ## 1.0.38
 
 - **Speaker cables stay on the walls.** They no longer hang across the room. Each run goes from the hi-fi to the wall, up to the ceiling, along the ceiling, and down to the speaker.

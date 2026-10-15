@@ -898,7 +898,8 @@ public static class HSPatchCutTimer
     }
 }
 
-// Sockets chain: a switched-off UK socket still feeds the next socket along, only its own plugs go dead.
+// Sockets and light switches chain: a switched-off plate still feeds the next socket or switch along.
+// Only the lights / plugs on this plate go dead; the rest of the run stays live.
 [HarmonyPatch(typeof(PowerTrigger), "HandlePowerReceived")]
 public static class HSPatchSocketChain
 {
@@ -908,12 +909,16 @@ public static class HSPatchSocketChain
         {
             if (power <= 0 || !__instance.isPowered || __instance.IsActive || __instance.Children == null || __instance.Children.Count == 0)
                 return;
-            if (!HSPlugs.IsSocketAt(__instance.Position))
+            bool socket = HSPlugs.IsSocketAt(__instance.Position);
+            bool light = HSPlugs.IsLightSwitchAt(__instance.Position);
+            if (!socket && !light)
                 return;
             for (int i = 0; i < __instance.Children.Count && power > 0; i++)
             {
                 PowerItem ch = __instance.Children[i];
-                if (!HSPlugs.IsSocketAt(ch.Position))
+                if (socket && !HSPlugs.IsSocketAt(ch.Position))
+                    continue;
+                if (light && !HSPlugs.IsLightSwitchAt(ch.Position))
                     continue;
                 ch.HandlePowerReceived(ref power);
                 // Vanilla only passes the power update on to switch children while this switch is off.

@@ -278,7 +278,7 @@ hsLightSwitchUK,blocks,Block,,,,UK Light Switch
 hsCookerSwitchUK,blocks,Block,,,,UK Cooker Switch (45A)
 hsSocketUKDesc,blocks,Block,,,,"A UK 13A wall socket with its own switch. Wire power into it, then wire from it to the appliance: one plug for a single socket, two for a double. Switch it off and everything plugged in goes off."
 hsSocketUSDesc,blocks,Block,,,,"A US wall outlet, always live with no switch. Wire power into it, then wire from it to the appliance: one plug for a single outlet, two for a duplex."
-hsLightSwitchUKDesc,blocks,Block,,,,A UK rocker light switch. Wire power into it and from it to your lights; it switches them all on and off.
+hsLightSwitchUKDesc,blocks,Block,,,,"A UK rocker light switch. Wire power into it, then wire your lights or air con from it. Chain more switches on from it like sockets: power always goes through, and each switch only turns its own lights on and off."
 hsCookerSwitchUKDesc,blocks,Block,,,,A UK 45A cooker switch with a red rocker and neon. Wire power into it and from it to one cooker.
 hsPlugFullOne,UI,tooltip,,,K,This socket takes one plug and it is already in use
 hsPlugFullMany,UI,tooltip,,,K,This socket takes {0} plugs and both are in use
@@ -286,7 +286,7 @@ hsPlugUsed,UI,tooltip,,,K,Plugs: {0} of {1} in use
 hsPlugPowered,UI,tooltip,,,K,Live
 hsPlugNoPower,UI,tooltip,,,K,"No power: wire it from a generator, battery bank or solar bank"
 hsLightSwitchUS,blocks,Block,,,,US Light Switch
-hsLightSwitchUSDesc,blocks,Block,,,,"A US toggle light switch: lever up for on, down for off. Wire power into it and from it to your lights."
+hsLightSwitchUSDesc,blocks,Block,,,,"A US toggle light switch: lever up for on, down for off. Wire power into it, then wire your lights or air con from it. Chain more switches on from it like sockets: power always goes through, and each switch only turns its own lights on and off."
 washup,UI,commands,,,K,Wash up
 blockcommand_washup,UI,commands,,,K,"Wash up (1 jar, about 5 m less smell)"
 hsLblWash,UI,tooltip,,,K,Wash
@@ -427,6 +427,10 @@ hsCircuitNamed,UI,tooltip,,,K,Circuit named {0}
 hsCircuitNameCleared,UI,tooltip,,,K,Circuit name cleared
 hsSocketChained,UI,tooltip,,,K,Linked on to the next socket
 hsChainFull,UI,tooltip,,,K,This socket already links on to another socket: one onward link per socket
+hsSwitchChained,UI,tooltip,,,K,Linked on to the next switch
+hsSwitchChainFull,UI,tooltip,,,K,This switch already links on to another switch: one onward link per switch
+hsSwitchRun,UI,tooltip,,,K,"Switch {0} of {1} on this run (most {2})"
+hsSwitchChainMax,UI,tooltip,,,K,"A run takes at most {0} switches: start a new circuit from the consumer unit"
 hsWashingLine,blocks,Block,,,,Washing Line
 hsWashingLineDesc,blocks,Block,,,,"Two posts, a line and a clothes prop, 5 blocks wide. Peg wet clothes and armour on it (open it like a box) and they dry with no power: about 2 hours in daylight, twice that at night. Put it under open sky, and bring the washing in when it rains or it gets soaked again. Under a roof it dries like an airer."
 hsClothesAirer,blocks,Block,,,,Clothes Airer
