@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-// House-flipper: open/empty/broken POI furniture repairs shut, and the closed
-// cupboard already has loot in it (searched), not a fresh unsearched ping.
+// House-flipper: open/empty/broken POI furniture repairs shut into empty
+// player storage, not an unsearched loot ping and not a filled crate.
 public static class HSFlipper
 {
     struct FillJob
@@ -26,7 +26,9 @@ public static class HSFlipper
     static readonly List<FillJob> Pending = new List<FillJob>();
     static PropertyInfo touchedProp;
     static PropertyInfo worldTouchedProp;
+    static PropertyInfo playerStorageProp;
     static PropertyInfo gridProp;
+    static PropertyInfo gridOwnedProp;
     static MethodInfo gridTouch;
     static bool resolved;
 
@@ -41,11 +43,11 @@ public static class HSFlipper
             if (block == null)
                 continue;
             string name = block.blockName;
-            if (!IsHouse(name))
+            if (!IsHouseSource(name))
                 continue;
             if (!block.UpgradeBlock.isair)
                 continue;
-            string dest = Dest(name);
+            string dest = PreferEmpty(Dest(name));
             if (string.IsNullOrEmpty(dest) || dest == name)
                 continue;
             bool metal = IsMetal(name);
@@ -75,7 +77,7 @@ public static class HSFlipper
             pos = bv.Block.multiBlockPos.GetParentPos(pos, bv);
         bv = world.GetBlock(pos);
         string name = bv.Block != null ? bv.Block.GetBlockName() : null;
-        if (!IsHouse(name))
+        if (!IsHouseDest(name))
             return;
         FillJob job;
         job.Pos = pos;
@@ -129,68 +131,14 @@ public static class HSFlipper
         if (storage == null)
             return true;
         if (!storage.IsEmpty())
-        {
-            Touch(storage, world);
-            HSInv.SetModified(te);
-            return true;
-        }
-        string listName = storage.lootListName;
-        if (string.IsNullOrEmpty(listName))
-        {
-            Touch(storage, world);
-            HSInv.SetModified(te);
-            return true;
-        }
-        if (listName.EndsWith("NOPOP", StringComparison.OrdinalIgnoreCase))
-            listName = listName.Substring(0, listName.Length - 5);
-        LootContainer loot = LootContainer.GetLootContainer(listName, false);
-        if (loot == null)
-        {
-            Touch(storage, world);
-            HSInv.SetModified(te);
-            return true;
-        }
-        EntityPlayer player = world.GetEntity(entityId) as EntityPlayer;
-        if (player == null)
-            return false;
-        int slots = loot.size.x * loot.size.y;
-        ItemStack[] stacks = HSInv.GetStorageStacks(te);
-        if (stacks != null && stacks.Length > 0)
-            slots = stacks.Length;
-        if (slots <= 0)
-            slots = 1;
-        int stage = loot.useUnmodifiedLootstage
-            ? player.unModifiedGameStage
-            : player.GetHighestPartyLootStage(storage.LootStageMod, storage.LootStageBonus);
-        IList<ItemStack> spawned = loot.Spawn(
-            world.GetGameRandom(),
-            slots,
-            stage,
-            0f,
-            player,
-            FastTags<TagGroup.Global>.none,
-            loot.UniqueItems,
-            loot.IgnoreLootProb,
-            false);
-        if (spawned != null)
-        {
-            int n = spawned.Count;
-            if (n > slots)
-                n = slots;
-            for (int i = 0; i < n; i++)
-            {
-                ItemStack stack = spawned[i];
-                if (stack == null)
-                    continue;
-                storage.UpdateSlot(i, stack.Clone());
-            }
-        }
-        Touch(storage, world);
+            storage.SetEmpty();
+        MarkPlayerEmpty(storage, world);
+        HSSalvage.MarkPlaced(world, pos);
         HSInv.SetModified(te);
         return true;
     }
 
-    static void Touch(TEFeatureStorage storage, WorldBase world)
+    static void MarkPlayerEmpty(TEFeatureStorage storage, WorldBase world)
     {
         Resolve();
         if (storage == null)
@@ -200,6 +148,8 @@ public static class HSFlipper
             touchedProp.SetValue(storage, true, null);
         if (worldTouchedProp != null && worldTouchedProp.CanWrite)
             worldTouchedProp.SetValue(storage, time, null);
+        if (playerStorageProp != null && playerStorageProp.CanWrite)
+            playerStorageProp.SetValue(storage, true, null);
         if (gridProp == null)
             return;
         object grid = gridProp.GetValue(storage, null);
@@ -207,12 +157,10 @@ public static class HSFlipper
             return;
         if (gridTouch != null)
             gridTouch.Invoke(grid, null);
-        else
-        {
-            PropertyInfo wt = grid.GetType().GetProperty("WorldTimeTouched");
-            if (wt != null && wt.CanWrite)
-                wt.SetValue(grid, time, null);
-        }
+        if (gridOwnedProp == null)
+            gridOwnedProp = grid.GetType().GetProperty("PlayerOwned");
+        if (gridOwnedProp != null && gridOwnedProp.CanWrite)
+            gridOwnedProp.SetValue(grid, true, null);
     }
 
     static void Resolve()
@@ -223,18 +171,36 @@ public static class HSFlipper
         Type t = typeof(TEFeatureStorage);
         touchedProp = t.GetProperty("bTouched");
         worldTouchedProp = t.GetProperty("worldTimeTouched");
+        playerStorageProp = t.GetProperty("bPlayerStorage");
         gridProp = t.GetProperty("ItemGrid");
         if (gridProp != null)
+        {
             gridTouch = gridProp.PropertyType.GetMethod("Touch", Type.EmptyTypes);
+            gridOwnedProp = gridProp.PropertyType.GetProperty("PlayerOwned");
+        }
     }
 
-    static bool IsHouse(string name)
+    static bool IsHouseSource(string name)
+    {
+        if (string.IsNullOrEmpty(name) || name.IndexOf("_Player", StringComparison.Ordinal) >= 0)
+            return false;
+        return IsHousePrefix(name);
+    }
+
+    static bool IsHouseDest(string name)
+    {
+        if (string.IsNullOrEmpty(name))
+            return false;
+        if (name.EndsWith("_Player", StringComparison.Ordinal))
+            name = name.Substring(0, name.Length - 7);
+        return IsHousePrefix(name);
+    }
+
+    static bool IsHousePrefix(string name)
     {
         if (string.IsNullOrEmpty(name) || name.StartsWith("hs"))
             return false;
         if (name.IndexOf("Helper", StringComparison.Ordinal) >= 0)
-            return false;
-        if (name.IndexOf("_Player", StringComparison.Ordinal) >= 0)
             return false;
         for (int i = 0; i < Prefixes.Length; i++)
         {
@@ -242,6 +208,16 @@ public static class HSFlipper
                 return true;
         }
         return false;
+    }
+
+    static string PreferEmpty(string dest)
+    {
+        if (string.IsNullOrEmpty(dest))
+            return dest;
+        string player = dest + "_Player";
+        if (Exists(player))
+            return player;
+        return dest;
     }
 
     static bool IsMetal(string name)

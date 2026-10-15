@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.57
+
+- **Repaired furniture is empty storage.** Cupboards, desks and drawers repair shut as empty containers you can use. They are not unsearched loot and they do not roll kitchen junk into the drawers.
+
 ## 1.0.56
 
 - **Repaired cupboards already have loot in them.** Shutting a cabinet, desk or drawer no longer makes a fresh unsearched POI crate. It fills from that furniture's loot list and counts as searched, so you open it to take the stuff, not to ping it.
