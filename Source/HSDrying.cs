@@ -52,6 +52,21 @@ public class BlockHSDryer : BlockCompositeTileEntity
         view.Shown = Shown;
     }
 
+    public override bool OnBlockActivated(string _commandName, WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, EntityPlayerLocal _player)
+    {
+        if (_blockValue.ischild)
+        {
+            Vector3i parent = _blockValue.Block.multiBlockPos.GetParentPos(_blockPos, _blockValue);
+            return OnBlockActivated(_commandName, _world, parent, _world.GetBlock(parent), _player);
+        }
+        if (_commandName == "Search")
+        {
+            XUiC_HSDryingWindowGroup.Open(_player, _world.GetTileEntity(_blockPos), _blockValue.Block.GetLocalizedBlockName());
+            return true;
+        }
+        return base.OnBlockActivated(_commandName, _world, _blockPos, _blockValue, _player);
+    }
+
     public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
         string text = base.GetActivationText(_world, _blockValue, _blockPos, _entityFocusing);
@@ -73,6 +88,12 @@ public static class HSDrying
     static readonly HashSet<Vector3i> tracked = new HashSet<Vector3i>();
     static float nextTick;
     static ulong lastTime;
+
+    public static int WetSlots(ItemStack[] stacks)
+    {
+        int n = stacks != null ? stacks.Length : 0;
+        return n / 2;
+    }
 
     public static void Track(Vector3i pos)
     {
@@ -219,25 +240,35 @@ public static class HSDrying
                 continue;
             }
             TileEntity te = world.GetTileEntity(pos);
-            if (te == null || te.IsUserAccessing())
+            if (te == null)
                 continue;
             ItemStack[] stacks = HSInv.GetStorageStacks(te);
             if (stacks == null)
                 continue;
             float dryHours = DryHours(Conditions(world, pos, block));
             bool changed = false;
-            int clothes = 0;
-            for (int i = 0; i < stacks.Length; i++)
+            int half = WetSlots(stacks);
+            for (int i = 0; i < half; i++)
             {
                 ItemValue iv = HSItem.Val(stacks[i]);
                 if (stacks[i] == null || stacks[i].IsEmpty() || !HSLaundry.IsClothing(iv))
                     continue;
-                clothes++;
                 if (HSWorkingStuffSettings.EnableLaundry && hours > 0f && Apply(iv, nowH, hours, dryHours))
                     changed = true;
             }
+            if (HSWorkingStuffSettings.EnableLaundry && SortSides(stacks, nowH, half))
+                changed = true;
             if (changed)
-                HSInv.SetModified(te);
+            {
+                for (int i = 0; i < stacks.Length; i++)
+                    HSInv.SetStorageSlot(te, i, stacks[i] != null ? stacks[i] : ItemStack.Empty.Clone());
+            }
+            int clothes = 0;
+            for (int i = 0; i < half; i++)
+            {
+                if (stacks[i] != null && !stacks[i].IsEmpty() && HSLaundry.IsClothing(HSItem.Val(stacks[i])))
+                    clothes++;
+            }
             int show = Mathf.Min(clothes, block.Shown);
             if (bv.meta2 != show)
             {
@@ -248,6 +279,54 @@ public static class HSDrying
         if (gone != null)
             for (int i = 0; i < gone.Count; i++)
                 tracked.Remove(gone[i]);
+    }
+
+    // Wet stays on the left; when it is dry it moves to the right. Wet that was on the
+    // right (an old save, or someone dragging) comes back left if there is a peg free.
+    static bool SortSides(ItemStack[] stacks, float nowH, int half)
+    {
+        if (stacks == null || half <= 0)
+            return false;
+        bool changed = false;
+        for (int i = 0; i < half; i++)
+        {
+            ItemValue iv = HSItem.Val(stacks[i]);
+            if (stacks[i] == null || stacks[i].IsEmpty() || !HSLaundry.IsClothing(iv))
+                continue;
+            if (HSLaundry.Wetness(iv, nowH) > 0f)
+                continue;
+            int dest = FirstEmpty(stacks, half, stacks.Length);
+            if (dest < 0)
+                continue;
+            stacks[dest] = stacks[i];
+            stacks[i] = ItemStack.Empty.Clone();
+            changed = true;
+        }
+        for (int i = half; i < stacks.Length; i++)
+        {
+            ItemValue iv = HSItem.Val(stacks[i]);
+            if (stacks[i] == null || stacks[i].IsEmpty() || !HSLaundry.IsClothing(iv))
+                continue;
+            if (HSLaundry.Wetness(iv, nowH) <= 0f)
+                continue;
+            int dest = FirstEmpty(stacks, 0, half);
+            if (dest < 0)
+                continue;
+            stacks[dest] = stacks[i];
+            stacks[i] = ItemStack.Empty.Clone();
+            changed = true;
+        }
+        return changed;
+    }
+
+    static int FirstEmpty(ItemStack[] stacks, int from, int to)
+    {
+        for (int i = from; i < to && i < stacks.Length; i++)
+        {
+            if (stacks[i] == null || stacks[i].IsEmpty())
+                return i;
+        }
+        return -1;
     }
 }
 

@@ -42,6 +42,14 @@ public static class HSMicrowaveSound
         done = Ding;
         if (block is BlockHSKettle)
             return false;
+        if (block is BlockHSLaundry)
+        {
+            hum = HSLaundry.WasherHum;
+            done = block.GetBlockName().IndexOf("Dryer", System.StringComparison.OrdinalIgnoreCase) >= 0
+                ? "hsDryerDone"
+                : "hsWasherDone";
+            return true;
+        }
         if (block is BlockHSMicrowave)
         {
             hum = Hum;

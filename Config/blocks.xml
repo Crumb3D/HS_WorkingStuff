@@ -719,6 +719,11 @@
 
 		<block name="hsWasher">
 			<property name="Class" value="HSLaundry, HSWorkingStuff" />
+			<property class="Workstation">
+				<property name="CraftingAreaRecipes" value="hsWasher" />
+				<property name="Modules" value="output" />
+			</property>
+			<property name="WorkstationWindow" value="workstation_hsWasher" />
 			<property name="CreativeMode" value="Player" />
 			<property name="DescriptionKey" value="hsWasherDesc" />
 			<property name="Material" value="Mmetal" />
@@ -734,6 +739,13 @@
 			<property name="MaxDamage" value="300" />
 			<property name="DisplayType" value="blockElectrical" />
 			<property name="UnlockedBy" value="craftingWorkstations,perkAdvancedEngineering" />
+			<property name="WorkstationIcon" value="ui_game_symbol_water" />
+			<property name="CraftIcon" value="ui_game_symbol_water" />
+			<property name="CraftActionName" value="blockcommand_hswash" />
+			<property name="OpenSound" value="open_fridge" />
+			<property name="CloseSound" value="close_fridge" />
+			<property name="CraftSound" value="campfire_cook_click" />
+			<property name="CraftCompleteSound" value="hsWasherDone" />
 			<property name="CustomIcon" value="hsWashingMachine" />
 			<property class="RepairItems">
 				<property name="resourceForgedIron" value="4" />
@@ -741,15 +753,23 @@
 			</property>
 			<drop event="Destroy" name="resourceScrapIron" count="4,8" />
 			<property name="Group" value="Science,TCScience,Building" />
-			<property name="Tags" value="electricianSkill" />
+			<property name="Tags" value="electricianSkill,workstationSkill" />
 			<property name="FilterTags" value="MC_playerBlocks,SC_electrical" />
 		</block>
 
 		<block name="hsDryer">
 			<property name="Extends" value="hsWasher" />
+			<property class="Workstation">
+				<property name="CraftingAreaRecipes" value="hsDryer" />
+				<property name="Modules" value="output" />
+			</property>
+			<property name="WorkstationWindow" value="workstation_hsWasher" />
 			<property name="DescriptionKey" value="hsDryerDesc" />
 			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSTumbleDryer" />
 			<property name="RequiredPower" value="20" />
+			<property name="CraftIcon" value="ui_game_symbol_fire" />
+			<property name="CraftActionName" value="blockcommand_hsdry" />
+			<property name="CraftCompleteSound" value="hsDryerDone" />
 			<property name="UnlockedBy" value="craftingWorkstations,perkAdvancedEngineering" />
 			<property name="CustomIcon" value="hsTumbleDryer" />
 		</block>
@@ -757,14 +777,26 @@
 		<block name="hsWasherVanilla">
 			<property name="Extends" value="cntWasherClosed" param1="Class,CompositeFeatures,DowngradeBlock,CreativeMode" />
 			<property name="Class" value="HSLaundry, HSWorkingStuff" />
+			<property class="Workstation">
+				<property name="CraftingAreaRecipes" value="hsWasher" />
+				<property name="Modules" value="output" />
+			</property>
+			<property name="WorkstationWindow" value="workstation_hsWasher" />
 			<property name="CreativeMode" value="Player" />
 			<property name="DescriptionKey" value="hsWasherDesc" />
 			<property name="RequiredPower" value="15" />
 			<property name="TakeDelay" value="5" />
 			<property name="DisplayType" value="blockElectrical" />
 			<property name="UnlockedBy" value="craftingWorkstations,perkAdvancedEngineering" />
+			<property name="WorkstationIcon" value="ui_game_symbol_water" />
+			<property name="CraftIcon" value="ui_game_symbol_water" />
+			<property name="CraftActionName" value="blockcommand_hswash" />
+			<property name="OpenSound" value="open_fridge" />
+			<property name="CloseSound" value="close_fridge" />
+			<property name="CraftSound" value="campfire_cook_click" />
+			<property name="CraftCompleteSound" value="hsWasherDone" />
 			<property name="Group" value="Science,TCScience,Building" />
-			<property name="Tags" value="electricianSkill" />
+			<property name="Tags" value="electricianSkill,workstationSkill" />
 			<property name="FilterTags" value="MC_playerBlocks,SC_electrical" />
 			<property name="CustomIcon" value="cntWasherClosed" />
 		</block>
@@ -772,14 +804,26 @@
 		<block name="hsDryerVanilla">
 			<property name="Extends" value="cntDryerClosed" param1="Class,CompositeFeatures,DowngradeBlock,CreativeMode" />
 			<property name="Class" value="HSLaundry, HSWorkingStuff" />
+			<property class="Workstation">
+				<property name="CraftingAreaRecipes" value="hsDryer" />
+				<property name="Modules" value="output" />
+			</property>
+			<property name="WorkstationWindow" value="workstation_hsWasher" />
 			<property name="CreativeMode" value="Player" />
 			<property name="DescriptionKey" value="hsDryerDesc" />
 			<property name="RequiredPower" value="20" />
 			<property name="TakeDelay" value="5" />
 			<property name="DisplayType" value="blockElectrical" />
 			<property name="UnlockedBy" value="craftingWorkstations,perkAdvancedEngineering" />
+			<property name="WorkstationIcon" value="ui_game_symbol_fire" />
+			<property name="CraftIcon" value="ui_game_symbol_fire" />
+			<property name="CraftActionName" value="blockcommand_hsdry" />
+			<property name="OpenSound" value="open_fridge" />
+			<property name="CloseSound" value="close_fridge" />
+			<property name="CraftSound" value="campfire_cook_click" />
+			<property name="CraftCompleteSound" value="hsDryerDone" />
 			<property name="Group" value="Science,TCScience,Building" />
-			<property name="Tags" value="electricianSkill" />
+			<property name="Tags" value="electricianSkill,workstationSkill" />
 			<property name="FilterTags" value="MC_playerBlocks,SC_electrical" />
 			<property name="CustomIcon" value="cntDryerClosed" />
 		</block>

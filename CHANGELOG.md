@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.49
+
+- **Washer and dryer open like the cooker.** Clothes and armour you wear or carry highlight as washable. Click one to see how dirty or wet it is and how long it will take, then queue it. The same piece comes out the other side clean (and wet) or dry. Hats and gloves are quicker than a coat; 20% dirty takes a fifth of the time of filthy. One jar of cold water per wash. A tumble is faster than a wash (`DryerSeconds` 20, `WasherSeconds` 30 at 100%).
+- **Washing line and airer: wet on the left, dry on the right.** Hang wet clothes on the left; when they are dry they move across. Line and airer times are unchanged (hours, weather). The dryer is still seconds.
+
 ## 1.0.48
 
 - **Washing machine (and dryer) run for 30 seconds.** They hum, then ding, then the clothes are clean (and wet). A splash and instant finish was skipping the cycle, so dirt often stayed.

@@ -394,6 +394,40 @@ public static class HSLaundry
         return n;
     }
 
+    public static bool HasWashWater(World world, Vector3i pos)
+    {
+        if (!HSWorkingStuffSettings.EnablePlumbing)
+            return true;
+        HSWater.Taps taps = HSWater.FindTaps(world, pos);
+        if (!taps.Cold.Ok)
+            return false;
+        if (taps.Cold.Infinite)
+            return true;
+        return HSWater.GetTank(taps.Cold.TankPos).Units >= Mathf.Max(1, HSWorkingStuffSettings.WasherJars);
+    }
+
+    public static bool TakeWashWater(World world, Vector3i pos, EntityPlayer player)
+    {
+        if (!HSWorkingStuffSettings.EnablePlumbing)
+            return true;
+        HSWater.Taps taps = HSWater.FindTaps(world, pos);
+        HSWater.Source src = taps.Cold;
+        if (!src.Ok)
+        {
+            HSWorkingStuffNet.Tell(player, HSWater.ColdReason(taps));
+            return false;
+        }
+        int jars = Mathf.Max(1, HSWorkingStuffSettings.WasherJars);
+        if (!HSWater.TakeFromSource(ref src, jars))
+        {
+            HSWorkingStuffNet.Tell(player, HSLoc.Format("hsWasherShort", "Not enough water: a wash needs {0} jars", jars));
+            return false;
+        }
+        if (!src.Infinite)
+            HSWorkingStuffNet.BroadcastTank(src.TankPos);
+        return true;
+    }
+
     public static int Process(ItemStack[] items, bool dryer, float nowH)
     {
         int n = 0;

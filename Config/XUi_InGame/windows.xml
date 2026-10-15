@@ -29,6 +29,28 @@
 			</rect>
 		</window>
 
+		<window name="windowHSDrying" width="720" height="280" panel="Center" cursor_area="true">
+			<rect name="header" height="43" depth="1">
+				<headerbg />
+				<sprite depth="3" name="windowIcon" style="icon32px" pivot="center" pos="21,-21" sprite="ui_game_symbol_clothing" />
+				<label depth="3" name="lootName" pos="42,-6" width="400" height="32" text="Drying" font_size="32" />
+			</rect>
+			<rect name="wet" pos="3,-49" width="350">
+				<label depth="3" pos="6,0" width="330" height="26" font_size="22" justify="left" upper_case="false" text="WET" text_key="hsDryingWet" />
+				<sprite depth="0" name="bgWet" pos="0,-28" color="255,255,255,1" type="sliced" sprite="menu_empty" width="348" height="180" />
+				<grid depth="12" name="wet" pos="0,-28" rows="2" cols="4" cell_width="75" cell_height="75" repeat_content="true" controller="HSDryingGrid, HSWorkingStuff">
+					<item_stack name="0"/>
+				</grid>
+			</rect>
+			<rect name="dry" pos="365,-49" width="350">
+				<label depth="3" pos="6,0" width="330" height="26" font_size="22" justify="left" upper_case="false" text="DRY" text_key="hsDryingDry" />
+				<sprite depth="0" name="bgDry" pos="0,-28" color="255,255,255,1" type="sliced" sprite="menu_empty" width="348" height="180" />
+				<grid depth="12" name="dry" pos="0,-28" rows="2" cols="4" cell_width="75" cell_height="75" repeat_content="true" controller="HSDryingGrid, HSWorkingStuff">
+					<item_stack name="0"/>
+				</grid>
+			</rect>
+		</window>
+
 		<window name="windowHSStovePower" width="228" height="121" panel="Right" cursor_area="true" controller="HSStovePowerWindow, HSWorkingStuff">
 			<rect style="header.panel">
 				<headerbg />

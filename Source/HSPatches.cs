@@ -30,7 +30,7 @@ public static class HSPatchFridgeLoad
         {
             return;
         }
-        if (block == null || !(block is BlockHSFridge))
+        if (block == null || !(block is BlockHSFridge || block is BlockHSLaundry))
             return;
         var fridge = new TileEntityHSFridge(_chunk);
         TileEntityHSFridge.CopyPowered(src, fridge);

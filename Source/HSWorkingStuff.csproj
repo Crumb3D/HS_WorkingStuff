@@ -126,7 +126,9 @@
     <Compile Include="HSGrill.cs" />
     <Compile Include="HSRoomTemp.cs" />
     <Compile Include="HSLaundry.cs" />
+    <Compile Include="HSLaundryCraft.cs" />
     <Compile Include="BlockHSLaundry.cs" />
+    <Compile Include="XUiC_HSDryingWindow.cs" />
     <Compile Include="HSPlugs.cs" />
     <Compile Include="HSMicrowaveSound.cs" />
     <Compile Include="HSSwitchText.cs" />

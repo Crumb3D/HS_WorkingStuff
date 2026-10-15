@@ -1,91 +1,94 @@
 using System;
 using UnityEngine;
 
-// Washing machine (plumbed cold water + power) and tumble dryer (power). Same storage as the fridge.
-public class BlockHSLaundry : BlockHSFridge
+// Washing machine and tumble dryer: cooker-style workstation. Clothes you wear or carry
+// show as washable recipes; time depends on the piece and how dirty or wet it is.
+public class BlockHSLaundry : BlockHSStove
 {
-    readonly BlockActivationCommand[] lcmds = new BlockActivationCommand[]
-    {
-        new BlockActivationCommand("open", "hand", true),
-        new BlockActivationCommand("hswash", "water", true),
-        new BlockActivationCommand("take", "hand", false)
-    };
-
     public bool IsDryer
     {
         get { return GetBlockName().IndexOf("Dryer", StringComparison.OrdinalIgnoreCase) >= 0; }
+    }
+
+    public override void OnBlockLoaded(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue)
+    {
+        if (!_blockValue.ischild)
+            MigrateFridge(_world, _blockPos);
+        base.OnBlockLoaded(_world, _blockPos, _blockValue);
+    }
+
+    // Old washers were fridge storage. Read any leftover clothes, drop them, then the
+    // stove load creates the workstation tile entity.
+    static void MigrateFridge(WorldBase world, Vector3i pos)
+    {
+        if (world == null || !HSWorkingStuffNet.IsAuthority)
+            return;
+        TileEntity te = world.GetTileEntity(pos);
+        if (te == null || te is TileEntityWorkstation)
+            return;
+        IHSFridgeInv fridge = HSFridgeInv.Of(te);
+        if (fridge != null)
+        {
+            fridge.EnsureItems();
+            Drop(fridge.Items, pos);
+        }
+        Chunk chunk = world.GetChunkFromWorldPos(pos) as Chunk;
+        World w = world as World;
+        if (chunk != null && w != null)
+        {
+            try
+            {
+                chunk.RemoveTileEntity(w, te);
+            }
+            catch (Exception e)
+            {
+                Log.Warning("[HSWorkingStuff] washer migrate at " + pos + ": " + e.Message);
+            }
+        }
+        Log.Out("[HSWorkingStuff] washer at " + pos + " is now a workstation");
+    }
+
+    static void Drop(ItemStack[] items, Vector3i pos)
+    {
+        if (items == null || GameManager.Instance == null)
+            return;
+        Vector3 at = pos.ToVector3() + new Vector3(0.5f, 0.5f, 0.5f);
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i] == null || items[i].IsEmpty())
+                continue;
+            GameManager.Instance.ItemDropServer(items[i].Clone(), at, new Vector3(0.5f, 0f, 0.5f), -1, 600f);
+        }
     }
 
     public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
         _blockPos = HSWater.Parent(_blockPos, _blockValue);
         World world = _world as World;
-        IHSFridgeInv te = HSFridgeInv.Of(_world.GetTileEntity(_blockPos));
-        bool powered = te != null && te.IsPowered;
-        string text = _blockValue.Block.GetLocalizedBlockName() + "\n"
-            + (powered ? HSLoc.Get("hsLaundryPowered", "Powered") : HSLoc.Get("hsLaundryNoPower", "No power: wire it up first"));
+        bool powered = HSStovePower.IsPowered(_blockPos);
+        string name = _blockValue.Block.GetLocalizedBlockName();
+        string text = name + "\n" + (powered
+            ? HSLoc.Get("hsLaundryPowered", "Powered")
+            : HSLoc.Get("hsLaundryNoPower", "No power: wire it up first"));
         if (!IsDryer && world != null && HSWorkingStuffSettings.EnablePlumbing)
         {
             HSWater.Taps taps = HSWater.FindTaps(world, _blockPos);
             if (!taps.Cold.Ok)
                 text += "\n" + HSWater.ColdReason(taps);
+            else if (!HSLaundry.HasWashWater(world, _blockPos))
+                text += "\n" + HSLoc.Format("hsWasherShort", "Not enough water: a wash needs {0} jars", HSWorkingStuffSettings.WasherJars);
         }
-        if (HSLaundry.Busy(_blockPos))
-            text += "\n" + HSLoc.Format("hsWasherRunning", "Running: {0}s left", HSLaundry.SecondsLeft(_blockPos));
-        if (te != null)
+        TileEntityWorkstation te = _world.GetTileEntity(_blockPos) as TileEntityWorkstation;
+        string job;
+        float left = BlockHSMicrowave.SecondsLeft(te, out job);
+        if (left > 0f)
         {
-            int n = HSLaundry.Count(te.Items, IsDryer, HSLaundry.NowHours(world));
-            text += "\n" + (IsDryer
-                ? HSLoc.Format("hsDryerHolds", "{0} wet items inside", n)
-                : HSLoc.Format("hsWasherHolds", "{0} clothes or armour inside", n));
+            text += "\n" + (powered
+                ? HSLoc.Format("hsLaundryQueued", "{0}: {1} left", job, BlockHSMicrowave.Clock(left))
+                : HSLoc.Format("hsLaundryPaused", "No power: paused, {0} left", BlockHSMicrowave.Clock(left)));
         }
+        else if (te != null && !te.OutputEmpty())
+            text += "\n" + HSLoc.Get("hsLaundryDone", "Done: take it from the output");
         return text;
-    }
-
-    public override BlockActivationCommand[] GetBlockActivationCommands(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
-    {
-        _blockPos = HSWater.Parent(_blockPos, _blockValue);
-        bool land = _world.IsMyLandProtectedBlock(_blockPos, _world.GetGameManager().GetPersistentLocalPlayer());
-        var te = _world.GetTileEntity(_blockPos) as TileEntityPowered;
-        string run = IsDryer ? "hsdry" : "hswash";
-        if (!IsDryer && HSWorkingStuffSettings.EnablePlumbing)
-        {
-            World world = _world as World;
-            HSWater.Taps taps = world != null ? HSWater.FindTaps(world, _blockPos) : new HSWater.Taps();
-            if (!taps.Cold.Ok)
-                run = HSWater.ColdReasonKey(taps);
-        }
-        lcmds[1] = new BlockActivationCommand(run, IsDryer ? "fire" : "water", true);
-        lcmds[2].enabled = land && te != null && te.IsPlayerPlaced && TakeDelay > 0f;
-        return lcmds;
-    }
-
-    public override bool OnBlockActivated(string _commandName, WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, EntityPlayerLocal _player)
-    {
-        if (_blockValue.ischild)
-        {
-            Vector3i parent = _blockValue.Block.multiBlockPos.GetParentPos(_blockPos, _blockValue);
-            return OnBlockActivated(_commandName, _world, parent, _world.GetBlock(parent), _player);
-        }
-        if (_commandName == "hswash" || _commandName == "hsdry")
-        {
-            HSWorkingStuffNet.SendWater(HSWorkingStuffNet.Laundry, _blockPos, _player);
-            return true;
-        }
-        if (HSSinkCmds.IsOff(_commandName))
-        {
-            if (_player != null)
-                GameManager.ShowTooltip(_player, Localization.Get("blockcommand_" + _commandName));
-            return true;
-        }
-        if (_commandName == "open")
-        {
-            IHSFridgeInv te = InvAt(_world, _blockPos);
-            if (te == null)
-                return false;
-            XUiC_HSStorageWindowGroup.Open(_player, te, _blockValue.Block.GetLocalizedBlockName());
-            return true;
-        }
-        return base.OnBlockActivated(_commandName, _world, _blockPos, _blockValue, _player);
     }
 }

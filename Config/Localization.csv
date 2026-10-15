@@ -233,10 +233,10 @@ hsFridgeTemp,UI,tooltip,,,K,Fridge: {0}
 hsFreezerTemp,UI,tooltip,,,K,Freezer: {0}
 hsWasher,blocks,Block,,,,Washing Machine
 hsWasherVanilla,blocks,Block,,,,US Washing Machine
-hsWasherDesc,blocks,Block,,,,"Put dirty clothes and armour in, then Wash. Needs power (15W) and a cold water pipe from a tank, like a sink; a wash uses 4 jars. Clothes come out clean but wet."
+hsWasherDesc,blocks,Block,,,,"Open it like a cooker. Dirty clothes and armour you wear or carry highlight as washable. Time depends on the piece and how dirty it is (20% dirty is five times quicker than filthy). Needs power (15W) and a cold water pipe; one jar per garment. Clean clothes come out wet on the other side."
 hsDryer,blocks,Block,,,,Tumble Dryer
 hsDryerVanilla,blocks,Block,,,,US Tumble Dryer
-hsDryerDesc,blocks,Block,,,,"Put wet clothes and armour in, then Dry. Needs power (20W), no water."
+hsDryerDesc,blocks,Block,,,,"Open it like a cooker. Wet clothes and armour you wear or carry highlight. Time depends on the piece and how wet it is. Needs power (20W), no water. Dry clothes come out the other side."
 hsThermometer,blocks,Block,,,,Wall Thermometer
 hsThermometerDesc,blocks,Block,,,,"Hang it on a wall and look at it for the room temperature, the temperature outside, and whether the heating or air con is working on the room."
 blockcommand_hswash,UI,commands,,,K,Wash
@@ -258,6 +258,17 @@ hsWasherRunning,UI,tooltip,,,K,Running: {0}s left
 hsWasherBusy,UI,tooltip,,,K,Already running
 hsDryerEmpty,UI,tooltip,,,K,Nothing wet to dry
 hsWasherShort,UI,tooltip,,,K,Not enough water: a wash needs {0} jars
+hsLaundryWashInfo,UI,tooltip,,,K,This one is {0}% dirty. Washing takes {1}s
+hsLaundryDryInfo,UI,tooltip,,,K,This one is {0}% wet. Drying takes {1}s
+hsLaundryNeedDirty,UI,tooltip,,,K,You are not wearing or carrying a dirty one of these
+hsLaundryNeedWet,UI,tooltip,,,K,You are not wearing or carrying a wet one of these
+hsLaundryQueueFull,UI,tooltip,,,K,The queue is full
+hsLaundryQueued,UI,tooltip,,,K,{0}: {1} left
+hsLaundryPaused,UI,tooltip,,,K,"No power: paused, {0} left"
+hsLaundryDone,UI,tooltip,,,K,Done: take it from the output
+hsDryingWindow,UI,tooltip,,,K,Drying
+hsDryingWet,UI,tooltip,,,K,Wet
+hsDryingDry,UI,tooltip,,,K,Dry
 hsWashed,UI,tooltip,,,K,"Washed {0} items. They are wet: dry them in a dryer, or they dry on you in {1} hours"
 hsDried,UI,tooltip,,,K,Dried {0} items
 hsClothesClean,UI,tooltip,,,K,Clean
@@ -442,9 +453,9 @@ hsSwitchChainFull,UI,tooltip,,,K,This switch already links on to another switch:
 hsSwitchRun,UI,tooltip,,,K,"Switch {0} of {1} on this run (most {2})"
 hsSwitchChainMax,UI,tooltip,,,K,"A run takes at most {0} switches: start a new circuit from the consumer unit"
 hsWashingLine,blocks,Block,,,,Washing Line
-hsWashingLineDesc,blocks,Block,,,,"Two posts, a line and a clothes prop, 5 blocks wide. Peg wet clothes and armour on it (open it like a box) and they dry with no power: about 2 hours in daylight, twice that at night. Put it under open sky, and bring the washing in when it rains or it gets soaked again. Under a roof it dries like an airer."
+hsWashingLineDesc,blocks,Block,,,,"Two posts, a line and a clothes prop, 5 blocks wide. Hang wet clothes on the left; when they are dry they move to the right. About 2 hours in daylight, twice that at night. Bring them in when it rains or they get soaked again. Under a roof it dries like an airer."
 hsClothesAirer,blocks,Block,,,,Clothes Airer
-hsClothesAirerDesc,blocks,Block,,,,"A folding gullwing airer for indoors. Hang wet clothes and armour on it (open it like a box) and they dry in about 3 hours with no power, any weather. Next to a warm radiator they dry twice as fast."
+hsClothesAirerDesc,blocks,Block,,,,"A folding gullwing airer for indoors. Hang wet clothes on the left; when they are dry they move to the right. About 3 hours with no power, any weather. Next to a warm radiator they dry twice as fast."
 hsClothesPegs,items,Item,,,,Clothes Pegs
 hsClothesPegsDesc,items,Item,,,,"Wooden spring pegs. A washing line needs 10."
 hsDrySun,UI,tooltip,,,K,"Good drying weather: wet clothes dry in {0} h"

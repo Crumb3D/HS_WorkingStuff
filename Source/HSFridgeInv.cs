@@ -124,7 +124,10 @@ public static class HSFridgeInv
             return false;
         try
         {
-            return te.blockValue.Block is BlockHSFridge;
+            Block block = te.blockValue.Block;
+            if (block is BlockHSFridge)
+                return true;
+            return block is BlockHSLaundry && !(te is TileEntityWorkstation);
         }
         catch
         {

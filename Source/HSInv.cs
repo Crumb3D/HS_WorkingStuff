@@ -140,6 +140,30 @@ public static class HSInv
         return null;
     }
 
+    public static void SetEquipSlot(EntityPlayer player, int index, ItemValue value)
+    {
+        if (player == null || player.equipment == null)
+            return;
+        MethodInfo two = typeof(Equipment).GetMethod("SetSlotItem", new[] { typeof(int), typeof(ItemValue) });
+        if (two != null)
+        {
+            two.Invoke(player.equipment, new object[] { index, value });
+            return;
+        }
+        MethodInfo three = typeof(Equipment).GetMethod("SetSlotItem", new[] { typeof(int), typeof(ItemValue), typeof(bool) });
+        if (three != null)
+            three.Invoke(player.equipment, new object[] { index, value, true });
+    }
+
+    public static void SetStorageSlot(TileEntity te, int index, ItemStack stack)
+    {
+        TEFeatureStorage storage = GetStorage(te);
+        if (storage == null || index < 0)
+            return;
+        storage.UpdateSlot(index, stack != null ? stack : ItemStack.Empty.Clone());
+        SetModified(te);
+    }
+
     public static void SetModified(TileEntity te)
     {
         if (te == null)

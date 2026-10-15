@@ -362,7 +362,9 @@ public static class HSWorkingStuffNet
         if (block == null)
             return;
         pos = HSWater.Parent(pos, bv);
-        HSLaundry.TryStart(world, pos, player, block.IsDryer);
+        if (block.IsDryer)
+            return;
+        HSLaundry.TakeWashWater(world, pos, player);
     }
 
     public static void HandleSync(Vector3i pos, int units, int packed)

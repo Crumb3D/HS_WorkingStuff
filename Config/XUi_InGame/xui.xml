@@ -36,6 +36,18 @@
 			<window name="windowOutput" />
 			<window name="windowNonPagingHeader" />
 		</window_group>
+		<window_group name="workstation_hsWasher" controller="XUiC_WorkstationWindowGroup" open_backpack_on_open="true" close_compass_on_open="true" defaultselected="bp.content">
+			<window name="windowCraftingList"/>
+			<window name="craftingInfoPanel"/>
+			<window name="windowCraftingQueue"/>
+			<window name="windowHSStovePower" />
+			<window name="windowOutput" />
+			<window name="windowNonPagingHeader" />
+		</window_group>
+		<window_group name="hsDrying" controller="HSDryingWindowGroup, HSWorkingStuff" open_backpack_on_open="true" close_compass_on_open="true">
+			<window name="windowHSDrying" />
+			<window name="windowNonPagingHeader" />
+		</window_group>
 	</append>
 	<append xpath="/xui/window_group[@name='toolbelt']">
 		<window name="HUDHSPipe"/>

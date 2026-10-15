@@ -81,6 +81,7 @@ public class HSWorkingStuffMod : IModApi
             HSCircuits.Load();
         }
         HSWorkingStuffNet.RegisterPackage();
+        HSLaundryCraft.Register();
         HSJoinHold.Tick();
     }
 
@@ -98,6 +99,7 @@ public class HSWorkingStuffMod : IModApi
         HSTV.Clear();
         HSKettle.Clear();
         HSLaundry.Clear();
+        HSLaundryCraft.Clear();
         HSDrying.Clear();
         HSNeeds.Clear();
         HSRoomTemp.Clear();
