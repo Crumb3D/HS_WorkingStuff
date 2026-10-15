@@ -55,6 +55,19 @@ public static class HSBoiler
             || name == "radiatorHouse01" || name == "radiatorHouse01Player";
     }
 
+    // Laid pipe sits in the tank, sinks and the other boiler too. Those are cold water, not this heating loop.
+    public static bool BlocksHeat(Block block)
+    {
+        if (block == null)
+            return false;
+        string n = block.GetBlockName();
+        if (IsBoiler(n))
+            return true;
+        if (n == HSWater.TankName || n == HSWater.RainCatchName || n == HSWater.IntakeName)
+            return true;
+        return HSWater.IsSinkBlock(block);
+    }
+
     public static Info Known(Vector3i pos)
     {
         Info info;
@@ -286,7 +299,7 @@ public static class HSBoiler
                     q.Enqueue(np);
                     continue;
                 }
-                if (!HSWater.IsBarePipe(nn) && !HSPipeNet.Has(np))
+                if (BlocksHeat(nb) || (!HSWater.IsBarePipe(nn) && !HSPipeNet.Has(np)))
                     continue;
                 seen.Add(nk);
                 q.Enqueue(np);
@@ -542,7 +555,7 @@ public static class HSBoiler
                 string nn = nb.GetBlockName();
                 if (IsBoiler(nn))
                     return HSWater.Parent(np, nbv);
-                if (!IsRadiator(nn) && !HSWater.IsBarePipe(nn) && !HSPipeNet.Has(np))
+                if (BlocksHeat(nb) || (!IsRadiator(nn) && !HSWater.IsBarePipe(nn) && !HSPipeNet.Has(np)))
                     continue;
                 seen.Add(nk);
                 q.Enqueue(np);

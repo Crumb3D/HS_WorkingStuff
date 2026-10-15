@@ -239,7 +239,7 @@ public static class HSThermostat
                     if (!loop.Radiators.Contains(rp))
                         loop.Radiators.Add(rp);
                 }
-                else if (!HSWater.IsBarePipe(nn) && !HSPipeNet.Has(np))
+                else if (HSBoiler.BlocksHeat(nb) || (!HSWater.IsBarePipe(nn) && !HSPipeNet.Has(np)))
                     continue;
                 q.Enqueue(np);
             }

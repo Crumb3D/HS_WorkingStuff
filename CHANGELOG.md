@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.46
+
+- **Each boiler only counts its own radiators.** Sharing a tank (or sinks, shower, bath, washer) no longer makes the upstairs boiler claim the downstairs heating loop. Central heating stays on the pipes from that boiler to its radiators.
+
 ## 1.0.45
 
 - **Buff icons show how bad it is.** Unwashed and dirty clothes show extra smell in metres, wet clothes show hours left to dry, and pee / poo show how full you are.
