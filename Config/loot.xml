@@ -41,4 +41,34 @@
 		<item name="hsBreaker15" count="1" loot_prob_template="low"/>
 		<item name="hsBreaker30" count="1" loot_prob_template="low"/>
 	</append>
+
+	<!-- Empty jars for flushing, filling, washing. Vanilla mostly veryLow except liquor piles. -->
+	<set xpath="/lootcontainers/lootgroup[@name='groupFoodTrashCommon']/item[@name='drinkJarEmpty']/@loot_prob_template">med</set>
+	<set xpath="/lootcontainers/lootgroup[@name='groupFoodTrashCommon']/item[@name='drinkJarEmpty']/@count">1,3</set>
+	<set xpath="/lootcontainers/lootgroup[@name='groupFoodTrashUncommon']/item[@name='drinkJarEmpty']/@loot_prob_template">med</set>
+	<set xpath="/lootcontainers/lootgroup[@name='groupFoodTrashUncommon']/item[@name='drinkJarEmpty']/@count">1,3</set>
+	<set xpath="/lootcontainers/lootgroup[@name='groupDrinksCommon']/item[@name='drinkJarEmpty']/@count">1,3</set>
+	<set xpath="/lootcontainers/lootgroup[@name='groupDumpsterFood']/item[@name='drinkJarEmpty']/@count">1,3</set>
+	<set xpath="/lootcontainers/lootgroup[@name='groupCupboard01']/item[@name='drinkJarEmpty']/@loot_prob_template">med</set>
+	<setattribute xpath="/lootcontainers/lootgroup[@name='groupCupboard01']/item[@name='drinkJarEmpty']" name="count">1,3</setattribute>
+	<set xpath="/lootcontainers/lootgroup[@name='groupToilet01']/item[@name='drinkJarEmpty']/@loot_prob_template">high</set>
+	<set xpath="/lootcontainers/lootgroup[@name='groupToilet01']/item[@name='drinkJarEmpty']/@count">1,3</set>
+	<set xpath="/lootcontainers/lootgroup[@name='groupChem01']/item[@name='drinkJarEmpty']/@loot_prob_template">med</set>
+	<setattribute xpath="/lootcontainers/lootgroup[@name='groupChem01']/item[@name='drinkJarEmpty']" name="count">1,3</setattribute>
+	<set xpath="/lootcontainers/lootgroup[@name='groupBackpacks01']/item[@name='drinkJarEmpty']/@loot_prob_template">med</set>
+	<setattribute xpath="/lootcontainers/lootgroup[@name='groupBackpacks01']/item[@name='drinkJarEmpty']" name="count">1,3</setattribute>
+	<set xpath="/lootcontainers/lootgroup[@name='groupCampingTents01']/item[@name='drinkJarEmpty']/@loot_prob_template">med</set>
+	<setattribute xpath="/lootcontainers/lootgroup[@name='groupCampingTents01']/item[@name='drinkJarEmpty']" name="count">1,3</setattribute>
+	<set xpath="/lootcontainers/lootgroup[@name='groupLiquorSmall01']/item[@name='drinkJarEmpty']/@count">1,3</set>
+	<set xpath="/lootcontainers/lootgroup[@name='groupLiquorMed01']/item[@name='drinkJarEmpty']/@count">1,3</set>
+	<set xpath="/lootcontainers/lootgroup[@name='groupLiquorLarge01']/item[@name='drinkJarEmpty']/@count">1,3</set>
+	<append xpath="/lootcontainers/lootgroup[@name='groupSinks01']">
+		<item name="drinkJarEmpty" count="1,3" loot_prob_template="medHigh"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupBathtub01']">
+		<item name="drinkJarEmpty" count="1,3" loot_prob_template="med"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupFoodCommon']">
+		<item name="drinkJarEmpty" count="1,3" loot_prob_template="medLow"/>
+	</append>
 </configs>

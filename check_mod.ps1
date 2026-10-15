@@ -231,6 +231,9 @@ if ($blocksXml -notmatch 'cntBathTubEmpty[\s\S]{0,400}HSShower') { Fail "empty b
 if ($blocksXml -notmatch 'decoClawFootBathTub[\s\S]{0,400}HSShower') { Fail "clawfoot bath is not a working bath" } else { Ok "clawfoot bath" }
 if ($blocksXml -notmatch "block\[@name='showerHead'\][\s\S]{0,400}HSShower") { Fail "POI shower head is not a working shower" } else { Ok "POI shower head" }
 if ($blocksXml -notmatch "block\[@name='showerHead02'\][\s\S]{0,400}HSShower") { Fail "POI shower head 2 is not a working shower" } else { Ok "POI shower head 2" }
+if ($lootXml -notmatch "groupToilet01'\]/item\[@name='drinkJarEmpty'\]/@count"">1,3") { Fail "toilet loot does not bump empty jars" } else { Ok "empty jars in toilet loot" }
+if ($lootXml -notmatch "groupSinks01[\s\S]{0,250}drinkJarEmpty") { Fail "sink loot has no empty jars" } else { Ok "empty jars in sinks" }
+if ($lootXml -notmatch "groupCupboard01'\]/item\[@name='drinkJarEmpty'\]/@loot_prob_template"">med") { Fail "cupboard loot has no empty-jar bump" } else { Ok "empty jars in cupboards" }
 if ($blocksXml -notmatch 'cntCabinetBottomBrokenDoor[\s\S]{0,500}resourceWood') { Fail "broken cabinets do not repair with wood" } else { Ok "broken cabinets" }
 if ($blocksXml -notmatch 'cntCabinetBottomOpen[\s\S]{0,500}ToBlock" value="cntCabinetBottom"') { Fail "open cabinets are not repairable" } else { Ok "open cabinets" }
 if ($blocksXml -notmatch 'cntCupboardCabinetOldTopOpen[\s\S]{0,500}ToBlock" value="cntCupboardCabinetOldTopClosed"') { Fail "wall cupboards are not repairable" } else { Ok "wall cupboards" }
