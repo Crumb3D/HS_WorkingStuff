@@ -232,10 +232,10 @@ hsFridgeFreezerPowered,UI,tooltip,,,K,"Powered: fridge food lasts 4x longer, fre
 hsFridgeTemp,UI,tooltip,,,K,Fridge: {0}
 hsFreezerTemp,UI,tooltip,,,K,Freezer: {0}
 hsWasher,blocks,Block,,,,Washing Machine
-hsWasherVanilla,blocks,Block,,,,Washing Machine (Old)
+hsWasherVanilla,blocks,Block,,,,US Washing Machine
 hsWasherDesc,blocks,Block,,,,"Put dirty clothes and armour in, then Wash. Needs power (15W) and a cold water pipe from a tank, like a sink; a wash uses 4 jars. Clothes come out clean but wet."
 hsDryer,blocks,Block,,,,Tumble Dryer
-hsDryerVanilla,blocks,Block,,,,Tumble Dryer (Old)
+hsDryerVanilla,blocks,Block,,,,US Tumble Dryer
 hsDryerDesc,blocks,Block,,,,"Put wet clothes and armour in, then Dry. Needs power (20W), no water."
 hsThermometer,blocks,Block,,,,Wall Thermometer
 hsThermometerDesc,blocks,Block,,,,"Hang it on a wall and look at it for the room temperature, the temperature outside, and whether the heating or air con is working on the room."
@@ -311,7 +311,9 @@ hsRangeOutletUSDesc,blocks,Block,,,,"The US way to power a cooker: a big 240V ra
 hsKettle,blocks,Block,,,,Electric Kettle
 hsKettleDesc,blocks,Block,,,,"A cordless electric kettle. Stand it on a worktop and plug it into a socket. Hold a jar of water and hold E to fill it: one jar is one cup, up to 3. Switch it on and it boils, then clicks off. For a cuppa, put a mug down on the side, drop a tea bag in it, pick it up and pour the boiled kettle onto it. An empty jar takes a jar of boiled water. It stays hot for a while, then you have to boil it again."
 hsToaster,blocks,Block,,,,Toaster
-hsToasterDesc,blocks,Block,,,,"A two-slice toaster for the worktop. Plug it into a socket (5W, only while it toasts) and put in slices of bread to make toast."
+hsToasterDesc,blocks,Block,,,,"A two-slice toaster for the worktop. Plug it into a socket (5W, only while it toasts) and put in slices of bread to make toast. It buzzes while it toasts and pops when it's done."
+hsToasterUS,blocks,Block,,,,US Toaster
+hsToasterUSDesc,blocks,Block,,,,"The vanilla toaster, wired as a worktop appliance. Plug it into a socket like the UK toaster. Same toast, same pop."
 hsPlantedWheat1,blocks,Block,,,,Wheat Seed
 hsPlantedWheat2,blocks,Block,,,,Wheat
 hsPlantedWheat3,blocks,Block,,,,Ripe Wheat

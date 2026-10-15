@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Audio;
 
 // Powered air conditioner: standing near a running unit keeps the heat off, the opposite of a radiator.
 public class BlockHSAirCon : BlockPowered
@@ -44,7 +45,9 @@ public static class HSAirCon
     public const string CoolBuff = "buffHSAirConCool";
 
     static readonly HashSet<long> units = new HashSet<long>();
+    static readonly HashSet<long> humming = new HashSet<long>();
     static float nextCheck;
+    static float nextSound;
 
     public static void Track(Vector3i pos)
     {
@@ -60,6 +63,38 @@ public static class HSAirCon
     {
         var te = world != null ? world.GetTileEntity(pos) as TileEntityPowered : null;
         return te != null && te.IsPowered;
+    }
+
+    public static void SoundTick()
+    {
+        if (!HSWorkingStuffNet.IsAuthority || units.Count == 0)
+            return;
+        float now = Time.time;
+        if (now < nextSound)
+            return;
+        nextSound = now + 1f;
+        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+        if (world == null)
+            return;
+        foreach (long k in new List<long>(units))
+        {
+            Vector3i p = HSWater.FromKey(k);
+            bool run = world.GetChunkFromWorldPos(p) != null && IsRunning(world, p);
+            bool was = humming.Contains(k);
+            if (run == was)
+                continue;
+            Vector3 at = new Vector3(p.x + 0.5f, p.y + 0.5f, p.z + 0.5f);
+            if (run)
+            {
+                humming.Add(k);
+                Audio.Manager.BroadcastPlay(at, "hsAirConHum");
+            }
+            else
+            {
+                humming.Remove(k);
+                Audio.Manager.BroadcastStop(at, "hsAirConHum");
+            }
+        }
     }
 
     // Any peer with a local player, like the radiator warmth.
@@ -129,5 +164,6 @@ public static class HSAirCon
     public static void Clear()
     {
         units.Clear();
+        humming.Clear();
     }
 }

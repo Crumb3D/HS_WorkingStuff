@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using Audio;
 using HarmonyLib;
 using UnityEngine;
 
@@ -397,6 +398,8 @@ public static class HSWorkingStuffNet
         }
         int n = HSLaundry.Process(inv.Items, dryer, nowH);
         inv.SetModified();
+        Vector3 at = pos.ToVector3() + new Vector3(0.5f, 0.5f, 0.5f);
+        Audio.Manager.BroadcastPlay(at, dryer ? "hsDryerDone" : "hsWasherDone");
         Tell(player, dryer
             ? HSLoc.Format("hsDried", "Dried {0} items", n)
             : HSLoc.Format("hsWashed", "Washed {0} items. They are wet: dry them in a dryer, or they dry on you in {1} hours", n, HSWorkingStuffSettings.AirDryHours.ToString("0")));

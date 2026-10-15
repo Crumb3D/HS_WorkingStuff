@@ -374,6 +374,13 @@
 			<property name="CustomIcon" value="hsToaster" />
 		</block>
 
+		<block name="hsToasterUS">
+			<property name="Extends" value="hsToaster" />
+			<property name="DescriptionKey" value="hsToasterUSDesc" />
+			<property name="Model" value="@:Entities/Appliances/toasterPrefab.prefab" />
+			<property name="CustomIcon" value="cntToaster" />
+		</block>
+
 		<!-- A mug put down on the worktop (right-click with a mug). Drop a tea bag in, pick it up, pour the kettle on it. -->
 		<block name="hsMugPlaced">
 			<property name="Class" value="HSMug, HSWorkingStuff" />

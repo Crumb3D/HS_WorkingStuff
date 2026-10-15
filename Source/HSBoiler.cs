@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Audio;
 using UnityEngine;
 
 // The combi boiler (block hsWaterHeater) fires on demand. It asks its circuit for power only
@@ -210,9 +211,18 @@ public static class HSBoiler
             && last.Filled == info.Filled;
         if (same && !resend)
             return;
+        bool fireChanged = last.Firing != info.Firing;
         published[k] = info;
         Remember(pos, info);
         HSWorkingStuffNet.BroadcastBoiler(pos, info);
+        if (fireChanged)
+        {
+            Vector3 at = pos.ToVector3() + new Vector3(0.5f, 0.5f, 0.5f);
+            if (info.Firing)
+                Audio.Manager.BroadcastPlay(at, "hsBoilerFire");
+            else
+                Audio.Manager.BroadcastStop(at, "hsBoilerFire");
+        }
     }
 
     static void SendRadiator(Vector3i pos, bool warm)

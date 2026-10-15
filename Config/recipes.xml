@@ -340,6 +340,11 @@
 			<ingredient name="resourceElectricParts" count="2"/>
 			<ingredient name="resourceScrapPolymers" count="2"/>
 		</recipe>
+		<recipe name="hsToasterUS" count="1" craft_area="workbench" tags="learnable">
+			<ingredient name="resourceForgedIron" count="3"/>
+			<ingredient name="resourceElectricParts" count="2"/>
+			<ingredient name="resourceScrapPolymers" count="2"/>
+		</recipe>
 		<recipe name="hsTVStand" count="1" craft_area="workbench" tags="learnable">
 			<ingredient name="resourceElectricParts" count="4"/>
 			<ingredient name="resourceScrapPolymers" count="8"/>

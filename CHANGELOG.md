@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.41
+
+- **Appliance sounds, except the fridge and freezer.** The toaster buzzes and pops when it finishes. The coffee maker gurgles and dings, cookers hiss while they cook, the washer and dryer ding when a load is done, air con hums, and the boiler whooshes while it fires. Microwave and kettle sounds are unchanged.
+- **US toaster** uses the vanilla toaster model. No new mesh. The vanilla washer and dryer are now named US Washing Machine / US Tumble Dryer.
+
 ## 1.0.40
 
 - **Kettle (and toaster) plug into a socket.** Wire them from a wall socket like a microwave: you get the plug and lead, they refuse a wire straight from the generator, and the kettle draws 10W only while it boils. Look at an unplugged kettle and it says so.
