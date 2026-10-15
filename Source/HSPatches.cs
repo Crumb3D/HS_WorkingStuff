@@ -151,31 +151,25 @@ public static class HSPatchSinkCmds
             return;
         if (!HSWater.IsSinkBlock(__instance))
             return;
-        BlockActivationCommand[] extra = HSSinkCmds.Build(_world, _blockPos, _entityFocusing);
-        BlockActivationCommand[] src = __result;
-        int n = src != null ? src.Length : 0;
-        var all = new BlockActivationCommand[n + extra.Length];
-        for (int i = 0; i < extra.Length; i++)
-            all[i] = extra[i];
-        for (int i = 0; i < n; i++)
-            all[extra.Length + i] = src[i];
-        __result = all;
+        __result = HSSinkCmds.Build(_world, _blockPos, _entityFocusing);
     }
 }
 
 [HarmonyPatch(typeof(Block), "OnBlockActivated", new[] { typeof(string), typeof(WorldBase), typeof(Vector3i), typeof(BlockValue), typeof(EntityPlayerLocal) })]
 public static class HSPatchSinkUse
 {
-    static void Postfix(Block __instance, string _commandName, WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, EntityPlayerLocal _player, ref bool __result)
+    static bool Prefix(Block __instance, string _commandName, WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, EntityPlayerLocal _player, ref bool __result)
     {
         if (!HSWorkingStuffSettings.EnablePlumbing)
-            return;
+            return true;
         if (__instance is BlockHSSink || __instance is BlockHSLaundry || __instance is BlockHSToilet)
-            return;
+            return true;
         if (!HSWater.IsSinkBlock(__instance))
-            return;
-        if (HSSinkCmds.Run(_commandName, _blockPos, _player))
-            __result = true;
+            return true;
+        if (!HSSinkCmds.Run(_commandName, _blockPos, _player))
+            return true;
+        __result = true;
+        return false;
     }
 }
 

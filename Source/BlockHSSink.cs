@@ -134,8 +134,12 @@ public static class HSSinkCmds
         try
         {
             if (player.emodel != null && player.emodel.avatarController != null)
-                player.emodel.avatarController.SetMeleeAttackSpeed(1f);
-            player.RightArmAnimationUse = true;
+            {
+                AvatarController av = player.emodel.avatarController;
+                av.SetMeleeAttackSpeed(1f);
+                av._resetTrigger(AvatarController.useItemHash);
+                av.StartAnimationUse();
+            }
             player.PlayOneShot(string.IsNullOrEmpty(sound) ? "player_drinking" : sound);
         }
         catch { }
@@ -154,7 +158,14 @@ public static class HSSinkCmds
         try
         {
             if (kind == HSWorkingStuffNet.SinkFill || kind == HSWorkingStuffNet.SinkFillHot)
-                player.RightArmAnimationUse = true;
+            {
+                if (player.emodel != null && player.emodel.avatarController != null)
+                {
+                    AvatarController av = player.emodel.avatarController;
+                    av._resetTrigger(AvatarController.useItemHash);
+                    av.StartAnimationUse();
+                }
+            }
             player.PlayOneShot("bucketfill_water");
         }
         catch { }

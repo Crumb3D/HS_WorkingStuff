@@ -10,6 +10,9 @@ public static class HSLaundry
     public const string MetaWet = "hsWetH";
     // Hours since the player last washed.
     public const string BodyCVar = "hsBodySmell";
+    public const string BodyMetresCVar = ".hsSmellBodyM";
+    public const string ClothesMetresCVar = ".hsSmellClothesM";
+    public const string WetHoursCVar = ".hsWetHours";
     public const string SmellyBuff = "buffHSSmelly";
     public const string DirtyBuff = "buffHSDirtyClothes";
     public const string WetBuff = "buffHSWetClothes";
@@ -190,11 +193,14 @@ public static class HSLaundry
                 if (!HSWash.IsWashed(p) && !(soaking && inWater))
                     body += hours;
                 p.Buffs.SetCustomVar(BodyCVar, body);
+                p.Buffs.SetCustomVar(BodyMetresCVar, BodyMetresFromHours(body));
                 Toggle(p, SmellyBuff, body >= HSWorkingStuffSettings.BodySmellStartHours);
             }
             else
                 Toggle(p, SmellyBuff, false);
             bool dirty = false, wet = false;
+            float clothesM = 0f;
+            float wetHours = 0f;
             if (HSWorkingStuffSettings.EnableLaundry && p.equipment != null)
             {
                 float nowH = NowHours(world);
@@ -207,12 +213,22 @@ public static class HSLaundry
                         continue;
                     if (hours > 0f)
                         iv.SetMetadata(MetaDirt, Mathf.Min(1f, Dirt(iv) + hours * rate));
-                    if (Dirt(iv) >= 0.5f)
+                    float d = Dirt(iv);
+                    if (d >= 0.5f)
+                    {
                         dirty = true;
-                    if (Wetness(iv, nowH) > 0f)
+                        clothesM += d * HSWorkingStuffSettings.DirtyClothesSmell;
+                    }
+                    float w = Wetness(iv, nowH);
+                    if (w > 0f)
+                    {
                         wet = true;
+                        wetHours = Mathf.Max(wetHours, w * Mathf.Max(0.1f, HSWorkingStuffSettings.AirDryHours));
+                    }
                 }
             }
+            p.Buffs.SetCustomVar(ClothesMetresCVar, clothesM);
+            p.Buffs.SetCustomVar(WetHoursCVar, wetHours);
             Toggle(p, DirtyBuff, dirty);
             Toggle(p, WetBuff, wet);
         }
@@ -228,6 +244,15 @@ public static class HSLaundry
             p.Buffs.RemoveBuff(buff);
     }
 
+    static float BodyMetresFromHours(float hours)
+    {
+        float start = HSWorkingStuffSettings.BodySmellStartHours;
+        float full = Mathf.Max(start + 1f, HSWorkingStuffSettings.BodySmellFullHours);
+        if (hours < start)
+            return 0f;
+        return Mathf.Lerp(10f, HSWorkingStuffSettings.BodySmellRadius, (hours - start) / (full - start));
+    }
+
     // Extra smell radius in metres: the body after a day without a wash, plus clothes that are at least half dirty.
     public static float SmellRadius(EntityPlayer p)
     {
@@ -235,13 +260,7 @@ public static class HSLaundry
             return 0f;
         float r = 0f;
         if (HSWorkingStuffSettings.EnableBodySmell)
-        {
-            float h = p.Buffs.GetCustomVar(BodyCVar);
-            float start = HSWorkingStuffSettings.BodySmellStartHours;
-            float full = Mathf.Max(start + 1f, HSWorkingStuffSettings.BodySmellFullHours);
-            if (h >= start)
-                r += Mathf.Lerp(10f, HSWorkingStuffSettings.BodySmellRadius, (h - start) / (full - start));
-        }
+            r += BodyMetresFromHours(p.Buffs.GetCustomVar(BodyCVar));
         if (HSWorkingStuffSettings.EnableLaundry && p.equipment != null)
         {
             int n = p.equipment.GetSlotCount();

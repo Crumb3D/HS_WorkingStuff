@@ -2,6 +2,12 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.45
+
+- **Buff icons show how bad it is.** Unwashed and dirty clothes show extra smell in metres, wet clothes show hours left to dry, and pee / poo show how full you are.
+- **Bathroom sinks no longer crash the radial.** A vanilla sink used to hit a missing take-command slot when you drank or washed. Bathroom taps now use the same menu as the kitchen sink.
+- **Kitchen (and bathroom) taps play the drink animation.** Drink, wash and fill reset and fire UseItem so the empty-hand drink actually shows.
+
 ## 1.0.44
 
 - **Kitchen sockets feed their plugs again.** A new socket on a run no longer eats the last watt and leaves every appliance saying no power while the plate and the consumer unit still look live. Double sockets that were never flicked now start with both outlets on. New UK sockets start switched on.

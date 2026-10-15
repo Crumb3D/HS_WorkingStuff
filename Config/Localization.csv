@@ -265,11 +265,14 @@ hsClothesDirt,UI,tooltip,,,K,{0}: {1}% dirty
 hsClothesSmell,UI,tooltip,,,K,Adds to your smell: wash it in a washing machine
 hsClothesWet,UI,tooltip,,,K,"Wet: cold to wear, dries in {0} h. A washing line, airer or dryer is quicker"
 buffHSSmellyName,buffs,Buff,,,,Unwashed
-buffHSSmellyDesc,buffs,Buff,,,,You have not washed for a day or more. Zombies can smell you further away the longer it goes on. Have a shower or a bath.
+buffHSSmellyDesc,buffs,Buff,,,,The number is extra metres zombies can smell you. Have a shower or a bath to clear it.
+buffHSSmellyValue,buffs,Buff,,,,{0:0} m
 buffHSDirtyClothesName,buffs,Buff,,,,Dirty Clothes
-buffHSDirtyClothesDesc,buffs,Buff,,,,Some of what you are wearing is dirty and adds to your smell. Wash it in a washing machine.
+buffHSDirtyClothesDesc,buffs,Buff,,,,The number is extra metres from dirty clothes. Wash them in a washing machine.
+buffHSDirtyClothesValue,buffs,Buff,,,,{0:0} m
 buffHSWetClothesName,buffs,Buff,,,,Wet Clothes
-buffHSWetClothesDesc,buffs,Buff,,,,"Some of what you are wearing is still wet from the wash and makes you colder. Use a tumble dryer, or it dries on you."
+buffHSWetClothesDesc,buffs,Buff,,,,The number is hours until the wet clothes dry on you. A dryer is quicker.
+buffHSWetClothesValue,buffs,Buff,,,,{0:0} h
 hsSocketUKSingle,blocks,Block,,,,"UK Socket (Single, Switched)"
 hsSocketUKDouble,blocks,Block,,,,"UK Socket (Double, Switched)"
 hsSocketUSSingle,blocks,Block,,,,US Outlet (Single)
@@ -488,9 +491,11 @@ hsAccidentPoo,UI,tooltip,,,K,You didn't make it. Your clothes are filthy and you
 hsUrgePee,UI,tooltip,,,K,"You need a pee. A toilet, a urinal or a tree will do"
 hsUrgePoo,UI,tooltip,,,K,You need the toilet. Only a toilet will do
 buffHSNeedPeeName,buffs,Buff,,,,Need a pee
-buffHSNeedPeeDesc,buffs,Buff,,,,"Your bladder is getting full. A toilet, a urinal or a tree will do."
+buffHSNeedPeeDesc,buffs,Buff,,,,"The number is how full your bladder is. A toilet, a urinal or a tree will do."
+buffHSNeedPeeValue,buffs,Buff,,,,{0:0}%
 buffHSNeedPooName,buffs,Buff,,,,Need the toilet
-buffHSNeedPooDesc,buffs,Buff,,,,Only a toilet will do. A urinal or a tree will not.
+buffHSNeedPooDesc,buffs,Buff,,,,The number is how full your bowels are. Only a toilet will do.
+buffHSNeedPooValue,buffs,Buff,,,,{0:0}%
 blockcommand_hsopenfreezer,UI,Menu,,,K,Open freezer
 hsWallThermostat,blocks,Block,,,,Wall Thermostat
 hsWallThermostatDesc,blocks,Block,,,,"A digital room thermostat. Wire it from a socket (it shares the socket, it does not take a plug) and put it within 8 blocks of a radiator. Turn it up or down to set every radiator on that heating loop at once; turning one radiator's own valve still overrides it until you turn the thermostat again. Hold E to switch the central heating on or off."
