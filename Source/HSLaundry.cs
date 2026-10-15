@@ -222,6 +222,12 @@ public static class HSLaundry
             return;
         }
         ulong now = world.worldTime;
+        if (HSGod.Active(p))
+        {
+            lastTick = now;
+            HSGod.Clear(p);
+            return;
+        }
         float hours = 0f;
         if (lastTick != 0UL && now > lastTick && now - lastTick < 2000UL)
             hours = (now - lastTick) / 1000f;
@@ -572,5 +578,59 @@ public static class HSLaundry
         HSWorkingStuffNet.Tell(player, run.Dryer
             ? HSLoc.Format("hsDried", "Dried {0} items", n)
             : HSLoc.Format("hsWashed", "Washed {0} items. They are wet: dry them in a dryer, or they dry on you in {1} hours", n, HSWorkingStuffSettings.AirDryHours.ToString("0")));
+    }
+}
+
+public static class HSGod
+{
+    public static bool Active(EntityAlive e)
+    {
+        try
+        {
+            return e != null && e.IsGodMode != null && e.IsGodMode.Value;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public static void Clear(EntityPlayerLocal p)
+    {
+        if (p == null || p.Buffs == null)
+            return;
+        p.Buffs.SetCustomVar(HSLaundry.BodyCVar, 0f);
+        p.Buffs.SetCustomVar(HSLaundry.BodyMetresCVar, 0f);
+        p.Buffs.SetCustomVar(HSLaundry.ClothesMetresCVar, 0f);
+        p.Buffs.SetCustomVar(HSLaundry.WetHoursCVar, 0f);
+        p.Buffs.SetCustomVar(HSNeeds.BladderCVar, 0f);
+        p.Buffs.SetCustomVar(HSNeeds.BowelCVar, 0f);
+        Remove(p, HSLaundry.SmellyBuff);
+        Remove(p, HSLaundry.DirtyBuff);
+        Remove(p, HSLaundry.WetBuff);
+        Remove(p, HSNeeds.PeeBuff);
+        Remove(p, HSNeeds.PooBuff);
+        CleanWorn(p);
+    }
+
+    static void Remove(EntityPlayerLocal p, string buff)
+    {
+        if (p.Buffs.HasBuff(buff))
+            p.Buffs.RemoveBuff(buff);
+    }
+
+    static void CleanWorn(EntityPlayerLocal p)
+    {
+        if (p.equipment == null)
+            return;
+        int n = p.equipment.GetSlotCount();
+        for (int i = 0; i < n; i++)
+        {
+            ItemValue iv = p.equipment.GetSlotItem(i);
+            if (!HSLaundry.IsClothing(iv))
+                continue;
+            iv.SetMetadata(HSLaundry.MetaDirt, 0f);
+            iv.SetMetadata(HSLaundry.MetaWet, -1f);
+        }
     }
 }

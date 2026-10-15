@@ -199,6 +199,13 @@ public static class HSNeeds
             return;
         }
         ulong now = world.worldTime;
+        if (HSGod.Active(p))
+        {
+            lastTick = now;
+            HSGod.Clear(p);
+            urgedPee = urgedPoo = false;
+            return;
+        }
         float hours = 0f;
         if (lastTick != 0UL && now > lastTick && now - lastTick < 2000UL)
             hours = (now - lastTick) / 1000f;

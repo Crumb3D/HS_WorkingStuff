@@ -194,7 +194,8 @@ public static class HSPipeTool
             return false;
         string n = b.GetBlockName();
         return n == HSWater.RainCatchName || n == HSWater.TankName || n == HSWater.HeaterName
-            || n == HSWater.IntakeName || HSWater.IsSinkBlock(b) || HSWater.IsBarePipe(n)
+            || n == HSWater.VanillaHeaterName || n == HSWater.IntakeName
+            || b is BlockHSHeater || HSWater.IsSinkBlock(b) || HSWater.IsBarePipe(n)
             || HSBoiler.IsRadiator(n);
     }
 

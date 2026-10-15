@@ -77,8 +77,8 @@
   "KettleHotMinutes": 10,
 
   "EnableNeeds": true,
-  "BladderHours": 3,
-  "BowelHours": 8,
+  "BladderHours": 24,
+  "BowelHours": 72,
   "DrinkBladder": 25,
   "EatBowels": 20,
   "UrgeAt": 60,

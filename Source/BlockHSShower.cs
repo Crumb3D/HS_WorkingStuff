@@ -3,14 +3,18 @@ public class BlockHSShower : BlockHSSink
 {
     public float TakeDelay = 5f;
 
+    bool bath;
+
     public bool IsBath
     {
-        get { return GetBlockName() == HSWater.BathName; }
+        get { return bath; }
     }
 
     public override void Init()
     {
         base.Init();
+        bath = GetBlockName() == HSWater.BathName;
+        Properties.ParseBool("HSBath", ref bath);
         if (Properties.Values.ContainsKey("TakeDelay"))
             TakeDelay = StringParsers.ParseFloat(Properties.Values["TakeDelay"]);
     }

@@ -19,6 +19,7 @@ public static class HSWater
     public const string RainCatchName = "hsRainCatch";
     public const string TankName = "hsWaterTank";
     public const string HeaterName = "hsWaterHeater";
+    public const string VanillaHeaterName = "hsWaterHeaterVanilla";
     public const string IntakeName = "hsWaterIntake";
     public const string WaterCoolerName = "hsWaterCooler";
     public const string ShowerName = "hsShower";
@@ -133,7 +134,7 @@ public static class HSWater
         if (string.IsNullOrEmpty(name))
             return false;
         return name == "hsPipeStraight" || name == "hsPipeCorner" || name == "hsPipeJoint"
-            || name == HeaterName || name == TankName || name == IntakeName
+            || name == HeaterName || name == VanillaHeaterName || name == TankName || name == IntakeName
             || name == "hsSink" || name == RainCatchName
             || IsBarePipe(name);
     }
@@ -153,6 +154,8 @@ public static class HSWater
         if (n == "hsSink" || n == "utilitySink" || n == "sinkKitchen" || n == "pedestalSink")
             return true;
         if (n == WaterCoolerName || n == ShowerName || n == BathName || n == WasherName || n == WasherVanillaName)
+            return true;
+        if (block is BlockHSShower)
             return true;
         if (n == "hsToilet" || n == "hsUrinal" || block is BlockHSToilet)
             return true;
@@ -225,7 +228,7 @@ public static class HSWater
             if (b == null)
                 continue;
             string n = b.GetBlockName();
-            if (n == HeaterName)
+            if (n == HeaterName || n == VanillaHeaterName || b is BlockHSHeater)
             {
                 taps.HeaterSeen = true;
                 if (HeaterPowered(world, p, bv))
@@ -976,7 +979,7 @@ public static class HSWater
     public static string HotReason(Taps taps)
     {
         if (!taps.HeaterSeen)
-            return HSLoc.Get("hsSinkHotNoHeater", "Hot: needs a combi boiler piped in");
+            return HSLoc.Get("hsSinkHotNoHeater", "Hot: needs pipes to a combi boiler");
         if (!taps.HeaterPowered)
             return HSLoc.Get("hsSinkHotNoPower", "Hot: the boiler has no power");
         if (taps.HotEmpty)

@@ -13,8 +13,7 @@ public static class HSSalvage
         { "cntToilet01", "hsToilet" },
         { "cntToilet02", "hsToilet" },
         { "cntToilet03", "hsToilet" },
-        { "cntBathTubGore", "hsBath" },
-        { "cntBathTubEmpty", "hsBath" }
+        { "cntBathTubGore", "cntBathTubEmpty" }
     };
 
     public static readonly Dictionary<string, string> Repair = new Dictionary<string, string>
@@ -48,12 +47,23 @@ public static class HSSalvage
         { "cntMicrowaveOvenVer2Open", "hsMicrowaveRetro" },
         { "cntCoffeeMaker", "hsCoffeeMaker" },
         { "cntCoffeeMakerCommercial", "hsCoffeeMakerCommercial" },
+        { "cntToaster", "hsToasterUS" },
         { "cntWasherClosed", "hsWasherVanilla" },
         { "cntWasherClosed_Player", "hsWasherVanilla" },
         { "cntWasherOpen", "hsWasherVanilla" },
         { "cntDryerClosed", "hsDryerVanilla" },
         { "cntDryerClosed_Player", "hsDryerVanilla" },
-        { "cntDryerOpen", "hsDryerVanilla" }
+        { "cntDryerOpen", "hsDryerVanilla" },
+        { "waterHeaterWhite", "hsWaterHeaterVanilla" },
+        { "waterHeaterBrown", "hsWaterHeaterVanilla" },
+        { "waterHeaterRed", "hsWaterHeaterVanilla" },
+        { "waterHeaterYellow", "hsWaterHeaterVanilla" },
+        { "waterHeaterGreen", "hsWaterHeaterVanilla" },
+        { "waterHeaterBlue", "hsWaterHeaterVanilla" },
+        { "waterHeaterGrey", "hsWaterHeaterVanilla" },
+        { "waterHeaterBlack", "hsWaterHeaterVanilla" },
+        { "radiatorHouse01", "hsRadiatorCastIron" },
+        { "radiatorHouse01Player", "hsRadiatorCastIron" }
     };
 
     static readonly HashSet<string> Working = new HashSet<string>
@@ -63,20 +73,10 @@ public static class HSSalvage
         "hsMicrowave", "hsMicrowaveRetro",
         "hsCoffeeMaker", "hsCoffeeMakerCommercial",
         "hsWasher", "hsWasherVanilla", "hsDryer", "hsDryerVanilla",
-        "hsToilet", "hsUrinal", "hsBath", "hsShower"
+        "hsToilet", "hsUrinal", "hsBath", "hsShower",
+        "cntBathTubEmpty", "decoClawFootBathTub",
+        "hsToasterUS", "hsWaterHeaterVanilla", "hsRadiatorCastIron", "hsWaterHeater"
     };
-
-    public static bool IsEmptyBath(string name)
-    {
-        return name == "cntBathTubEmpty";
-    }
-
-    public static bool CanUpgrade(WorldBase world, Vector3i pos, string name)
-    {
-        if (string.IsNullOrEmpty(name) || !Repair.ContainsKey(name))
-            return false;
-        return LootEmpty(world, pos);
-    }
 
     public static bool LootEmpty(WorldBase world, Vector3i pos)
     {
@@ -122,8 +122,9 @@ public static class HSSalvage
         MarkPlaced(world, pos);
         if (player != null)
         {
-            string key = dest == "hsBath" ? "hsSalvageBath" : "hsSalvageToilet";
-            string text = dest == "hsBath"
+            bool bath = dest == "hsBath" || dest == "cntBathTubEmpty";
+            string key = bath ? "hsSalvageBath" : "hsSalvageToilet";
+            string text = bath
                 ? "The bath is usable. Pipe hot water to it when you can"
                 : "The toilet is usable. A few pees before it needs a jar to flush; a poo always does";
             HSWorkingStuffNet.Tell(player, HSLoc.Get(key, text));
@@ -202,59 +203,16 @@ public static class HSPatchSalvageLootClose
     }
 }
 
-[HarmonyPatch(typeof(Block), "HasBlockActivationCommands")]
-public static class HSPatchSalvageBathHas
+[HarmonyPatch(typeof(EntityBuffs), "AddBuff", new[] { typeof(string), typeof(Vector3i), typeof(int), typeof(bool), typeof(bool), typeof(float) })]
+public static class HSPatchGodBuff
 {
-    static void Postfix(Block __instance, ref bool __result)
+    static void Postfix(EntityBuffs __instance, string _name)
     {
-        if (__result || __instance == null)
+        if (_name != "god" || __instance == null)
             return;
-        if (HSSalvage.IsEmptyBath(__instance.GetBlockName()))
-            __result = true;
-    }
-}
-
-[HarmonyPatch(typeof(Block), "GetBlockActivationCommands")]
-public static class HSPatchSalvageBathCmds
-{
-    static void Postfix(Block __instance, ref BlockActivationCommand[] __result)
-    {
-        if (__instance == null || !HSSalvage.IsEmptyBath(__instance.GetBlockName()))
-            return;
-        int n = __result != null ? __result.Length : 0;
-        var all = new BlockActivationCommand[n + 1];
-        for (int i = 0; i < n; i++)
-            all[i] = __result[i];
-        all[n] = new BlockActivationCommand("hsuse", "water", true);
-        __result = all;
-    }
-}
-
-[HarmonyPatch(typeof(Block), "OnBlockActivated", new[] { typeof(string), typeof(WorldBase), typeof(Vector3i), typeof(BlockValue), typeof(EntityPlayerLocal) })]
-public static class HSPatchSalvageBathRun
-{
-    static bool Prefix(Block __instance, string _commandName, WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, EntityPlayerLocal _player)
-    {
-        if (_commandName != "hsuse" || __instance == null || !HSSalvage.IsEmptyBath(__instance.GetBlockName()))
-            return true;
-        HSWorkingStuffNet.SendWater(HSWorkingStuffNet.Salvage, _blockPos, _player);
-        return false;
-    }
-}
-
-[HarmonyPatch(typeof(ItemActionRepair), "CanRemoveRequiredResource")]
-public static class HSPatchSalvageUpgrade
-{
-    static void Postfix(ItemActionRepair __instance, BlockValue blockValue, ref bool __result)
-    {
-        if (!__result || __instance == null || blockValue.Block == null)
-            return;
-        string name = blockValue.Block.GetBlockName();
-        if (!HSSalvage.Repair.ContainsKey(name))
-            return;
-        WorldBase world = GameManager.Instance != null ? GameManager.Instance.World : null;
-        if (!HSSalvage.CanUpgrade(world, __instance.blockTargetPos, name))
-            __result = false;
+        EntityPlayerLocal p = __instance.parent as EntityPlayerLocal;
+        if (p != null)
+            HSGod.Clear(p);
     }
 }
 

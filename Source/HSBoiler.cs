@@ -44,9 +44,14 @@ public static class HSBoiler
     const float ScanSeconds = 5f;
     const float FillSeconds = 5f;
 
+    public static bool IsBoiler(Block block)
+    {
+        return block is BlockHSHeater;
+    }
+
     public static bool IsBoiler(string name)
     {
-        return name == HSWater.HeaterName;
+        return name == HSWater.HeaterName || name == HSWater.VanillaHeaterName;
     }
 
     public static bool IsRadiator(string name)
@@ -73,7 +78,7 @@ public static class HSBoiler
         if (block == null)
             return false;
         string n = block.GetBlockName();
-        if (IsBoiler(n))
+        if (IsBoiler(block))
             return true;
         if (n == HSWater.TankName || n == HSWater.RainCatchName || n == HSWater.IntakeName)
             return true;
@@ -156,7 +161,7 @@ public static class HSBoiler
             if (world.GetChunkFromWorldPos(pos) == null)
                 continue;
             BlockValue bv = world.GetBlock(pos);
-            if (bv.Block == null || bv.ischild || !IsBoiler(bv.Block.GetBlockName()))
+            if (bv.Block == null || bv.ischild || !IsBoiler(bv.Block))
             {
                 Removed(pos);
                 continue;
@@ -593,7 +598,7 @@ public static class HSBoiler
                 if (nb == null)
                     continue;
                 string nn = nb.GetBlockName();
-                if (IsBoiler(nn))
+                if (IsBoiler(nb))
                     return HSWater.Parent(np, nbv);
                 if (IsRadiator(nn) && !PipedRadiator(world, np) && !PipedRadiator(world, HSWater.Parent(np, nbv)))
                     continue;

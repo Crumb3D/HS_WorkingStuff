@@ -2,6 +2,15 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.54
+
+- **Bladder and bowels idle much slower.** Empty fill is 24 game hours for the bladder and 72 for the bowels (about an hour / three hours of real time at default 60-minute days). Drinking and eating still add the usual amount.
+- **Microwave, toaster and coffee maker repair.** The microwave repair no longer shows a red missing-item error. The toaster repairs into the working US toaster. Coffee / fridge / cooker repairs take 2 electric parts and are not blocked by leftover loot.
+- **Empty and clawfoot baths work like urinals.** Look at them and they say they need pipes and a boiler. A gore bath still converts to the empty tub after you loot it.
+- **Broken kitchen cabinets repair with wood.** The hanging door and hollow broken cabinets become the intact ones.
+- **POI water heater and house radiator repair.** The vanilla cylinder heater repairs into a working boiler (same 1x2 tank model). The cast-iron house radiator repairs into the working cast-iron radiator.
+- **God mode clears HS smell and needs.** Unwashed, dirty/wet clothes, and pee/poo go away as soon as god mode is on, and they stay off while it is on.
+
 ## 1.0.53
 
 - **Looted toilets and baths become usable.** Empty a POI toilet (or the gore bath) and it turns into a working one. An empty bathtub is Hold E to use. POI urinals work as soon as you find them.

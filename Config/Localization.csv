@@ -26,6 +26,8 @@ hsSink,blocks,Block,,,,Working Sink
 hsSinkDesc,blocks,Block,,,,"Two taps. Cold comes straight from a piped tank or lake intake, as clean or murky as that water is. Hot comes through a powered combi boiler and is always boiled. A tap with no supply shows greyed out with what it needs. POI kitchen sinks work the same way if you pipe them."
 hsWaterHeater,blocks,Block,,,,Combi Boiler
 hsWaterHeaterDesc,blocks,Block,,,,"Wall-hung combi boiler. Place it against a wall. Pipe a tank into it and on to a sink for a hot tap; it only fires (and draws power) while hot water runs. Pipe radiators to it and switch central heating on to warm the house: 15W plus about 5W per radiator while heating (more with its valve turned up)."
+hsWaterHeaterVanilla,blocks,Block,,,,Working Water Heater
+hsWaterHeaterVanillaDesc,blocks,Block,,,,"A POI cylinder heater repaired into a working boiler. Same vanilla tank model. Pipe a tank into it and on to a sink for hot water; switch central heating on for radiators. 15W plus about 5W per radiator."
 hsStoveOld,blocks,Block,,,,Electric Cooker
 hsStoveModern,blocks,Block,,,,Electric Cooker
 hsStoveWall,blocks,Block,,,,Electric Wall Oven
@@ -119,7 +121,7 @@ hsRainDrained,UI,tooltip,,,K,Filter in: drained {0} jars of murky water so the c
 hsSinkCold,UI,tooltip,,,K,Cold: {0}
 hsSinkColdNone,UI,tooltip,,,K,Cold: no tank or intake piped in
 hsSinkHot,UI,tooltip,,,K,Hot: {0}
-hsSinkHotNoHeater,UI,tooltip,,,K,Hot: needs a combi boiler piped in
+hsSinkHotNoHeater,UI,tooltip,,,K,Hot: needs pipes to a combi boiler
 hsSinkHotNoPower,UI,tooltip,,,K,Hot: the boiler has no power
 hsSinkHotDry,UI,tooltip,,,K,Hot: the boiler has no tank or intake behind it
 hsSinkColdEmpty,UI,tooltip,,,K,Cold: the tank is empty. Pipe a rain catch to it or pour water in

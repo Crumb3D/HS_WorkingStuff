@@ -229,7 +229,7 @@ public static class HSThermostat
                     continue;
                 string nn = nb.GetBlockName();
                 seen.Add(nk);
-                if (HSBoiler.IsBoiler(nn))
+                if (HSBoiler.IsBoiler(nb))
                 {
                     if (!loop.Boiler.HasValue)
                         loop.Boiler = HSWater.Parent(np, nbv);

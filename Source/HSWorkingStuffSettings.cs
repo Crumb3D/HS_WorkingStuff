@@ -74,8 +74,8 @@ public static class HSWorkingStuffSettings
     public static float KettleBoilSeconds = 30f;
     public static float KettleHotMinutes = 10f;
     public static bool EnableNeeds = true;
-    public static float BladderHours = 3f;
-    public static float BowelHours = 8f;
+    public static float BladderHours = 24f;
+    public static float BowelHours = 72f;
     public static float DrinkBladder = 25f;
     public static float EatBowels = 20f;
     public static int UrgeAt = 60;
@@ -158,8 +158,8 @@ public static class HSWorkingStuffSettings
         KettleBoilSeconds = 30f;
         KettleHotMinutes = 10f;
         EnableNeeds = true;
-        BladderHours = 3f;
-        BowelHours = 8f;
+        BladderHours = 24f;
+        BowelHours = 72f;
         DrinkBladder = 25f;
         EatBowels = 20f;
         UrgeAt = 60;

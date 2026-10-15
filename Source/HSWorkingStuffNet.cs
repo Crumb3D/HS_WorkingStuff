@@ -324,7 +324,7 @@ public static class HSWorkingStuffNet
         else if (kind == BoilerHeating)
         {
             BlockValue bv = world.GetBlock(pos);
-            if (bv.Block == null || !HSBoiler.IsBoiler(bv.Block.GetBlockName()))
+            if (bv.Block == null || !HSBoiler.IsBoiler(bv.Block))
                 return;
             HSBoiler.SetHeating(pos, arg != 0);
             Tell(player, arg != 0
