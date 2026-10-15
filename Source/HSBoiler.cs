@@ -55,16 +55,16 @@ public static class HSBoiler
             || name == "radiatorHouse01" || name == "radiatorHouse01Player";
     }
 
-    // POI house radiators only join the heating loop after the pipe tool has laid into them.
+    // Radiator pipe is laid under the floor and points up; the radiator cell itself often has no pipe.
     public static bool PipedRadiator(World world, Vector3i pos)
     {
-        if (HSPipeNet.Has(pos))
+        if (HSPipeNet.Has(pos) || HSPipeNet.Has(pos + Vector3i.down))
             return true;
         if (world == null)
             return false;
         BlockValue bv = world.GetBlock(pos);
         Vector3i parent = HSWater.Parent(pos, bv);
-        return parent != pos && HSPipeNet.Has(parent);
+        return parent != pos && (HSPipeNet.Has(parent) || HSPipeNet.Has(parent + Vector3i.down));
     }
 
     // Laid pipe sits in the tank, sinks and the other boiler too. Those are cold water, not this heating loop.
@@ -289,6 +289,13 @@ public static class HSBoiler
         {
             Vector3i p = q.Dequeue();
             walked++;
+            BlockValue above = world.GetBlock(p + Vector3i.up);
+            if (above.Block != null && IsRadiator(above.Block.GetBlockName()))
+            {
+                Vector3i rp = HSWater.Parent(p + Vector3i.up, above);
+                if (!found.Contains(rp) && (PipedRadiator(world, p + Vector3i.up) || PipedRadiator(world, rp)))
+                    found.Add(rp);
+            }
             for (int i = 0; i < HSWater.Dirs.Length; i++)
             {
                 Vector3i np = p + HSWater.Dirs[i];
@@ -564,6 +571,12 @@ public static class HSBoiler
         var seen = new HashSet<long>();
         q.Enqueue(radiator);
         seen.Add(HSWater.Key(radiator));
+        Vector3i below = radiator + Vector3i.down;
+        if (HSPipeNet.Has(below))
+        {
+            q.Enqueue(below);
+            seen.Add(HSWater.Key(below));
+        }
         int walked = 0;
         while (q.Count > 0 && walked < limit)
         {

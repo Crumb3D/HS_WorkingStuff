@@ -111,7 +111,7 @@ public static class HSLaundryCraft
         if (!IsLaundry(recipe) || craftTime <= 0f || recipe.ingredients == null || recipe.ingredients.Count != 1)
             return false;
         ItemValue iv = HSItem.Val(recipe.ingredients[0]);
-        return iv != null && !iv.IsEmpty() && HSLaundry.IsClothing(iv) && (iv.HasMetadata(HSLaundry.MetaDirt) || iv.HasMetadata(HSLaundry.MetaWet));
+        return iv != null && !iv.IsEmpty() && HSLaundry.IsClothing(iv);
     }
 
     public static float BaseSeconds(ItemClass ic, bool dryer)
@@ -328,6 +328,14 @@ public static class HSLaundryCraft
         float nowH = HSLaundry.NowHours(world);
         if (count < 1)
             count = 1;
+        string reason;
+        if (!MachineReady(station, recipe, out reason))
+        {
+            GameManager.ShowTooltip(player, reason);
+            return false;
+        }
+        XUiC_CraftingQueue q = group.GetChildByType<XUiC_CraftingQueue>();
+        BindQueue(q);
         bool any = false;
         for (int i = 0; i < count; i++)
         {
@@ -351,7 +359,8 @@ public static class HSLaundryCraft
             one.craftExpGain = 0;
             one.UseIngredientModifier = false;
             one.AddIngredient(taken, 1);
-            if (!group.AddItemToQueue(one, 1, time))
+            one.Init();
+            if (q == null || !q.AddRecipeToCraft(one, 1, time))
             {
                 GiveBack(player, taken);
                 GameManager.ShowTooltip(player, HSLoc.Get("hsLaundryQueueFull", "The queue is full"));
@@ -361,6 +370,23 @@ public static class HSLaundryCraft
             any = true;
         }
         return any;
+    }
+
+    static readonly FieldInfo queueItems = AccessTools.Field(typeof(XUiC_CraftingQueue), "queueItems");
+
+    static void BindQueue(XUiC_CraftingQueue q)
+    {
+        if (q == null || queueItems == null)
+            return;
+        XUiController[] items = queueItems.GetValue(q) as XUiController[];
+        if (items != null && items.Length > 0)
+            return;
+        items = q.GetChildrenByType<XUiC_RecipeStack>();
+        if (items == null || items.Length == 0)
+            return;
+        queueItems.SetValue(q, items);
+        for (int i = 0; i < items.Length; i++)
+            ((XUiC_RecipeStack)items[i]).Owner = q;
     }
 
     static void GiveBack(EntityPlayer player, ItemValue iv)

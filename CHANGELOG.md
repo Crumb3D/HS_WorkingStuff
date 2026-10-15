@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.51
+
+- **Washer and dryer actually queue a wash.** Clicking Wash no longer says the queue is full when it is empty. Same path for the dryer once something wet is in it.
+- **Radiator pipes under the floor count again.** The heating run sits in the floor, not in the radiator, so those radiators show on the boiler without re-piping. The pipe tool will also lay onto a floor that already has pipe, and onto POI floors.
+
 ## 1.0.50
 
 - **Washer and dryer show every clothing and armour recipe.** Runtime recipes are now added to the cooker's visible list. Worn or carried dirty/wet pieces highlight; the rest stay dimmed. Click one to wash or dry.

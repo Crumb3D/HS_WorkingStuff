@@ -830,13 +830,24 @@ public static class HSPipeTool
         return 0;
     }
 
-    // Pipe can run inside a floor block: a full block, or a half block / plate whose top is full.
+    // Pipe can run inside a floor block: a full block, a half block / plate whose top is full,
+    // or a POI multi-block floor (child cells still count as the floor the radiator stands on).
     static bool FloorCell(World world, Vector3i p)
     {
         BlockValue bv = world.GetBlock(p);
         if (bv.isair || IsEndpoint(bv.Block))
             return false;
-        return Covers(world, p, Vector3i.up);
+        if (Covers(world, p, Vector3i.up))
+            return true;
+        if (bv.ischild)
+        {
+            Vector3i parent = HSWater.Parent(p, bv);
+            if (parent == p)
+                return true;
+            BlockValue pv = world.GetBlock(parent);
+            return !pv.isair && (Covers(world, parent, Vector3i.up) || pv.Block != null);
+        }
+        return false;
     }
 
     // Where pipe may join each cell, and the direction from there into it. Pipe joins pipe on any side.
@@ -939,8 +950,10 @@ public static class HSPipeTool
     {
         Func<Vector3i, bool> floor = p =>
         {
-            if (fromSet.Contains(p) || toSet.Contains(p) || HSPipeNet.Has(p))
+            if (fromSet.Contains(p) || toSet.Contains(p))
                 return false;
+            if (HSPipeNet.Has(p))
+                return !IsEndpoint(world.GetBlock(p).Block);
             return FloorCell(world, p);
         };
         // The drop to the floor runs down the wall, not through the air.
