@@ -77,6 +77,7 @@ public static class HSLoc
         { "hsFridgePowered", "Powered: food lasts 4x longer" },
         { "hsFridgeUnpowered", "Unpowered: spoils at normal speed" },
         { "hsFridgeEmptyFood", "No perishable food stored" },
+        { "hsFridgeFoodOnly", "Only food that spoils goes in here" },
         { "hsFridgeOldest", "Oldest food: {0} days left" },
         { "hsHeaterOn", "Heating: water from this line is boiled" },
         { "hsHeaterOff", "No power: water stays as it is" },

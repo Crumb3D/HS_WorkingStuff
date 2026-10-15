@@ -55,6 +55,7 @@ hsDriedMeatDesc,items,Item,,,,"Dried on a rack. Keeps about three weeks."
 hsFridgePowered,UI,tooltip,,,K,Powered: food lasts 4x longer
 hsFridgeUnpowered,UI,tooltip,,,K,Unpowered: spoils at normal speed
 hsFridgeEmptyFood,UI,tooltip,,,K,No perishable food stored
+hsFridgeFoodOnly,UI,tooltip,,,K,Only food that spoils goes in here
 hsFridgeOldest,UI,tooltip,,,K,Oldest food: {0} days left
 hsHeaterOn,UI,tooltip,,,K,Heating: water from this line is boiled
 hsHeaterOff,UI,tooltip,,,K,No power: water stays as it is

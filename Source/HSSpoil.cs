@@ -29,6 +29,18 @@ public static class HSSpoil
         return ic.Properties.Values.ContainsKey("SpoilDays");
     }
 
+    public static bool CanFridge(ItemValue iv)
+    {
+        if (iv == null || iv.IsEmpty())
+            return true;
+        return IsPerishable(iv) || IsSpoiled(iv);
+    }
+
+    public static bool CanFridge(ItemStack stack)
+    {
+        return stack == null || stack.IsEmpty() || CanFridge(HSItem.Val(stack));
+    }
+
     public static bool IsMeatOrEgg(ItemValue iv)
     {
         if (iv == null || iv.ItemClass == null)

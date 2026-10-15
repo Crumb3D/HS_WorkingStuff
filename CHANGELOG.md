@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.52
+
+- **Fridge and freezer only take food that spoils.** Blocks, tools and anything else bounce back. Junk already in there is handed back when you open it. Spoiled leftovers can still sit in there until you take them out.
+
 ## 1.0.51
 
 - **Washer and dryer actually queue a wash.** Clicking Wash no longer says the queue is full when it is empty. Same path for the dryer once something wet is in it.

@@ -92,7 +92,7 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 
 ## Blocks
 
-- **Working Fridge** — 24 slots, needs power for the 4x keep time. Store perishables / take spoiled.
+- **Working Fridge** — 24 slots, needs power for the 4x keep time. Only food that spoils goes in (blocks and tools bounce back). Store perishables / take spoiled.
 - **Working Cooler** — 12 slots, 2x keep time, no power.
 - **Drying rack** — raw meat becomes dried meat in about a day.
 - **Compost box** — spoiled food becomes nitrate in about a day.
@@ -120,7 +120,7 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 - **Electric cooker (old / modern / wall)** — same recipes and tools as a campfire (cooking pot, grill, beaker). No wood. Wire it to a generator or it will not cook. Draws 10W only while food is queued or its window is open. The cooker window shows **Powered** or **Unpowered** where the campfire fuel slot was.
 - **Microwave (modern / retro)** — cheap, 5W only while cooking with the door shut, a short microwave-safe menu with no pot or grill: boiled water, coffee, goldenrod tea, red tea, honey tea, baked potato, corn on the cob, vegetable stew, sham chowder, spaghetti, gumbo stew. Each one needs the same unlock as at the campfire. Queue the food and close the door to cook; opening the door pauses it. Look at it to see what's cooking and the time left. Stand next to it while it cooks and you hear a quiet close-range hum; it dings when the queue is done.
 - **Coffee maker (home / commercial)** — put in a jar of water and coffee beans and it brews a jar of coffee; add 5 gunpowder for black strap coffee. Murky water is fine, the machine heats it, so no boiling first and no pot. Same unlocks as campfire coffee. 5W, only while brewing or while its window is open. It gurgles while it brews and dings when it's done. Look at it for what's brewing and the time left.
-- **Chest freezer** — a 2-block-wide chest freezer. Opens like the fridge with or without power; wired (10W), food in it does not spoil at all.
+- **Chest freezer** — a 2-block-wide chest freezer. Opens like the fridge with or without power; wired (10W), food in it does not spoil at all. Same as the fridge: only food that spoils goes in.
   - **Frozen food.** After 2 hours in a powered freezer, food freezes solid (the tooltip says so). Frozen food can't be eaten, and recipes won't use it. Out of the freezer it thaws in 2 hours, or 8 in a powered fridge, and it doesn't spoil while frozen. For a quick thaw, hold E on a powered microwave and pick **Defrost**: everything frozen on you thaws at once.
 - **Plumbed water cooler** — the vanilla water cooler, piped to a tank like a sink. Cold tap only, and it has its own filter, so even murky tank water comes out clean.
 - **Toilet / urinal** — the game's own toilet and wall urinal models, made working. Pipe them like a sink. Hold E to **Pee**, and on a toilet **Poo**. A flush takes 1 jar from the tank (any water, you don't drink it) and you hear the flush. No pipe: hold a jar or bucket of water and **Fill cistern**, then **Flush**. Two pees at a urinal share one jar. A poo with no water leaves the bowl dirty: it smells, the toilet says **dirty** when you look at it, and you can't go again until you flush. A urinal will not take a poo.
