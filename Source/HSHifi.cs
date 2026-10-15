@@ -33,6 +33,26 @@ public class BlockHSHifi : BlockPowered
         player.Pos = _blockPos;
     }
 
+    public override void OnBlockAdded(WorldBase world, Chunk _chunk, Vector3i _blockPos, BlockValue _blockValue, PlatformUserIdentifierAbs _addedByPlayer)
+    {
+        base.OnBlockAdded(world, _chunk, _blockPos, _blockValue, _addedByPlayer);
+        if (!_blockValue.ischild)
+            HSHifi.Track(_blockPos);
+    }
+
+    public override void OnBlockLoaded(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue)
+    {
+        base.OnBlockLoaded(_world, _blockPos, _blockValue);
+        if (!_blockValue.ischild)
+            HSHifi.Track(_blockPos);
+    }
+
+    public override void OnBlockRemoved(WorldBase world, Chunk _chunk, Vector3i _blockPos, BlockValue _blockValue)
+    {
+        HSHifi.Untrack(_blockPos);
+        base.OnBlockRemoved(world, _chunk, _blockPos, _blockValue);
+    }
+
     public override bool HasBlockActivationCommands(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
         return true;
@@ -152,7 +172,33 @@ public static class HSHifi
     static readonly string[] Extensions = { ".mp3", ".ogg", ".wav" };
     static List<string> tracks = new List<string>();
     static float nextScan = -1f;
+    static readonly HashSet<long> hifis = new HashSet<long>();
     public static readonly HashSet<string> Failed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+    public static void Track(Vector3i pos)
+    {
+        hifis.Add(HSWater.Key(pos));
+    }
+
+    public static void Untrack(Vector3i pos)
+    {
+        hifis.Remove(HSWater.Key(pos));
+    }
+
+    public static void VisitPlaying(World world, System.Action<Vector3i> visit)
+    {
+        if (world == null || visit == null || hifis.Count == 0)
+            return;
+        foreach (long k in hifis)
+        {
+            Vector3i p = HSWater.FromKey(k);
+            if (world.GetChunkFromWorldPos(p) == null)
+                continue;
+            BlockValue bv = world.GetBlock(p);
+            if (bv.Block is BlockHSHifi && IsOn(bv) && Playing(bv) && HSTV.Live(world, p))
+                visit(p);
+        }
+    }
 
     public static bool IsOn(BlockValue bv)
     {

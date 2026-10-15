@@ -87,5 +87,8 @@
   "CisternJars": 4,
   "ToiletPeesBeforeFlush": 3,
   "DirtyToiletSmell": 8,
-  "WaterWashClothes": 0.2
+  "WaterWashClothes": 0.2,
+  "EnableHouseNoise": true,
+  "IndoorSmell": 0.25,
+  "OpenDoorSmell": 0.55
 }

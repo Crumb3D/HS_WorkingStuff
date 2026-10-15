@@ -126,6 +126,14 @@ public static class HSMicrowaveSound
         StopHum(pos);
     }
 
+    public static void VisitHums(System.Action<Vector3i, string> visit)
+    {
+        if (visit == null || humAt.Count == 0)
+            return;
+        foreach (KeyValuePair<Vector3i, string> kv in humAt)
+            visit(kv.Key, kv.Value);
+    }
+
     public static void PlayAt(Vector3i pos, string sound)
     {
         if (string.IsNullOrEmpty(sound))

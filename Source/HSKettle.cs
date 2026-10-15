@@ -296,6 +296,14 @@ public static class HSKettle
         humming.Clear();
     }
 
+    public static void VisitHumming(System.Action<Vector3i> visit)
+    {
+        if (visit == null || humming.Count == 0)
+            return;
+        foreach (Vector3i p in humming)
+            visit(p);
+    }
+
     static void Hum(Vector3i pos, bool on)
     {
         if (on == humming.Contains(pos))

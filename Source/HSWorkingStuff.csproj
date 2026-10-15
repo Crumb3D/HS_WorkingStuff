@@ -97,6 +97,8 @@
     <Compile Include="HSFlipper.cs" />
     <Compile Include="HSThermostat.cs" />
     <Compile Include="HSHifi.cs" />
+    <Compile Include="HSHouseNoise.cs" />
+    <Compile Include="HSIndoor.cs" />
     <Compile Include="HSKettle.cs" />
     <Compile Include="HSWater.cs" />
     <Compile Include="HSPickup.cs" />

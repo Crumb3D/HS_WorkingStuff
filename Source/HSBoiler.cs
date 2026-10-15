@@ -255,6 +255,17 @@ public static class HSBoiler
         }
     }
 
+    public static void VisitFiring(System.Action<Vector3i> visit)
+    {
+        if (visit == null || published.Count == 0)
+            return;
+        foreach (KeyValuePair<long, Info> kv in published)
+        {
+            if (kv.Value.Firing)
+                visit(HSWater.FromKey(kv.Key));
+        }
+    }
+
     static void SendRadiator(Vector3i pos, bool warm)
     {
         RememberRadiator(pos, warm);

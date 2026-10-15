@@ -87,6 +87,9 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `ToiletPeesBeforeFlush` | 3 | Wees a dry toilet takes before it needs a jar to flush |
 | `DirtyToiletSmell` | 8 | Smell (m) an unflushed toilet or urinal adds while you stand by it |
 | `WaterWashClothes` | 0.2 | Dirt washed off each worn piece at a lake or sink (0.2 = 20%) |
+| `EnableHouseNoise` | true | Running washer, dryer, cooker, TV, hi-fi and other kit rings as a dinner bell. Fridge stays quiet. Pair with HS Better Ears so idle zombies walk to it |
+| `IndoorSmell` | 0.25 | Smell distance while you are indoors with the doors shut (0.25 = a quarter) |
+| `OpenDoorSmell` | 0.55 | Smell distance indoors when an open door or window is next to you |
 
 Set a bool to `false` to turn that feature off without removing the mod.
 
@@ -157,7 +160,7 @@ With `EnableConnectToIp` true, the main menu gets **Connect to IP** under Play G
 ## Living in the house
 
 - **Room temperature.** Indoors, the temperature follows the weather outside slowly (about 3 game hours behind) and a house only takes 15°F / 8°C off it, like a UK house: cold in winter, hot in summer, cooler after rain. In the snow or on a cold night you need the radiators on. A warm radiator heats the room up to 68°F / 20°C. A running air conditioner cools it to 72°F / 22°C. The thermometer, the radiator gauge and the temperature you feel all follow the °C or °F option in the game's video settings. The numbers in the settings file stay Fahrenheit, because that is the unit the game stores.
-- **Smell.** After a day without a wash you start to smell (**Unwashed**), and it gets worse over three days. The icon shows extra metres zombies can smell you. **Wash up** at a sink (1 jar) or crouch at a lake or river and press the drink key to wash: same drink anim as the tap, each takes about 5 m off, once an hour, and rinses a bit of dirt off the clothes you are wearing. Standing in water up to your waist washes 50-70% off slowly (clothes too). A shower takes 90-100% and a bath all of it. Indoors it is cut down like other smells; rain or water hides it.
+- **Smell.** After a day without a wash you start to smell (**Unwashed**), and it gets worse over three days. The icon shows extra metres zombies can smell you. **Wash up** at a sink (1 jar) or crouch at a lake or river and press the drink key to wash: same drink anim as the tap, each takes about 5 m off, once an hour, and rinses a bit of dirt off the clothes you are wearing. Standing in water up to your waist washes 50-70% off slowly (clothes too). A shower takes 90-100% and a bath all of it. **Indoors cuts the distance** (about a quarter with the doors shut). An open door or window next to you leaks smell outside. Walls stop it going through the brick. Rain or water hides it.
 - **Dirty clothes.** Clothes and armour you wear get dirty over about three days of wear (hover an item to see how dirty). Dirty pieces add to your smell; the icon shows those extra metres. Wash them in the washing machine.
 - **Bladder and bowels.** An empty bladder fills in about 24 game hours on its own, faster when you drink (a jar is about a quarter). Bowels fill in about 72 hours, faster when you eat. At about 60% you get **Need a pee** or **Need the toilet**, with how full you are on the icon. Pee at a toilet, a urinal or a tree (look at the trunk and hold E). Poo only in a toilet. Leave it until you're full and you have an accident: a pee soaks your clothes, a poo makes them filthy, and both make you smell. Wash the clothes and have a shower. God mode clears smell, dirty/wet clothes, and the need to go.
 

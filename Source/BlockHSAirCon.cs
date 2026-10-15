@@ -49,6 +49,14 @@ public static class HSAirCon
     static float nextCheck;
     static float nextSound;
 
+    public static void VisitHumming(System.Action<Vector3i> visit)
+    {
+        if (visit == null || humming.Count == 0)
+            return;
+        foreach (long k in humming)
+            visit(HSWater.FromKey(k));
+    }
+
     public static void Track(Vector3i pos)
     {
         units.Add(HSWater.Key(pos));

@@ -39,6 +39,14 @@ public static class HSLaundry
 
     public const string WasherHum = "hsWasherHum";
 
+    public static void VisitRuns(System.Action<Vector3i> visit)
+    {
+        if (visit == null || runs.Count == 0)
+            return;
+        foreach (KeyValuePair<long, Run> kv in runs)
+            visit(HSWater.FromKey(kv.Key));
+    }
+
     public static void Clear()
     {
         lastTick = 0UL;

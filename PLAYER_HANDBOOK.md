@@ -92,6 +92,17 @@ You can mix: live with the repaired POI cooker and toaster for weeks, then hang 
 
 ---
 
+## The house is a dinner bell
+
+You can live here. You cannot run the whole kitchen like a nightclub and expect the street to stay empty.
+
+- A **running washer, dryer, cooker, microwave, toaster, kettle, coffee maker, air con, firing boiler, TV or hi-fi** makes noise in the background while you sort loot. Idle zombies hear it and come to the house. The **fridge stays quiet**.
+- **Close the door.** Walls and a shut door muffle that racket. An **open door with the appliance right next to it** leaks the noise outside — dinner bell.
+- **Smell works the same way.** Indoors cuts how far zombies can smell you (unwashed, dirty clothes, carried meat). Shut the doors and it stays in the room. An open door or window leaks it into the street. Walls stop it going through the brick.
+- Windows leak more than a solid wall. Repairing and crafting are loud too: **crouch** if you want to sneak (load **HS Better Ears** on the server and every client).
+
+---
+
 ## What you have to learn
 
 Crafted recipes need **both** a magazine level and a perk. Repairing a POI fridge does not. The list in the crafting menu tells you which magazine and perk each recipe wants.
@@ -115,4 +126,5 @@ Microwave and grill food still uses the vanilla cooking unlocks. If you can’t 
 - A socket only takes as many plugs as it has outlets. Chain sockets along the wall without using a plug.
 - Appliances only draw watts while they work. An idle cooker costs nothing until you queue food.
 - God mode clears the mod’s smell, dirty/wet clothes, and needing the toilet.
+- Shut the doors if the washer is on. An open door next to a running machine is a dinner bell.
 - Load this mod on the **dedicated server and every client**. After an update, restart both.

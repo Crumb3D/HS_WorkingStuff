@@ -2,6 +2,12 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.63
+
+- **The house is a dinner bell.** A running washer, dryer, cooker, microwave, toaster, kettle, coffee maker, air con, firing boiler, TV or hi-fi pulses noise. Idle zombies hear it and come looking. The fridge stays quiet.
+- **Shut the door.** Walls and closed doors muffle the racket (with HS Better Ears). An open door next to a running appliance leaks the noise outside. Windows leak more than a solid wall. Crouch while you repair and craft.
+- **Indoors cuts smell.** A closed-up room knocks smell distance down. An open door or window nearby leaks it into the street. Walls stop it going through the brickwork.
+
 ## 1.0.62
 
 - **Empty jars turn up more.** Cupboards, sinks, toilets, trash, backpacks and tents. Loot a POI loo and you will often find 1–3 empty jars for the flush. Still one jar per flush; they are just less rare.

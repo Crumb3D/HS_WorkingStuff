@@ -1,10 +1,12 @@
 <configs>
 	<append xpath="/Sounds">
 		<SoundDataNode name="hsMicrowaveHum"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Amb_XSmall.prefab"/>
+			<Noise ID="2" noise="18" time="3" muffled_when_crouched="1" heat_map_strength="0.04" heat_map_time="60"/>
 			<AudioClip ClipName="@:Sounds/Ambient_Loops/a_coolerbev_lp.wav" Loop="true"/>
-			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0"/> <NoiseScale value="0"/> <MaxVoices value="18"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
+			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0"/> <NoiseScale value="1"/> <MaxVoices value="18"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
 
 		<SoundDataNode name="hsMicrowaveDing"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Interact.prefab"/>
+			<Noise ID="2" noise="16" time="1" muffled_when_crouched="1" heat_map_strength="0.03" heat_map_time="30"/>
 			<AudioClip ClipName="@:Sounds/TriggeredEvents/elevator_ding1.wav"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="10"/> <MaxRepeatRate value="0"/> </SoundDataNode>
 
@@ -26,37 +28,55 @@
 			<LocalCrouchVolumeScale value="0.5"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="4"/> <MaxRepeatRate value="0.2"/> </SoundDataNode>
 
 		<SoundDataNode name="hsKettleBoil"> <AudioSource name="@:Sounds/Prefabs/AudioSource_FridgeLP.prefab"/>
+			<Noise ID="2" noise="14" time="3" muffled_when_crouched="1" heat_map_strength="0.03" heat_map_time="40"/>
 			<AudioClip ClipName="@:Sounds/Misc/underwater_lp.ogg" Loop="true"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="12"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
 		<SoundDataNode name="hsKettlePour"> <AudioSource name="@:Sounds/Prefabs/AudioSource_UseAction.prefab"/>
 			<AudioClip ClipName="@:Sounds/UseActions/bucketplace_water.wav"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="6"/> <MaxRepeatRate value="0.2"/> </SoundDataNode>
 		<SoundDataNode name="hsToasterHum"> <AudioSource name="@:Sounds/Prefabs/AudioSource_FridgeLP.prefab"/>
+			<Noise ID="2" noise="12" time="2" muffled_when_crouched="1" heat_map_strength="0.03" heat_map_time="40"/>
 			<AudioClip ClipName="@:Sounds/Ambient_Loops/a_signbuzz_lp.wav" Loop="true"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="12"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
 		<SoundDataNode name="hsToasterPop"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Interact.prefab"/>
+			<Noise ID="2" noise="14" time="1" muffled_when_crouched="1" heat_map_strength="0.02" heat_map_time="30"/>
 			<AudioClip ClipName="@:Sounds/Weapons/Ranged/Lever_Action_Rifle/lever_action_rifle_close1.wav"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="8"/> <MaxRepeatRate value="0"/> </SoundDataNode>
 		<SoundDataNode name="hsCoffeeBrew"> <AudioSource name="@:Sounds/Prefabs/AudioSource_FridgeLP.prefab"/>
+			<Noise ID="2" noise="12" time="3" muffled_when_crouched="1" heat_map_strength="0.02" heat_map_time="40"/>
 			<AudioClip ClipName="@:Sounds/Misc/underwater_lp.ogg" Loop="true"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="12"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
 		<SoundDataNode name="hsStoveCook"> <AudioSource name="@:Sounds/Prefabs/AudioSource_FridgeLP.prefab"/>
+			<Noise ID="2" noise="20" time="3" muffled_when_crouched="1" heat_map_strength="0.05" heat_map_time="60"/>
 			<AudioClip ClipName="@:Sounds/Ambient_Loops/a_fire_sm_lp.wav" Loop="true"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="12"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
 		<SoundDataNode name="hsAirConHum"> <AudioSource name="@:Sounds/Prefabs/AudioSource_FridgeLP.prefab"/>
+			<Noise ID="2" noise="16" time="3" muffled_when_crouched="1" heat_map_strength="0.04" heat_map_time="60"/>
 			<AudioClip ClipName="@:Sounds/Ambient_Loops/a_coolermini_lp.wav" Loop="true"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="12"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
 		<SoundDataNode name="hsBoilerFire"> <AudioSource name="@:Sounds/Prefabs/AudioSource_FridgeLP.prefab"/>
+			<Noise ID="2" noise="14" time="3" muffled_when_crouched="1" heat_map_strength="0.03" heat_map_time="60"/>
 			<AudioClip ClipName="@:Sounds/Ambient_Loops/a_fire_sm_lp.wav" Loop="true"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="8"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
 		<SoundDataNode name="hsWasherHum"> <AudioSource name="@:Sounds/Prefabs/AudioSource_FridgeLP.prefab"/>
+			<Noise ID="2" noise="32" time="3" muffled_when_crouched="1" heat_map_strength="0.08" heat_map_time="90"/>
 			<AudioClip ClipName="@:Sounds/Crafting/cement_mixer_lp.wav" Loop="true"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="8"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
 		<SoundDataNode name="hsWasherDone"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Interact.prefab"/>
+			<Noise ID="2" noise="18" time="1" muffled_when_crouched="1" heat_map_strength="0.04" heat_map_time="40"/>
 			<AudioClip ClipName="@:Sounds/TriggeredEvents/elevator_ding2.wav"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="8"/> <MaxRepeatRate value="0"/> </SoundDataNode>
 		<SoundDataNode name="hsDryerDone"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Interact.prefab"/>
+			<Noise ID="2" noise="18" time="1" muffled_when_crouched="1" heat_map_strength="0.04" heat_map_time="40"/>
 			<AudioClip ClipName="@:Sounds/TriggeredEvents/elevator_ding3.wav"/>
 			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="0.5"/> <NoiseScale value="1"/> <MaxVoices value="8"/> <MaxRepeatRate value="0"/> </SoundDataNode>
+		<SoundDataNode name="hsTVPlay"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Amb_XSmall.prefab"/>
+			<Noise ID="2" noise="24" time="3" muffled_when_crouched="1" heat_map_strength="0.06" heat_map_time="60"/>
+			<AudioClip ClipName="@:Sounds/Ambient_Loops/a_coolerbev_lp.wav" Loop="true"/>
+			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="1"/> <NoiseScale value="1"/> <MaxVoices value="1"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
+		<SoundDataNode name="hsHifiPlay"> <AudioSource name="@:Sounds/Prefabs/AudioSource_Amb_XSmall.prefab"/>
+			<Noise ID="2" noise="26" time="3" muffled_when_crouched="1" heat_map_strength="0.06" heat_map_time="60"/>
+			<AudioClip ClipName="@:Sounds/Ambient_Loops/a_coolerbev_lp.wav" Loop="true"/>
+			<LocalCrouchVolumeScale value="1.0"/> <CrouchNoiseScale value="1"/> <NoiseScale value="1"/> <MaxVoices value="1"/> <MaxRepeatRate value="0.0"/> </SoundDataNode>
 	</append>
 </configs>

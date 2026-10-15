@@ -120,6 +120,21 @@ public static class HSTV
         return bv.meta2and1 & 0x7F;
     }
 
+    public static void VisitOn(World world, System.Action<Vector3i> visit)
+    {
+        if (world == null || visit == null || tvs.Count == 0)
+            return;
+        foreach (long k in tvs)
+        {
+            Vector3i p = HSWater.FromKey(k);
+            if (world.GetChunkFromWorldPos(p) == null)
+                continue;
+            BlockValue bv = world.GetBlock(p);
+            if (bv.Block is BlockHSTV && IsOn(bv) && Live(world, p))
+                visit(p);
+        }
+    }
+
     public static void Track(Vector3i pos)
     {
         tvs.Add(HSWater.Key(pos));

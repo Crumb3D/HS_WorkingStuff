@@ -94,7 +94,8 @@ public static class HSPatchWashedSmell
         return false;
     }
 
-    // Body odour and dirty clothes, on top of what you carry. Shelter cuts it like vanilla; rain or water hides it.
+    // Body odour and dirty clothes, on top of what you carry. Indoors and closed doors cut it;
+    // an open door or window nearby leaks smell outside. Rain or water hides it.
     static void Postfix(PlayerStealth __instance)
     {
         try
@@ -105,10 +106,19 @@ public static class HSPatchWashedSmell
                 return;
             if (__instance.smellWet >= 3f || __instance.smellWetRate >= 0.01f)
                 return;
+            float indoor = HSIndoor.SmellScale(world, local.position);
+            bool enclosed = indoor < 0.99f;
+            if (enclosed && !__instance.smellSheltered)
+            {
+                __instance.smellRadiusTarget *= indoor;
+                __instance.smellSheltered = true;
+            }
             float extra = HSLaundry.SmellRadius(local);
             if (extra < 1f)
                 return;
-            if (__instance.smellSheltered)
+            if (enclosed)
+                extra *= indoor;
+            else if (__instance.smellSheltered)
                 extra *= 0.2f;
             if (extra > __instance.smellRadiusTarget)
                 __instance.smellRadiusTarget = extra;

@@ -85,6 +85,9 @@ public static class HSWorkingStuffSettings
     public static int ToiletPeesBeforeFlush = 3;
     public static float DirtyToiletSmell = 8f;
     public static float WaterWashClothes = 0.2f;
+    public static bool EnableHouseNoise = true;
+    public static float IndoorSmell = 0.25f;
+    public static float OpenDoorSmell = 0.55f;
 
     public static void Load(string modPath)
     {
@@ -169,6 +172,9 @@ public static class HSWorkingStuffSettings
         ToiletPeesBeforeFlush = 3;
         DirtyToiletSmell = 8f;
         WaterWashClothes = 0.2f;
+        EnableHouseNoise = true;
+        IndoorSmell = 0.25f;
+        OpenDoorSmell = 0.55f;
         if (!string.IsNullOrEmpty(modPath))
             TryRead(Path.Combine(modPath, "HSWorkingStuffSettings.json"));
         try
@@ -276,6 +282,13 @@ public static class HSWorkingStuffSettings
         ReadInt(text, "ToiletPeesBeforeFlush", ref ToiletPeesBeforeFlush);
         ReadFloat(text, "DirtyToiletSmell", ref DirtyToiletSmell);
         ReadFloat(text, "WaterWashClothes", ref WaterWashClothes);
+        ReadBool(text, "EnableHouseNoise", ref EnableHouseNoise);
+        ReadFloat(text, "IndoorSmell", ref IndoorSmell);
+        ReadFloat(text, "OpenDoorSmell", ref OpenDoorSmell);
+        if (IndoorSmell < 0.05f) IndoorSmell = 0.05f;
+        if (IndoorSmell > 1f) IndoorSmell = 1f;
+        if (OpenDoorSmell < IndoorSmell) OpenDoorSmell = IndoorSmell;
+        if (OpenDoorSmell > 1f) OpenDoorSmell = 1f;
         Log.Out("[HSWorkingStuff] Read " + path);
     }
 
