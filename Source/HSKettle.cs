@@ -80,9 +80,11 @@ public class BlockHSKettle : BlockHSStove
         {
             if (cups == 0 || boiling || hot)
                 return true;
-            if (!HSStovePower.IsPowered(_blockPos))
+            if (!HSKettle.Live(_world, _blockPos))
             {
-                GameManager.ShowTooltip(_player, HSLoc.Get("hsKettleUnpowered", "No power: plug this kettle in to boil"));
+                GameManager.ShowTooltip(_player, HSKettle.PluggedIn(_world, _blockPos)
+                    ? HSLoc.Get("hsKettleUnpowered", "No power: plug this kettle in to boil")
+                    : HSLoc.Get("hsKettleNoSocket", "Not plugged in: wire it from a socket"));
                 return true;
             }
             _world.SetBlockRPC(_blockPos, HSKettle.With(bv, cups, true, false));
@@ -243,6 +245,16 @@ public static class HSKettle
         return item == "hsMugBagPJ" ? "hsMugTeaPJ" : item == "hsMugBagYorkie" ? "hsMugTeaYorkie" : null;
     }
 
+    public static bool PluggedIn(WorldBase world, Vector3i pos)
+    {
+        return HSStovePower.PluggedIn(world, pos);
+    }
+
+    public static bool Live(WorldBase world, Vector3i pos)
+    {
+        return HSStovePower.IsPowered(pos) && PluggedIn(world, pos);
+    }
+
     public static float BoilSeconds(int cups)
     {
         return Mathf.Max(5f, HSWorkingStuffSettings.KettleBoilSeconds) * (0.5f + 0.25f * cups);
@@ -319,7 +331,7 @@ public static class HSKettle
                 Forget(pos);
                 continue;
             }
-            bool powered = HSStovePower.IsPowered(pos);
+            bool powered = Live(world, pos);
             Hum(pos, powered);
             if (!powered)
                 continue;
@@ -350,8 +362,10 @@ public static class HSKettle
             ? HSLoc.Get("hsKettleEmpty", "Empty: hold a jar of water to fill it (one jar is one cup)")
             : HSLoc.Format("hsKettleWater", "Water: {0} of {1} cups", cups, MaxCups);
         string state;
-        if (!HSStovePower.IsPowered(pos))
-            state = HSLoc.Get("hsKettleUnpowered", "No power: plug this kettle in to boil");
+        if (!PluggedIn(GameManager.Instance != null ? GameManager.Instance.World : null, pos))
+            state = HSLoc.Get("hsKettleNoSocket", "Not plugged in: wire it from a socket");
+        else if (!HSStovePower.IsPowered(pos))
+            state = HSLoc.Get("hsKettleUnpowered", "No power: the socket is off");
         else if (Boiling(bv))
             state = HSLoc.Get("hsKettleBoilingNow", "Boiling...");
         else if (Hot(bv) && cups > 0)

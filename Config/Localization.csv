@@ -343,11 +343,13 @@ hsMugCoffee,items,Item,,,,Mug of Coffee
 hsMugCoffeeDesc,items,Item,,,,"Coffee in a mug. Same as a jar of coffee, and you keep the mug."
 hsKettleDone,UI,tooltip,,,K,Boiled: your drink is ready
 hsKettlePowered,UI,tooltip,,,K,"Powered: add a jar of water, and a mug and tea bag for a cuppa"
-hsKettleUnpowered,UI,tooltip,,,K,No power: plug this kettle in to boil
+hsKettleUnpowered,UI,tooltip,,,K,No power: the socket is off
+hsKettleNoSocket,UI,tooltip,,,K,Not plugged in: wire it from a socket
+hsKettleSocketOnly,UI,tooltip,,,K,"A kettle or toaster plugs into a socket, not straight into the power"
 hsKettleBoiling,UI,tooltip,,,K,Boiling for {0}: {1} left
 hsToasterDone,UI,tooltip,,,K,Popped up: your toast is ready
 hsToasterPowered,UI,tooltip,,,K,Powered: add slices of bread
-hsToasterUnpowered,UI,tooltip,,,K,No power: plug this toaster in to toast
+hsToasterUnpowered,UI,tooltip,,,K,No power: the socket is off
 hsToasterToasting,UI,tooltip,,,K,Toasting: {0} left
 hsFrozenHours,UI,tooltip,,,K,Frozen: thaws in {0}h at room temperature
 hsFrozenMins,UI,tooltip,,,K,Frozen: thaws in {0} min at room temperature

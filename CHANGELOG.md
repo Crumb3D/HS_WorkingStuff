@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.40
+
+- **Kettle (and toaster) plug into a socket.** Wire them from a wall socket like a microwave: you get the plug and lead, they refuse a wire straight from the generator, and the kettle draws 10W only while it boils. Look at an unplugged kettle and it says so.
+
 ## 1.0.39
 
 - **Light switches chain like sockets.** Wire switch to switch and power always goes through, whether that switch is on or off. Each switch only turns its own lights or air con on and off; looking at it says "Switch on Fluorescent Light", not the next switch as well. One onward switch per plate, same run limit as sockets.

@@ -81,6 +81,8 @@ public class BlockHSStove : BlockWorkstation
     public override void OnBlockEntityTransformAfterActivated(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, BlockEntityData _ebcd)
     {
         base.OnBlockEntityTransformAfterActivated(_world, _blockPos, _blockValue, _ebcd);
+        if (HSModelHit.IsBundleModel(this))
+            HSModelHit.Wire(_ebcd);
         if (_blockValue.ischild)
             return;
         Chunk chunk = _world != null ? _world.GetChunkFromWorldPos(_blockPos) as Chunk : null;

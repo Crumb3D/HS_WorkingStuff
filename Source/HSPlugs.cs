@@ -471,6 +471,12 @@ public static class HSPatchSocketPlugs
                 HSPlugs.DenyReason(HSLoc.Get("hsHifiSocketOnly", "A hi-fi plugs into a socket, not straight into the power"));
                 return;
             }
+            if (limit <= 0 && (__instance.blockValue.Block is BlockHSKettle || __instance.blockValue.Block is BlockHSToaster))
+            {
+                __result = false;
+                HSPlugs.DenyReason(HSLoc.Get("hsKettleSocketOnly", "A kettle or toaster plugs into a socket, not straight into the power"));
+                return;
+            }
             bool fromHifi = parent.blockValue.Block is BlockHSHifi;
             if (__instance.blockValue.Block is BlockHSHifiSpeaker && !fromHifi)
             {

@@ -42,6 +42,13 @@ public static class HSStovePower
         return te != null && IsPowered(te.ToWorldPos());
     }
 
+    public static bool PluggedIn(WorldBase world, Vector3i pos)
+    {
+        TileEntityPowered te = GetSidecar(pos);
+        Vector3i parent;
+        return HSPlugs.Parent(te, out parent) && HSPlugs.IsSocket(world != null ? world.GetBlock(parent).Block : null);
+    }
+
     public static bool IsPowered(Vector3i pos)
     {
         if (!HSWorkingStuffSettings.EnableStove)
@@ -199,6 +206,8 @@ public static class HSStovePower
     // A microwave only runs with the door shut.
     static bool WantsPower(TileEntityWorkstation te)
     {
+        if (te.blockValue.Block is BlockHSKettle)
+            return HSKettle.Boiling(te.blockValue);
         bool queued = HSMicrowaveSound.HasQueued(te.Queue);
         bool open = te.IsUserAccessing();
         if (HSMicrowaveSound.IsMicrowave(te))
@@ -210,7 +219,15 @@ public static class HSStovePower
     {
         if (!IsStove(te))
             return true;
-        return HSWorkingStuffSettings.EnableStove && IsPowered(te);
+        if (!HSWorkingStuffSettings.EnableStove || !IsPowered(te))
+            return false;
+        Block b = te.blockValue.Block;
+        if (b is BlockHSKettle || b is BlockHSToaster)
+        {
+            World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+            return PluggedIn(world, te.ToWorldPos());
+        }
+        return true;
     }
 }
 
