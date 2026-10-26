@@ -2,6 +2,12 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.91
+
+- **Compass temp is outside again.** Top HUD shows true outdoor weather. Room on the wall thermometer is derived from that (lag / insulation / heating). Indoor core temp still follows the room so the house protects you.
+- **Eat from fridge.** Eating or drinking food in the fridge window uses that stack, not whatever is in your hand.
+- **Tank tooltip.** Linked tanks show the bank total as the main level (shared pool), not only that tank’s jars.
+
 ## 1.0.90
 
 - **Tank banks cascade.** Chained or face-to-face tanks pack water into the farthest tank first, then fill backwards. Sinks, toilets and washers draw from the whole bank (not just the nearest 3 jars). Each tank shows `Bank: X/Y`.

@@ -139,3 +139,61 @@ public static class HSPatchFridgeDropOne
     }
 }
 
+// Eat / drink from the fridge window must consume that stack — not SimulateActionExecution into the
+// dummy toolbelt slot, which can end up using whatever you were already holding.
+[HarmonyPatch(typeof(ItemActionEntryUse), "OnActivated")]
+public static class HSPatchFridgeEat
+{
+    static bool Prefix(ItemActionEntryUse __instance)
+    {
+        if (__instance == null || __instance.ItemController == null)
+            return true;
+        var slot = __instance.ItemController as XUiC_ItemStack;
+        if (slot == null || !XUiC_HSStorageGrid.IsFoodSlot(slot))
+            return true;
+        var kind = __instance.consumeType;
+        if (kind != ItemActionEntryUse.ConsumeType.Eat && kind != ItemActionEntryUse.ConsumeType.Drink
+            && kind != ItemActionEntryUse.ConsumeType.Heal)
+            return true;
+        if (slot.xui != null && slot.xui.IsUsingItemActionEntryUse)
+            return false;
+        EntityPlayerLocal player = slot.xui != null && slot.xui.playerUI != null ? slot.xui.playerUI.entityPlayer : null;
+        ItemStack fridgeStack = slot.ItemStack;
+        ItemValue iv = HSItem.Val(fridgeStack);
+        if (player == null || fridgeStack == null || fridgeStack.IsEmpty() || iv == null)
+            return false;
+        ItemClass ic = iv.ItemClass;
+        if (ic == null || ic.Actions == null)
+            return false;
+        ItemAction action = null;
+        for (int i = 0; i < ic.Actions.Length; i++)
+        {
+            if (ic.Actions[i] != null)
+            {
+                action = ic.Actions[i];
+                break;
+            }
+        }
+        if (action == null)
+            return false;
+        if (HSFrozen.IsFrozen(iv))
+        {
+            HSFrozen.TellFrozen(player);
+            return false;
+        }
+        slot.xui.IsUsingItemActionEntryUse = true;
+        ItemStack one = new ItemStack(iv.Clone(), 1);
+        if (!action.ExecuteInstantAction(player, one, false, slot))
+        {
+            slot.xui.IsUsingItemActionEntryUse = false;
+            return false;
+        }
+        // ExecuteInstantAction decrements the fridge slot via stackController; ForceRefresh writes the TE.
+        slot.ForceRefreshItemStack();
+        if (slot.WindowGroup != null && slot.WindowGroup.Controller != null)
+            slot.WindowGroup.Controller.SetAllChildrenDirty();
+        slot.xui.IsUsingItemActionEntryUse = false;
+        return false;
+    }
+}
+

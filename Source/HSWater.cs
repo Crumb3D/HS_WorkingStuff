@@ -1545,19 +1545,27 @@ public static class HSWater
 
     public static string TankPrompt(World world, Vector3i pos)
     {
-        int cap = HSWorkingStuffSettings.TankCapacity;
-        string level = LevelText(GetTank(pos), cap);
+        int per = HSWorkingStuffSettings.TankCapacity;
+        Tank show = GetTank(pos);
+        int cap = per;
         if (world != null)
         {
             List<Vector3i> bank = ConnectedTanks(world, pos);
-            if (bank.Count > 1)
+            int n = bank.Count > 0 ? bank.Count : 1;
+            cap = n * per;
+            show.Units = PoolUnits(world, pos);
+            for (int i = 0; i < bank.Count; i++)
             {
-                int pool = PoolUnits(world, pos);
-                level += "\n" + HSLoc.Format("hsTankBank", "Bank: {0}/{1} (fills farthest first)", pool, bank.Count * cap);
+                Tank bt = GetTank(bank[i]);
+                if (bt.Units <= 0)
+                    continue;
+                show.Quality = bt.Quality;
+                break;
             }
-            if (LiveIntakesFrom(world, pos).Count > 0)
-                level += "\n" + HSLoc.Get("hsTankLakeMurky", "Lake intake: filling with murky water");
         }
+        string level = LevelText(show, cap);
+        if (world != null && LiveIntakesFrom(world, pos).Count > 0)
+            level += "\n" + HSLoc.Get("hsTankLakeMurky", "Lake intake: filling with murky water");
         return level;
     }
 

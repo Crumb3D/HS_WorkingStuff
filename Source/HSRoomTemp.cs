@@ -270,8 +270,8 @@ public static class HSRoomTemp
     }
 }
 
-// Vanilla pulls a sheltered player's temperature 30F towards 70F at once. This swaps that for the room temperature above.
-// Compass HUD "_outsidetemp" is this value: outdoors = weather, indoors = room air (not the old comfort bias).
+// Compass HUD "_outsidetemp" must stay true outdoor weather (Weather + height/shade/wind).
+// Vanilla pulls that 30F toward 70F when sheltered — strip that so the top number matches the thermometer Outside.
 [HarmonyPatch(typeof(PlayerEntityStats), "GetOutsideTemperature")]
 public static class HSPatchRoomTemp
 {
@@ -282,28 +282,64 @@ public static class HSPatchRoomTemp
             EntityPlayerLocal lp = __instance.localPlayer;
             if (lp == null)
                 return;
-            World world = GameManager.Instance != null ? GameManager.Instance.World : null;
-            float s = lp.shelterPercent;
-            if (HSWorkingStuffSettings.EnableRoomTemperature && world != null && s > 0f)
-            {
-                Vector3 at = lp.GetPosition();
-                float room = HSRoomTemp.Room(world, at + Vector3.up);
-                float outdoor = HSRoomTemp.Weather(at);
-                float sun = SkyManager.GetSunPercent();
-                if (sun > 0.25f)
-                    outdoor += __instance.shadePer * sun * -8f;
-                if (s < 0.5f)
-                    outdoor += WeatherManager.GetWindSpeed() * 0.01f * -24f;
-                __result = Utils.FastLerpUnclamped(outdoor, room, s);
-            }
-            __result -= HSLaundry.WetCold(lp);
+            Vector3 at = lp.GetPosition();
+            float outdoor = HSRoomTemp.Weather(at);
+            float sun = SkyManager.GetSunPercent();
+            if (sun > 0.25f)
+                outdoor += __instance.shadePer * sun * -8f;
+            if (lp.shelterPercent < 0.5f)
+                outdoor += WeatherManager.GetWindSpeed() * 0.01f * -24f;
+            __result = outdoor - HSLaundry.WetCold(lp);
         }
         catch { }
     }
 }
 
-// Wall thermometer: room air where it hangs, true outdoor weather, and what the heating is doing.
-// Compass temp while indoors is room air too — Outside here is raw weather, not the HUD reading.
+// Core body temp still follows the room when you are indoors, so the house protects you.
+// HUD stays on outdoor weather from GetOutsideTemperature above.
+[HarmonyPatch(typeof(PlayerEntityStats), "UpdateWeatherStats")]
+public static class HSPatchRoomCoreTemp
+{
+    static float savedCore;
+
+    static void Prefix(PlayerEntityStats __instance)
+    {
+        savedCore = __instance.CoreTemp;
+    }
+
+    static void Postfix(PlayerEntityStats __instance)
+    {
+        try
+        {
+            if (!HSWorkingStuffSettings.EnableRoomTemperature)
+                return;
+            EntityPlayerLocal lp = __instance.localPlayer;
+            if (lp == null || lp.shelterPercent <= 0f)
+                return;
+            World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+            if (world == null || !World.TemperatureSurvival || !EntityStats.WeatherSurvivalEnabled)
+                return;
+            if (WeatherManager.inWeatherGracePeriod || lp.biomeStandingOn == null || lp.IsGodMode.Value)
+                return;
+            if (lp.Buffs != null && lp.Buffs.HasBuff("god"))
+                return;
+            Vector3 at = lp.GetPosition() + Vector3.up;
+            float room = HSRoomTemp.Room(world, at);
+            float outdoor = HSRoomTemp.Weather(lp.GetPosition());
+            float target = Utils.FastLerpUnclamped(outdoor, room, lp.shelterPercent);
+            if (target < 70f)
+                target = Utils.FastMin(70f, target + EffectManager.GetValue(PassiveEffects.HypothermalResist, null, 0f, lp));
+            else
+                target = Utils.FastMax(70f, target - EffectManager.GetValue(PassiveEffects.HyperthermalResist, null, 0f, lp));
+            __instance.CoreTemp = Utils.FastMoveTowards(savedCore, target, 1f);
+            if (lp.Buffs != null)
+                lp.Buffs.SetCustomVar("_coretemp", __instance.CoreTemp);
+        }
+        catch { }
+    }
+}
+
+// Wall thermometer: room air where it hangs (from outdoor weather via Room), and true Outside weather.
 public class BlockHSThermometer : Block
 {
     public override void OnBlockEntityTransformAfterActivated(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, BlockEntityData _ebcd)
