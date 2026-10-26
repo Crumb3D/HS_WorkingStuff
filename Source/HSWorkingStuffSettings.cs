@@ -20,7 +20,7 @@ public static class HSWorkingStuffSettings
     public static int BucketUnits = 4;
     public static float RainPerHour = 0.25f;
     public static float DewPerHour = 0.125f;
-    public static float IntakePerHour = 1f;
+    public static float IntakePerHour = 10f;
     public static int PipeSearchLimit = 48;
     public static int PipeRouteExpandLimit = 2000000;
     public static float DryDays = 1f;
@@ -114,7 +114,7 @@ public static class HSWorkingStuffSettings
         BucketUnits = 4;
         RainPerHour = 0.25f;
         DewPerHour = 0.125f;
-        IntakePerHour = 1f;
+        IntakePerHour = 10f;
         PipeSearchLimit = 48;
         PipeRouteExpandLimit = 2000000;
         WordPee = "piss";

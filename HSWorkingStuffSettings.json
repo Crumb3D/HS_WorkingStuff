@@ -16,7 +16,7 @@
   "BucketUnits": 4,
   "RainPerHour": 0.25,
   "DewPerHour": 0.125,
-  "IntakePerHour": 2,
+  "IntakePerHour": 10,
   "PipeSearchLimit": 48,
   "PipeRouteExpandLimit": 2000000,
   "DryDays": 1,

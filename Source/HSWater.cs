@@ -216,7 +216,9 @@ public static class HSWater
         return te != null && te.IsOn;
     }
 
-    // 1.0 per engine (MaxOutput / OutputPerStack). Passive flange intake always counts as 1.
+    // 1.0 per small engine in the bank (slot count, not quality-weighted MaxOutput).
+    // Genny MaxOutput is ~0.5–1.0 per engine by quality, so MaxOutput/OutputPerStack made 6 junk engines look like 3x.
+    // Passive flange intake always counts as 1.
     public static float PumpEngineScale(World world, Vector3i pos)
     {
         BlockValue bv = world != null ? world.GetBlock(pos) : BlockValue.Air;
@@ -224,14 +226,18 @@ public static class HSWater
         if (b == null || b.GetBlockName() != PumpName)
             return 1f;
         var te = world.GetTileEntity(pos) as TileEntityPowerSource;
-        if (te == null || te.MaxOutput <= 0)
+        if (te == null)
             return 1f;
-        int per = 100;
-        if (b.Properties != null)
-            b.Properties.ParseInt("OutputPerStack", ref per);
-        if (per < 1)
-            per = 100;
-        return Mathf.Max(1f, te.MaxOutput / (float)per);
+        ItemStack[] stacks = te.ItemSlots;
+        if (stacks == null || stacks.Length == 0)
+            return 1f;
+        int n = 0;
+        for (int i = 0; i < stacks.Length; i++)
+        {
+            if (stacks[i] != null && !stacks[i].IsEmpty())
+                n++;
+        }
+        return Mathf.Max(1f, n);
     }
 
     public static string PumpPrompt(World world, Vector3i pos)
@@ -442,10 +448,12 @@ public static class HSWater
                 string nn = nb.GetBlockName();
                 if (nn == TankName)
                 {
+                    // Chain: walk through tanks so Catch → Tank → Tank fills every tank on the run.
                     seen.Add(k);
                     Vector3i tp = Parent(np, nbv);
                     if (tankSeen.Add(Key(tp)))
                         found.Add(tp);
+                    q.Enqueue(np);
                     continue;
                 }
                 if (nn != RainCatchName && !IsBarePipe(nn) && !HSPipeNet.Has(np))
@@ -458,7 +466,7 @@ public static class HSWater
     }
 
     // From an intake: rain catches and tanks on bare pipe. A rain catch stops the walk (it takes the feed).
-    // Tanks found without passing a rain catch get a direct murky fill.
+    // Tanks chain: walk through so Pump → Tank → Tank fills every tank. Direct murky fill (no catch).
     public static void ReachFromIntake(World world, Vector3i intake, List<Vector3i> catches, List<Vector3i> directTanks)
     {
         if (catches != null)
@@ -504,6 +512,7 @@ public static class HSWater
                     Vector3i tp = Parent(np, nbv);
                     if (directTanks != null && tankSeen.Add(Key(tp)))
                         directTanks.Add(tp);
+                    q.Enqueue(np);
                     continue;
                 }
                 if (IsWaterSourceName(nn))
@@ -520,6 +529,7 @@ public static class HSWater
     }
 
     // Live intakes / pumps on the same bare-pipe run as this fixture (rain catch or tank).
+    // Walk through tanks so a tank further along a chain still sees the pump.
     public static List<Vector3i> LiveIntakesFrom(World world, Vector3i start)
     {
         var found = new List<Vector3i>();
@@ -555,9 +565,15 @@ public static class HSWater
                         found.Add(ip);
                     continue;
                 }
-                if (nn == TankName || nn == RainCatchName)
+                if (nn == RainCatchName)
                 {
                     seen.Add(k);
+                    continue;
+                }
+                if (nn == TankName)
+                {
+                    seen.Add(k);
+                    q.Enqueue(np);
                     continue;
                 }
                 if (!IsBarePipe(nn) && !HSPipeNet.Has(np))

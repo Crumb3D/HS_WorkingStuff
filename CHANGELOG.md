@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.88
+
+- **Water Pump: 6 engines = 6x.** Rate counted quality-weighted generator power before, so junk engines looked like half. Now it counts engines in the bank. `IntakePerHour` default is 10 (was 2), so a full bank fills a tank in under a game hour.
+- **Chain tanks.** Pipe Catch → Tank → Tank (or pump straight into a tank run). Water fills every tank on the run; a tank no longer stops the pipe walk.
+
 ## 1.0.87
 
 - **Trees detect again for a piss.** The prompt was checking the wrong tag (`Tags` instead of vanilla `BlockTag=TreeTrunk`). Look at a trunk: Press E to piss (dimmed when you do not need one).

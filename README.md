@@ -25,6 +25,7 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `BucketUnits` | 4 | How many jar units a bucket is |
 | `DewPerHour` | 0.125 | Dew a rain catch collects per game hour under open sky |
 | `RainPerHour` | 0.25 | Extra water while it rains |
+| `IntakePerHour` | 10 | Lake/river units per game hour into a piped catch or tank (× engines on a pump) |
 | `HotWaterSeconds` | 30 | How long the boiler keeps firing (and drawing power) after a hot tap runs |
 | `RadiatorWatts` | 5 | Extra watts per radiator at valve 3 while central heating runs (scales with the valve) |
 | `RadiatorRadius` | 5 | Blocks from a warm radiator at valve 3 that keep you warm (scales with the valve) |
