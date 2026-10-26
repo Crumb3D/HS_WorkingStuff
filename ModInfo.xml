@@ -4,6 +4,6 @@
 	<DisplayName value="HS Working Stuff" />
 	<Description value="Food spoils in 3 days on you, 7 in a fridge, 30 in a fridge-freezer and 90 in a chest freezer. Craft a fridge, cooler, stove, pipes, sink, water tank, combi boiler and radiators. Works on 7DTD 3.2 and 3.3." />
 	<Author value="Crumb" />
-	<Version value="1.0.89" />
+	<Version value="1.0.90" />
 	<SkipWithAntiCheat value="true" />
 </xml>

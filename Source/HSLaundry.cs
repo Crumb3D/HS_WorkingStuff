@@ -530,7 +530,7 @@ public static class HSLaundry
             return false;
         if (taps.Cold.Infinite)
             return true;
-        return HSWater.GetTank(taps.Cold.TankPos).Units >= Mathf.Max(1, HSWorkingStuffSettings.WasherJars);
+        return HSWater.PoolUnits(world, taps.Cold.TankPos) >= Mathf.Max(1, HSWorkingStuffSettings.WasherJars);
     }
 
     public static bool TakeWashWater(World world, Vector3i pos, EntityPlayer player)
@@ -551,7 +551,7 @@ public static class HSLaundry
             return false;
         }
         if (!src.Infinite)
-            HSWorkingStuffNet.BroadcastTank(src.TankPos);
+            HSWorkingStuffNet.BroadcastTankBank(world, src.TankPos);
         return true;
     }
 
@@ -641,7 +641,7 @@ public static class HSLaundry
                 return false;
             }
             if (!src.Infinite)
-                HSWorkingStuffNet.BroadcastTank(src.TankPos);
+                HSWorkingStuffNet.BroadcastTankBank(world, src.TankPos);
         }
         float secs = Mathf.Max(1f, HSWorkingStuffSettings.WasherSeconds);
         runs[k] = new Run { Until = Time.time + secs, Dryer = dryer, PlayerId = player != null ? player.entityId : -1 };

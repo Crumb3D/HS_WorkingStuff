@@ -130,6 +130,7 @@ hsSinkColdEmpty,UI,tooltip,,,K,"Cold: the tank is empty. Pipe a rain catch or la
 hsRainLakeClean,UI,tooltip,,,K,Lake intake: cleaning to clean water
 hsRainLakeMurky,UI,tooltip,,,K,Lake intake: murky until a dew filter is fitted
 hsTankLakeMurky,UI,tooltip,,,K,Lake intake: filling with murky water
+hsTankBank,UI,tooltip,,,K,Bank: {0}/{1} (fills farthest first)
 hsSinkHotEmpty,UI,tooltip,,,K,Hot: the tank behind the boiler is empty
 hsPipeToolHint,UI,tooltip,,,K,"Pipe Tool: E for menu, left click use water system here, right click new connection"
 hsPipeRadialNewSystem,UI,tooltip,,,K,New Water System

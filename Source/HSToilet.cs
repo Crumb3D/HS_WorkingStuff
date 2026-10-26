@@ -648,7 +648,8 @@ public static class HSNeeds
             return false;
         if (src.Infinite)
             return true;
-        return HSWater.GetTank(src.TankPos).Units >= jars;
+        World w = world;
+        return HSWater.PoolUnits(w, src.TankPos) >= jars;
     }
 
     static bool HoldingWater(EntityPlayer player)
@@ -675,7 +676,7 @@ public static class HSNeeds
             if (src.Ok && HSWater.TakeFromSource(ref src, jars))
             {
                 if (!src.Infinite)
-                    HSWorkingStuffNet.BroadcastTank(src.TankPos);
+                    HSWorkingStuffNet.BroadcastTankBank(world, src.TankPos);
                 return true;
             }
         }

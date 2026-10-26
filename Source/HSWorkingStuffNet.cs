@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using Audio;
 using HarmonyLib;
@@ -221,6 +222,18 @@ public static class HSWorkingStuffNet
         ToClients(Pkg().OfTank(pos, t.Units, (t.Quality & 0xF) | (t.Mods << 4)));
     }
 
+    // After a draw or pour, sync every tank in the bank (cascade moves water between them).
+    public static void BroadcastTankBank(World world, Vector3i tankPos)
+    {
+        if (!IsAuthority)
+            return;
+        List<Vector3i> bank = HSWater.TankBank(world, tankPos);
+        for (int i = 0; i < bank.Count; i++)
+            BroadcastTank(bank[i]);
+        if (bank.Count == 0)
+            BroadcastTank(tankPos);
+    }
+
     public static void Tell(EntityPlayer player, string text)
     {
         var local = player as EntityPlayerLocal;
@@ -280,7 +293,7 @@ public static class HSWorkingStuffNet
             else
                 ok = HSWater.FillPlayerContainers(player, src, kind == SinkFillAll || kind == SinkFillAllHot);
             if (ok && !src.Infinite)
-                BroadcastTank(src.TankPos);
+                BroadcastTankBank(world, src.TankPos);
         }
         else if (kind == SinkWash)
         {
@@ -299,7 +312,7 @@ public static class HSWorkingStuffNet
             if (hot)
                 HSBoiler.HotDraw(taps.HeaterPos);
             if (!src.Infinite)
-                BroadcastTank(src.TankPos);
+                BroadcastTankBank(world, src.TankPos);
             if (player.Buffs != null)
                 player.Buffs.AddBuff(hot ? HSLaundry.SinkWashBuff : HSLaundry.SinkWashColdBuff);
             return;
@@ -325,7 +338,7 @@ public static class HSWorkingStuffNet
             if (hot)
                 HSBoiler.HotDraw(taps.HeaterPos);
             if (!src.Infinite)
-                BroadcastTank(src.TankPos);
+                BroadcastTankBank(world, src.TankPos);
             if (hot)
                 HSWash.Apply(player, shower.IsBath);
             else
@@ -362,25 +375,41 @@ public static class HSWorkingStuffNet
             ok = poured > 0;
             if (ok)
             {
-                BroadcastTank(pos);
-                var tank = HSWater.GetTank(pos);
+                BroadcastTankBank(world, pos);
+                int pool = HSWater.PoolUnits(world, pos);
+                int bank = HSWater.TankBank(world, pos).Count;
+                int cap = bank > 1 ? bank * HSWorkingStuffSettings.TankCapacity : HSWorkingStuffSettings.TankCapacity;
                 Tell(player, HSLoc.Format("hsTankPoured", "Poured {0} in. The tank holds {1} of {2}",
-                    poured, tank.Units, HSWorkingStuffSettings.TankCapacity));
+                    poured, pool, cap));
             }
         }
         else if (kind == TankFill || kind == TankFillAll)
         {
-            var t = HSWater.GetTank(pos);
+            int pool = HSWater.PoolUnits(world, pos);
+            int q = HSWater.GetTank(pos).Quality;
+            if (HSWater.GetTank(pos).Units <= 0 && pool > 0)
+            {
+                List<Vector3i> bank = HSWater.TankBank(world, pos);
+                for (int i = 0; i < bank.Count; i++)
+                {
+                    var bt = HSWater.GetTank(bank[i]);
+                    if (bt.Units > 0)
+                    {
+                        q = bt.Quality;
+                        break;
+                    }
+                }
+            }
             var src = new HSWater.Source
             {
-                Ok = t.Units > 0,
+                Ok = pool > 0,
                 Infinite = false,
                 TankPos = pos,
-                Quality = t.Quality
+                Quality = q
             };
             ok = HSWater.FillPlayerContainers(player, src, kind == TankFillAll);
             if (ok)
-                BroadcastTank(pos);
+                BroadcastTankBank(world, pos);
         }
         else if (kind == BoilerHeating)
         {

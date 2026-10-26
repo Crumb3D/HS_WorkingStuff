@@ -319,6 +319,238 @@ public static class HSWater
             slot = found;
     }
 
+    // Every water tank joined by pipe (or sitting face-to-face) with this one.
+    public static List<Vector3i> ConnectedTanks(World world, Vector3i start)
+    {
+        var found = new List<Vector3i>();
+        if (world == null)
+            return found;
+        int limit = HSWorkingStuffSettings.PipeSearchLimit * 2;
+        var q = new Queue<Vector3i>();
+        var seen = new HashSet<long>();
+        var tankSeen = new HashSet<long>();
+        q.Enqueue(start);
+        seen.Add(Key(start));
+        int walked = 0;
+        while (q.Count > 0 && walked < limit)
+        {
+            Vector3i p = q.Dequeue();
+            walked++;
+            BlockValue bv = world.GetBlock(p);
+            Block b = bv.Block;
+            if (b != null && b.GetBlockName() == TankName)
+            {
+                Vector3i tp = Parent(p, bv);
+                if (tankSeen.Add(Key(tp)))
+                    found.Add(tp);
+            }
+            for (int i = 0; i < dirs.Length; i++)
+            {
+                Vector3i np = p + dirs[i];
+                long k = Key(np);
+                if (seen.Contains(k) || !HSPipeNet.Joins(p, np))
+                    continue;
+                Block nb = world.GetBlock(np).Block;
+                if (nb == null)
+                    continue;
+                string nn = nb.GetBlockName();
+                if (nn != TankName && !IsBarePipe(nn) && !HSPipeNet.Has(np))
+                    continue;
+                seen.Add(k);
+                q.Enqueue(np);
+            }
+        }
+        return found;
+    }
+
+    public static int PoolUnits(World world, Vector3i tankPos)
+    {
+        int n = 0;
+        List<Vector3i> group = ConnectedTanks(world, tankPos);
+        for (int i = 0; i < group.Count; i++)
+            n += GetTank(group[i]).Units;
+        return n;
+    }
+
+    // Farthest from rain catch / intake / pump fills first; no supply → farthest from a stable near-end leaf.
+    static List<Vector3i> CascadeOrder(World world, List<Vector3i> group)
+    {
+        var ordered = new List<Vector3i>(group);
+        if (world == null || ordered.Count <= 1)
+            return ordered;
+        var dist = new Dictionary<long, int>();
+        var q = new Queue<Vector3i>();
+        var seen = new HashSet<long>();
+        int limit = HSWorkingStuffSettings.PipeSearchLimit * 2;
+        // Seed from supplies that touch this bank's plumbing.
+        for (int g = 0; g < group.Count; g++)
+        {
+            Vector3i seed = group[g];
+            var walk = new Queue<Vector3i>();
+            var local = new HashSet<long> { Key(seed) };
+            walk.Enqueue(seed);
+            int steps = 0;
+            while (walk.Count > 0 && steps < limit)
+            {
+                Vector3i p = walk.Dequeue();
+                steps++;
+                BlockValue bv = world.GetBlock(p);
+                Block b = bv.Block;
+                string n = b != null ? b.GetBlockName() : "";
+                if (n == RainCatchName || IsWaterSourceName(n))
+                {
+                    long sk = Key(p);
+                    if (seen.Add(sk))
+                    {
+                        dist[sk] = 0;
+                        q.Enqueue(p);
+                    }
+                }
+                for (int i = 0; i < dirs.Length; i++)
+                {
+                    Vector3i np = p + dirs[i];
+                    long k = Key(np);
+                    if (local.Contains(k) || !HSPipeNet.Joins(p, np))
+                        continue;
+                    Block nb = world.GetBlock(np).Block;
+                    if (nb == null)
+                        continue;
+                    string nn = nb.GetBlockName();
+                    if (nn != TankName && nn != RainCatchName && !IsWaterSourceName(nn)
+                        && !IsBarePipe(nn) && !HSPipeNet.Has(np))
+                        continue;
+                    local.Add(k);
+                    walk.Enqueue(np);
+                }
+            }
+        }
+        if (q.Count == 0)
+        {
+            // No catch/pump on the run: treat the lowest Key tank as the near end.
+            Vector3i near = ordered[0];
+            long nearKey = Key(near);
+            for (int i = 1; i < ordered.Count; i++)
+            {
+                long k = Key(ordered[i]);
+                if (k < nearKey)
+                {
+                    nearKey = k;
+                    near = ordered[i];
+                }
+            }
+            seen.Add(nearKey);
+            dist[nearKey] = 0;
+            q.Enqueue(near);
+        }
+        int walked = 0;
+        while (q.Count > 0 && walked < limit)
+        {
+            Vector3i p = q.Dequeue();
+            walked++;
+            int pd = dist[Key(p)];
+            for (int i = 0; i < dirs.Length; i++)
+            {
+                Vector3i np = p + dirs[i];
+                long k = Key(np);
+                if (seen.Contains(k) || !HSPipeNet.Joins(p, np))
+                    continue;
+                Block nb = world.GetBlock(np).Block;
+                if (nb == null)
+                    continue;
+                string nn = nb.GetBlockName();
+                if (nn != TankName && nn != RainCatchName && !IsWaterSourceName(nn)
+                    && !IsBarePipe(nn) && !HSPipeNet.Has(np))
+                    continue;
+                seen.Add(k);
+                dist[k] = pd + 1;
+                q.Enqueue(np);
+            }
+        }
+        ordered.Sort((a, b) =>
+        {
+            int da, db;
+            if (!dist.TryGetValue(Key(a), out da))
+                da = -1;
+            if (!dist.TryGetValue(Key(b), out db))
+                db = -1;
+            int c = db.CompareTo(da);
+            return c != 0 ? c : Key(b).CompareTo(Key(a));
+        });
+        return ordered;
+    }
+
+    // Pack water to the far end of the bank (last tank full, then the one before, …).
+    public static void CascadeTanks(World world, Vector3i any, List<Vector3i> changed)
+    {
+        if (world == null)
+            return;
+        List<Vector3i> group = ConnectedTanks(world, any);
+        if (group.Count <= 1)
+            return;
+        CascadeGroup(world, group, changed);
+    }
+
+    static void CascadeGroup(World world, List<Vector3i> group, List<Vector3i> changed)
+    {
+        int cap = HSWorkingStuffSettings.TankCapacity;
+        int total = 0;
+        int quality = QualityMurky;
+        bool any = false;
+        for (int i = 0; i < group.Count; i++)
+        {
+            Tank t = GetTank(group[i]);
+            if (t.Units <= 0)
+                continue;
+            quality = !any ? t.Quality : MixQuality(quality, t.Quality);
+            total += t.Units;
+            any = true;
+        }
+        if (total <= 0)
+            return;
+        List<Vector3i> order = CascadeOrder(world, group);
+        int left = total;
+        for (int i = 0; i < order.Count; i++)
+        {
+            Vector3i pos = order[i];
+            Tank before = GetTank(pos);
+            Tank t = before;
+            int put = left < cap ? left : cap;
+            left -= put;
+            t.Units = put;
+            t.Quality = put > 0 ? quality : before.Quality;
+            if (t.Units != before.Units || t.Quality != before.Quality)
+            {
+                SetTank(pos, t);
+                if (changed != null)
+                    changed.Add(pos);
+            }
+            else
+                SetTank(pos, t);
+        }
+    }
+
+    static void CascadeAllTanks(World world, List<Vector3i> changed)
+    {
+        var done = new HashSet<long>();
+        var keys = new List<long>(tanks.Keys);
+        for (int i = 0; i < keys.Count; i++)
+        {
+            Vector3i pos = FromKey(keys[i]);
+            if (done.Contains(Key(pos)))
+                continue;
+            if (world.GetChunkFromWorldPos(pos) == null)
+                continue;
+            BlockValue bv = world.GetBlock(pos);
+            if (bv.Block == null || bv.ischild || bv.Block.GetBlockName() != TankName)
+                continue;
+            List<Vector3i> group = ConnectedTanks(world, pos);
+            for (int g = 0; g < group.Count; g++)
+                done.Add(Key(group[g]));
+            if (group.Count > 1)
+                CascadeGroup(world, group, changed);
+        }
+    }
+
     // Two walks share one queue: water that has not passed a heater (cold) and water that has (hot).
     // An unpowered heater stops the cold walk, so the hot tap only works through a running heater.
     public static Taps FindTaps(World world, Vector3i start)
@@ -369,10 +601,25 @@ public static class HSWater
             if (n == TankName)
             {
                 Vector3i tp = Parent(p, bv);
-                Tank t = GetTank(tp);
-                if (t.Units > 0)
+                // Any tank on the bank counts; draw uses the whole pool (Cascade packs far end first).
+                if (PoolUnits(world, tp) > 0)
                 {
-                    var stored = new Source { Ok = true, Infinite = false, TankPos = tp, Quality = t.Quality };
+                    var stored = new Source { Ok = true, Infinite = false, TankPos = tp, Quality = GetTank(tp).Units > 0 ? GetTank(tp).Quality : QualityMurky };
+                    // Prefer a tank that actually holds water for quality readout.
+                    if (GetTank(tp).Units <= 0)
+                    {
+                        List<Vector3i> bank = ConnectedTanks(world, tp);
+                        for (int bi = 0; bi < bank.Count; bi++)
+                        {
+                            Tank bt = GetTank(bank[bi]);
+                            if (bt.Units > 0)
+                            {
+                                stored.TankPos = bank[bi];
+                                stored.Quality = bt.Quality;
+                                break;
+                            }
+                        }
+                    }
                     if (hot)
                         Offer(ref taps.Hot, stored);
                     else
@@ -382,7 +629,7 @@ public static class HSWater
                     taps.HotEmpty = true;
                 else
                     taps.ColdEmpty = true;
-                continue;
+                // Walk through tanks so a bank of adjacent / chained tanks is one supply.
             }
             HashSet<long> seen = hot ? seenHot : seenCold;
             for (int i = 0; i < dirs.Length; i++)
@@ -734,7 +981,10 @@ public static class HSWater
         int count = HSItem.Count(stack);
         int n = count;
         if (!src.Infinite)
-            n = Math.Min(count, GetTank(src.TankPos).Units / per);
+        {
+            World w = GameManager.Instance != null ? GameManager.Instance.World : null;
+            n = Math.Min(count, PoolUnits(w, src.TankPos) / per);
+        }
         if (n <= 0 || !TakeFromSource(ref src, n * per))
             return 0;
         if (n == count)
@@ -749,9 +999,13 @@ public static class HSWater
             HSItem.SetCount(stack, count);
             if (!src.Infinite)
             {
+                // Put the failed fill back into the bank and re-pack farthest-first.
+                World w = GameManager.Instance != null ? GameManager.Instance.World : null;
                 Tank t = GetTank(src.TankPos);
                 t.Units += n * per;
                 SetTank(src.TankPos, t);
+                if (w != null)
+                    CascadeTanks(w, src.TankPos, null);
             }
             return 0;
         }
@@ -771,8 +1025,12 @@ public static class HSWater
             PourHolding(player, ref t, cap, bucket, false);
         if (t.Units <= before)
             return 0;
+        int added = t.Units - before;
         SetTank(pos, t);
-        return t.Units - before;
+        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+        if (world != null)
+            CascadeTanks(world, pos, null);
+        return added;
     }
 
     static void PourArray(EntityPlayer player, ItemStack[] stacks, ref Tank t, int cap, int bucket, bool all)
@@ -850,12 +1108,33 @@ public static class HSWater
             return false;
         if (src.Infinite)
             return true;
-        Tank t = GetTank(src.TankPos);
-        if (t.Units < need)
+        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+        List<Vector3i> group = ConnectedTanks(world, src.TankPos);
+        int have = 0;
+        for (int i = 0; i < group.Count; i++)
+            have += GetTank(group[i]).Units;
+        if (have < need)
             return false;
-        t.Units -= need;
-        SetTank(src.TankPos, t);
-        return true;
+        // Draw from the far end first (same order the bank packs into).
+        List<Vector3i> order = CascadeOrder(world, group);
+        int left = need;
+        for (int i = 0; i < order.Count && left > 0; i++)
+        {
+            Tank t = GetTank(order[i]);
+            int take = t.Units < left ? t.Units : left;
+            if (take <= 0)
+                continue;
+            t.Units -= take;
+            SetTank(order[i], t);
+            left -= take;
+        }
+        return left == 0;
+    }
+
+    // Every tank in the bank that changed after a draw / cascade.
+    public static List<Vector3i> TankBank(World world, Vector3i tankPos)
+    {
+        return ConnectedTanks(world, tankPos);
     }
 
     public static void Drink(EntityPlayer player, Source src)
@@ -1064,6 +1343,7 @@ public static class HSWater
                 changed.Add(pos);
         }
         TickIntakeFeeds(world, hours, changed);
+        CascadeAllTanks(world, changed);
         for (int i = 0; i < changed.Count; i++)
             HSWorkingStuffNet.BroadcastTank(changed[i]);
     }
@@ -1163,6 +1443,7 @@ public static class HSWater
         SetTank(tankPos, t);
         if (t.Units != beforeUnits || t.Quality != beforeQuality)
             changed.Add(tankPos);
+        CascadeTanks(world, tankPos, changed);
     }
 
     static void PushToTanks(World world, Vector3i catchPos, ref Tank c, List<Vector3i> changed)
@@ -1186,6 +1467,8 @@ public static class HSWater
             SetTank(targets[i], t);
             changed.Add(targets[i]);
         }
+        if (targets.Count > 0)
+            CascadeTanks(world, targets[0], changed);
     }
 
     public static void Load()
@@ -1262,9 +1545,19 @@ public static class HSWater
 
     public static string TankPrompt(World world, Vector3i pos)
     {
-        string level = LevelText(GetTank(pos), HSWorkingStuffSettings.TankCapacity);
-        if (world != null && LiveIntakesFrom(world, pos).Count > 0)
-            return level + "\n" + HSLoc.Get("hsTankLakeMurky", "Lake intake: filling with murky water");
+        int cap = HSWorkingStuffSettings.TankCapacity;
+        string level = LevelText(GetTank(pos), cap);
+        if (world != null)
+        {
+            List<Vector3i> bank = ConnectedTanks(world, pos);
+            if (bank.Count > 1)
+            {
+                int pool = PoolUnits(world, pos);
+                level += "\n" + HSLoc.Format("hsTankBank", "Bank: {0}/{1} (fills farthest first)", pool, bank.Count * cap);
+            }
+            if (LiveIntakesFrom(world, pos).Count > 0)
+                level += "\n" + HSLoc.Get("hsTankLakeMurky", "Lake intake: filling with murky water");
+        }
         return level;
     }
 
@@ -1340,8 +1633,9 @@ public static class HSWater
     {
         if (s.Infinite)
             return HSLoc.Format("hsSinkLake", "Lake feed, {0}", QualityText(s.Quality));
-        Tank t = GetTank(s.TankPos);
-        return HSLoc.Format("hsSinkTank", "Tank {0} {1}", t.Units, QualityText(s.Quality));
+        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+        int pool = PoolUnits(world, s.TankPos);
+        return HSLoc.Format("hsSinkTank", "Tank {0} {1}", pool, QualityText(s.Quality));
     }
 
     public static string SinkPrompt(World world, Vector3i pos)

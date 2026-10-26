@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.90
+
+- **Tank banks cascade.** Chained or face-to-face tanks pack water into the farthest tank first, then fill backwards. Sinks, toilets and washers draw from the whole bank (not just the nearest 3 jars). Each tank shows `Bank: X/Y`.
+
 ## 1.0.89
 
 - **Take up stretch.** Pipe Tool E menu: pick one end (rain catch, tank, …), then the other. Only that run comes up; tees keep other branches. Red preview while you aim. **Take up pipes** still pulls a whole joined network.

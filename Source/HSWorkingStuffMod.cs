@@ -18,7 +18,7 @@ public class HSWorkingStuffMod : IModApi
         ModEvents.PlayerSpawnedInWorld.RegisterHandler(OnSpawn);
         ModEvents.WorldShuttingDown.RegisterHandler(OnShutdown);
         ApplyHarmony();
-        Log.Out("[HSWorkingStuff] v1.0.89 take up pipe stretch; pump rate by engines; plumbing. Install on the host and on every client.");
+        Log.Out("[HSWorkingStuff] v1.0.90 tank bank cascade + pooled taps; pipe stretch; plumbing. Install on the host and on every client.");
     }
 
     static void ApplyHarmony()
