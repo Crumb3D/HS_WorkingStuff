@@ -167,13 +167,39 @@ public static class HSWater
         return false;
     }
 
+    public static bool CellHasWater(World world, Vector3i p)
+    {
+        if (world == null)
+            return false;
+        if (world.GetWater(p).HasMass())
+            return true;
+        return world.IsWater(p);
+    }
+
+    // Bank next to water: sides, diagonals, and one step down the bank. Not "in" the water.
     public static bool TouchesWater(World world, Vector3i pos)
     {
+        if (world == null)
+            return false;
+        if (CellHasWater(world, pos))
+            return true;
         for (int i = 0; i < dirs.Length; i++)
         {
-            Vector3i p = pos + dirs[i];
-            if (world.GetWater(p).HasMass())
+            if (CellHasWater(world, pos + dirs[i]))
                 return true;
+        }
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dz = -1; dz <= 1; dz++)
+            {
+                if (dx == 0 && dz == 0)
+                    continue;
+                Vector3i side = new Vector3i(pos.x + dx, pos.y, pos.z + dz);
+                if (CellHasWater(world, side))
+                    return true;
+                if (CellHasWater(world, new Vector3i(side.x, side.y - 1, side.z)))
+                    return true;
+            }
         }
         return false;
     }
@@ -190,12 +216,30 @@ public static class HSWater
         return te != null && te.IsOn;
     }
 
+    // 1.0 per engine (MaxOutput / OutputPerStack). Passive flange intake always counts as 1.
+    public static float PumpEngineScale(World world, Vector3i pos)
+    {
+        BlockValue bv = world != null ? world.GetBlock(pos) : BlockValue.Air;
+        Block b = bv.Block;
+        if (b == null || b.GetBlockName() != PumpName)
+            return 1f;
+        var te = world.GetTileEntity(pos) as TileEntityPowerSource;
+        if (te == null || te.MaxOutput <= 0)
+            return 1f;
+        int per = 100;
+        if (b.Properties != null)
+            b.Properties.ParseInt("OutputPerStack", ref per);
+        if (per < 1)
+            per = 100;
+        return Mathf.Max(1f, te.MaxOutput / (float)per);
+    }
+
     public static string PumpPrompt(World world, Vector3i pos)
     {
         bool water = world != null && TouchesWater(world, pos);
         string waterLine = water
-            ? HSLoc.Get("hsPumpHasWater", "Water: lake / river next to it")
-            : HSLoc.Get("hsPumpNoWater", "Place next to a lake, river or stream");
+            ? HSLoc.Get("hsPumpHasWater", "Water: yes — lake / river on the bank")
+            : HSLoc.Get("hsPumpNoWater", "Water: no — stand it on dry land next to the water (not in it)");
 
         var catches = new List<Vector3i>();
         var tanks = new List<Vector3i>();
@@ -211,15 +255,16 @@ public static class HSWater
         else
             pipeLine = HSLoc.Get("hsPumpNotPiped", "Not piped to a rain catch or tank");
 
+        float engines = world != null ? PumpEngineScale(world, pos) : 1f;
         string runLine;
         if (!water)
             runLine = HSLoc.Get("hsPumpIdleNoWater", "Idle: no water to pump");
         else if (!PumpPowered(world, pos))
             runLine = HSLoc.Get("hsPumpIdleOff", "Idle: put in engines and fuel, then turn it on");
         else if (catches.Count == 0 && tanks.Count == 0)
-            runLine = HSLoc.Get("hsPumpRunningNoPipe", "Running: needs a pipe to a rain catch or tank");
+            runLine = HSLoc.Format("hsPumpRunningNoPipe", "Running ({0}x engines): needs a pipe to a rain catch or tank", engines.ToString("0.#"));
         else
-            runLine = HSLoc.Get("hsPumpRunning", "Pumping");
+            runLine = HSLoc.Format("hsPumpRunningRate", "Pumping at {0}x (engines)", engines.ToString("0.#"));
 
         return waterLine + "\n" + pipeLine + "\n" + runLine;
     }
@@ -1043,7 +1088,8 @@ public static class HSWater
             float frac;
             if (!intakeFrac.TryGetValue(ik, out frac))
                 frac = 0f;
-            frac += rate;
+            float feed = rate * PumpEngineScale(world, intake);
+            frac += feed;
             int units = (int)frac;
             frac -= units;
             intakeFrac[ik] = frac;

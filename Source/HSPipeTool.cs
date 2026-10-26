@@ -236,7 +236,7 @@ public static class HSPipeTool
 
     static bool CellHasWater(World world, Vector3i p)
     {
-        return world != null && world.GetWater(p).HasMass();
+        return HSWater.CellHasWater(world, p);
     }
 
     static bool WaterNear(World world, Vector3i p)

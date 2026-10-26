@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.84
+
+- **Water Pump on the bank.** Put it on dry land next to the water, not in the water. Side water no longer blocks Turn On. Water detection covers bank edges and diagonals. More small engines pump faster. Stats show Water and Pipes. Take works without a land claim. Tooltip on open shows the full status.
+
 ## 1.0.83
 
 - **Wall thermometer temps.** Room no longer snaps to a fake 21°C comfort reading that matched the compass. Outside is the real weather (same base as the game). Room follows outdoor air with lag, and only heating / air con pulls it away. Compass temp indoors is the room air; Outside on the thermometer is weather.
