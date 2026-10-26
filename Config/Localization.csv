@@ -173,7 +173,7 @@ hsPipeTook,UI,tooltip,,,K,"Took up {0} straight, {1} corners and {2} joints"
 hsTankPoured,UI,tooltip,,,K,Poured {0} in. The tank holds {1} of {2}
 hsPipeBlockedAir,UI,tooltip,,,K,"Blocked by open air at {0} {1} {2}. Pipe will not cross that. Run it inside a solid floor, or along a wall"
 hsPipeBlockedBlock,UI,tooltip,,,K,"Blocked at {0} {1} {2} by {3}. Pipe only goes through a full floor or wall"
-hsPipeTooBig,UI,tooltip,,,K,"That run crosses a huge area of floor and still has not arrived. Drop a tank part way and connect it in two goes"
+hsPipeTooBig,UI,tooltip,,,K,"That run is too long for the pipe tool to finish the search. Raise PipeRouteExpandLimit in HSWorkingStuffSettings.json, or check the path is not blocked."
 hsPipeNotSet,UI,tooltip,,,K,not set
 hsPipeRouteNoSystem,UI,tooltip,,,K,Route: pick New Water System or Use Water System Here
 hsPipeRoutePending,UI,tooltip,,,K,Route: look at a thing and pick New Connection
@@ -551,7 +551,7 @@ hsCisternHold,UI,tooltip,,,K,Hold a jar or bucket of water to fill the cistern
 hsCisternFull,UI,tooltip,,,K,The cistern is full
 hsCisternFilled,UI,tooltip,,,K,Cistern filled: {0} jars
 hsTreePee,UI,tooltip,,,K,Went against the tree
-hsTreePeePrompt,UI,tooltip,,,K,Press {0} to Pee ({1}%)
+hsTreePeePrompt,UI,tooltip,,,K,Press {0} to {1} ({2}%)
 hsUrinalPoo,UI,tooltip,,,K,A urinal is no good for that. Use a toilet
 hsAccidentPee,UI,tooltip,,,K,You wet yourself. Your clothes are soaked and you smell
 hsAccidentPoo,UI,tooltip,,,K,You didn't make it. Your clothes are filthy and you smell

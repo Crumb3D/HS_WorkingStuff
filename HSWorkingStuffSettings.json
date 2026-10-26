@@ -18,6 +18,7 @@
   "DewPerHour": 0.125,
   "IntakePerHour": 2,
   "PipeSearchLimit": 48,
+  "PipeRouteExpandLimit": 2000000,
   "DryDays": 1,
   "CompostDays": 1,
   "HotWaterSeconds": 30,
@@ -81,6 +82,8 @@
   "KettleHotMinutes": 10,
 
   "EnableNeeds": true,
+  "WordPee": "piss",
+  "WordPoo": "shit",
   "BladderHours": 24,
   "BowelHours": 72,
   "DrinkBladder": 25,

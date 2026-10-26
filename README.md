@@ -79,6 +79,9 @@ Copy `HSWorkingStuffSettings.json` next to the DLL, or override it from `%AppDat
 | `LineDryHours` | 2 | Game hours wet clothes take to dry on a washing line in daylight (twice that at night) |
 | `AirerDryHours` | 3 | Game hours wet clothes take on a clothes airer or a covered line (half that by a warm radiator) |
 | `EnableNeeds` | true | Bladder and bowels: drinking, eating, toilets, urinals and trees |
+| `WordPee` | piss | Word used on radials, buffs and tree prompts for a wee |
+| `WordPoo` | shit | Word used on radials and buffs for a number two |
+| `PipeRouteExpandLimit` | 2000000 | How hard the pipe tool searches for a long run (no mid-tank needed) |
 | `BladderHours` | 24 | Game hours for an empty bladder to fill on its own (drinking still adds `DrinkBladder`) |
 | `BowelHours` | 72 | Game hours for empty bowels to fill on their own (eating still adds `EatBowels`) |
 | `DrinkBladder` | 25 | Bladder points one drink adds (100 is an accident) |

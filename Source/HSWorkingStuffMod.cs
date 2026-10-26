@@ -18,7 +18,7 @@ public class HSWorkingStuffMod : IModApi
         ModEvents.PlayerSpawnedInWorld.RegisterHandler(OnSpawn);
         ModEvents.WorldShuttingDown.RegisterHandler(OnShutdown);
         ApplyHarmony();
-        Log.Out("[HSWorkingStuff] v1.0.85 water pump fuel scales with engines like a genny; bank detection; thermometer temps; toilets and urinals, bladder and bowels, washing lines and clothes airers, consumer units and breaker panels, chained sockets, TVs, hi-fi with speakers, fridge, fridge-freezer, chest freezer with frozen food, cooler, stove, microwave, coffee maker, kettle, toaster, wheat and bread, tea, grills, plumbing, water cooler, shower, bath, combi boiler, radiators, air con, washer, dryer, thermometer, sockets, room temperature, smell, laundry, pipe tool, and 3-day food. Install on the host and on every client.");
+        Log.Out("[HSWorkingStuff] v1.0.86 long pipe runs; WordPee/WordPoo; water pump fuel; thermometer; toilets, plumbing, laundry, pipe tool. Install on the host and on every client.");
     }
 
     static void ApplyHarmony()

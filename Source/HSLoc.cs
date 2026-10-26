@@ -240,7 +240,7 @@ public static class HSLoc
         { "hsTankPoured", "Poured {0} in. The tank holds {1} of {2}" },
         { "hsPipeBlockedAir", "Blocked by open air at {0} {1} {2}. Pipe will not cross that. Run it inside a solid floor, or along a wall" },
         { "hsPipeBlockedBlock", "Blocked at {0} {1} {2} by {3}. Pipe only goes through a full floor or wall" },
-        { "hsPipeTooBig", "That run crosses a huge area of floor and still has not arrived. Drop a tank part way and connect it in two goes" },
+        { "hsPipeTooBig", "That run is too long for the pipe tool to finish the search. Raise PipeRouteExpandLimit in HSWorkingStuffSettings.json, or check the path is not blocked." },
         { "hsPipeNotSet", "not set" },
         { "hsPipeRouteNoSystem", "Route: pick New Water System or Use Water System Here" },
         { "hsPipeRoutePending", "Route: look at a thing and pick New Connection" },
@@ -536,7 +536,7 @@ public static class HSLoc
         { "buffHSWetClothesName", "Wet Clothes" },
         { "buffHSWetClothesDesc", "The number is hours until the wet clothes dry on you. A dryer is quicker." },
         { "buffHSWetClothesValue", "{0:0} h" },
-        { "hsTreePeePrompt", "Press {0} to Pee ({1}%)" },
+        { "hsTreePeePrompt", "Press {0} to {1} ({2}%)" },
         { "buffHSNeedPeeName", "Need a pee" },
         { "buffHSNeedPeeDesc", "The number is how full your bladder is. A toilet, a urinal or a tree will do." },
         { "buffHSNeedPeeValue", "{0:0}%" },
@@ -551,6 +551,9 @@ public static class HSLoc
 
     public static string Get(string key, string fallback)
     {
+        string need;
+        if (TryNeedWord(key, out need))
+            return need;
         string mapped;
         if (TryEnglish(key, out mapped) && !string.IsNullOrEmpty(mapped))
             fallback = mapped;
@@ -592,6 +595,76 @@ public static class HSLoc
         return false;
     }
 
+    // Radial / buff / prompt labels that use WordPee / WordPoo from the JSON.
+    public static bool TryNeedWord(string key, out string text)
+    {
+        text = null;
+        if (string.IsNullOrEmpty(key))
+            return false;
+        string pee = HSWorkingStuffSettings.WordPee;
+        string poo = HSWorkingStuffSettings.WordPoo;
+        if (string.IsNullOrEmpty(pee))
+            pee = "piss";
+        if (string.IsNullOrEmpty(poo))
+            poo = "shit";
+        switch (key)
+        {
+            case "blockcommand_hspee":
+                text = Capital(pee);
+                return true;
+            case "blockcommand_hspoo":
+                text = Capital(poo);
+                return true;
+            case "blockcommand_hsneedpee":
+                text = "Don't need a " + pee;
+                return true;
+            case "blockcommand_hsneedpoo":
+                text = "Don't need a " + poo;
+                return true;
+            case "buffHSNeedPeeName":
+                text = "Need a " + pee;
+                return true;
+            case "buffHSNeedPooName":
+                text = "Need a " + poo;
+                return true;
+            case "buffHSNeedPeeDesc":
+                text = "The number is how full your bladder is. A toilet, a urinal or a tree will do.";
+                return true;
+            case "buffHSNeedPooDesc":
+                text = "The number is how full your bowels are. Only a toilet will do.";
+                return true;
+            case "hsUrgePee":
+                text = "You need a " + pee + ". A toilet, a urinal or a tree will do";
+                return true;
+            case "hsUrgePoo":
+                text = "You need a " + poo + ". Only a toilet will do";
+                return true;
+            case "hsNeedNonePoo":
+                text = "You don't need a " + poo;
+                return true;
+            case "hsUrinalPoo":
+                text = "A urinal is no good for that. Use a toilet";
+                return true;
+            case "hsAccidentPee":
+                text = "You wet yourself. Your clothes are soaked and you smell";
+                return true;
+            case "hsAccidentPoo":
+                text = "You didn't make it. Your clothes are filthy and you smell";
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    static string Capital(string word)
+    {
+        if (string.IsNullOrEmpty(word))
+            return word;
+        if (word.Length == 1)
+            return word.ToUpperInvariant();
+        return char.ToUpperInvariant(word[0]) + word.Substring(1);
+    }
+
     public static bool Missing(string key, string value)
     {
         if (string.IsNullOrEmpty(value))
@@ -618,6 +691,12 @@ public static class HSPatchLocGet
                 __result = why;
                 return;
             }
+        }
+        string need;
+        if (HSLoc.TryNeedWord(_key, out need))
+        {
+            __result = need;
+            return;
         }
         if (!HSLoc.Missing(_key, __result))
             return;

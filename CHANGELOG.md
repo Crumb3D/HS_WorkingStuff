@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.86
+
+- **Long pipe runs.** No more “drop a tank part way” for a long bank-to-catch run. The pipe tool aims at the target (A*) and can search much farther (`PipeRouteExpandLimit`, default 2,000,000).
+- **WordPee / WordPoo.** In `HSWorkingStuffSettings.json`, set what the radial and buffs call them (default `"piss"` and `"shit"`). Toilets, trees, and need buffs use those words.
+
 ## 1.0.85
 
 - **Water Pump fuel like a generator bank.** Same fuel buffer / gas-per-fill as a genny. While it is on it draws power equal to its engines, so more engines burn petrol faster (and still pump faster).

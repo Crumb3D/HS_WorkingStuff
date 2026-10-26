@@ -172,7 +172,14 @@ public static class HSNeeds
             return null;
         string key = ActivateKey(local);
         int pct = BladderPct(local);
-        string text = HSLoc.Format("hsTreePeePrompt", "Press {0} to Pee ({1}%)", key, pct);
+        string word = HSWorkingStuffSettings.WordPee;
+        if (string.IsNullOrEmpty(word))
+            word = "piss";
+        if (word.Length > 1)
+            word = char.ToUpperInvariant(word[0]) + word.Substring(1);
+        else
+            word = word.ToUpperInvariant();
+        string text = HSLoc.Format("hsTreePeePrompt", "Press {0} to {1} ({2}%)", key, word, pct);
         if (!NeedsPee(local))
             text = "[808080]" + text + "[-]";
         return text;

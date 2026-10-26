@@ -22,6 +22,7 @@ public static class HSWorkingStuffSettings
     public static float DewPerHour = 0.125f;
     public static float IntakePerHour = 1f;
     public static int PipeSearchLimit = 48;
+    public static int PipeRouteExpandLimit = 2000000;
     public static float DryDays = 1f;
     public static float CompostDays = 1f;
     public static float HotWaterSeconds = 30f;
@@ -78,6 +79,8 @@ public static class HSWorkingStuffSettings
     public static float KettleBoilSeconds = 30f;
     public static float KettleHotMinutes = 10f;
     public static bool EnableNeeds = true;
+    public static string WordPee = "piss";
+    public static string WordPoo = "shit";
     public static float BladderHours = 24f;
     public static float BowelHours = 72f;
     public static float DrinkBladder = 25f;
@@ -113,6 +116,9 @@ public static class HSWorkingStuffSettings
         DewPerHour = 0.125f;
         IntakePerHour = 1f;
         PipeSearchLimit = 48;
+        PipeRouteExpandLimit = 2000000;
+        WordPee = "piss";
+        WordPoo = "shit";
         DryDays = 1f;
         CompostDays = 1f;
         HotWaterSeconds = 30f;
@@ -225,6 +231,9 @@ public static class HSWorkingStuffSettings
         ReadFloat(text, "DewPerHour", ref DewPerHour);
         ReadFloat(text, "IntakePerHour", ref IntakePerHour);
         ReadInt(text, "PipeSearchLimit", ref PipeSearchLimit);
+        ReadInt(text, "PipeRouteExpandLimit", ref PipeRouteExpandLimit);
+        if (PipeRouteExpandLimit < 80000)
+            PipeRouteExpandLimit = 80000;
         ReadFloat(text, "DryDays", ref DryDays);
         ReadFloat(text, "CompostDays", ref CompostDays);
         ReadFloat(text, "HotWaterSeconds", ref HotWaterSeconds);
@@ -283,6 +292,12 @@ public static class HSWorkingStuffSettings
         ReadFloat(text, "KettleBoilSeconds", ref KettleBoilSeconds);
         ReadFloat(text, "KettleHotMinutes", ref KettleHotMinutes);
         ReadBool(text, "EnableNeeds", ref EnableNeeds);
+        ReadString(text, "WordPee", ref WordPee);
+        ReadString(text, "WordPoo", ref WordPoo);
+        if (string.IsNullOrEmpty(WordPee))
+            WordPee = "piss";
+        if (string.IsNullOrEmpty(WordPoo))
+            WordPoo = "shit";
         ReadFloat(text, "BladderHours", ref BladderHours);
         ReadFloat(text, "BowelHours", ref BowelHours);
         ReadFloat(text, "DrinkBladder", ref DrinkBladder);
@@ -334,6 +349,28 @@ public static class HSWorkingStuffSettings
         float v;
         if (TryParseNumber(text, key, out v) && v >= 1f)
             dest = (int)v;
+    }
+
+    static void ReadString(string text, string key, ref string dest)
+    {
+        string rest = ValueAfter(text, key);
+        if (rest == null)
+            return;
+        if (!rest.StartsWith("\""))
+            return;
+        int end = 1;
+        while (end < rest.Length && rest[end] != '"')
+        {
+            if (rest[end] == '\\' && end + 1 < rest.Length)
+                end += 2;
+            else
+                end++;
+        }
+        if (end <= 1)
+            return;
+        string raw = rest.Substring(1, end - 1).Replace("\\\"", "\"").Trim();
+        if (raw.Length > 0)
+            dest = raw;
     }
 
     static string ValueAfter(string text, string key)

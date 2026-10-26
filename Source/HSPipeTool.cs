@@ -1433,8 +1433,7 @@ public static class HSPipeTool
         return false;
     }
 
-    // Cheapest run from any seed to any goal cell (both included). Bends cost a little so runs stay straight.
-    // There is no length cap. The search only stops if it has walked an absurd amount of floor without arriving.
+    // Cheapest run from any seed to any goal. A* toward the nearest goal — no mid-tank required for long runs.
     static List<Vector3i> Dijkstra(List<Seed> seeds, HashSet<Vector3i> goals, Func<Vector3i, int> enter, int vertExtra)
     {
         if (seeds.Count == 0 || goals.Count == 0)
@@ -1457,6 +1456,17 @@ public static class HSPipeTool
             }
             return c;
         };
+        Func<Vector3i, int> heur = p =>
+        {
+            int best = int.MaxValue;
+            foreach (Vector3i g in goals)
+            {
+                int md = Math.Abs(p.x - g.x) + Math.Abs(p.y - g.y) + Math.Abs(p.z - g.z);
+                if (md < best)
+                    best = md;
+            }
+            return best == int.MaxValue ? 0 : best * StepCost;
+        };
         foreach (Seed sd in seeds)
         {
             int c = price(sd.Cell);
@@ -1468,24 +1478,29 @@ public static class HSPipeTool
                 continue;
             dist[s] = c;
             atCell[s] = sd.Cell;
-            PushKey(heap, heapKey, c, s);
+            PushKey(heap, heapKey, c + heur(sd.Cell), s);
         }
         int expanded = 0;
+        int expandCap = HSWorkingStuffSettings.PipeRouteExpandLimit;
+        if (expandCap < 80000)
+            expandCap = 80000;
         while (heap.Count > 0)
         {
             long top = PopKey(heap, heapKey, out long s);
-            int at = (int)(top >> 32);
+            int f = (int)(top >> 32);
             int known;
-            if (!dist.TryGetValue(s, out known) || at != known)
+            if (!dist.TryGetValue(s, out known))
                 continue;
-            if (++expanded > 80000)
-            {
-                routeError = Localization.Get("hsPipeTooBig");
-                return null;
-            }
             Vector3i p;
             if (!atCell.TryGetValue(s, out p))
                 continue;
+            if (f > known + heur(p))
+                continue;
+            if (++expanded > expandCap)
+            {
+                routeError = HSLoc.Get("hsPipeTooBig", "That run is too long for the pipe tool to finish the search. Raise PipeRouteExpandLimit in HSWorkingStuffSettings.json, or check the path is not blocked.");
+                return null;
+            }
             if (goals.Contains(p))
             {
                 var run = new List<Vector3i>();
@@ -1506,6 +1521,7 @@ public static class HSPipeTool
                 return run;
             }
             int d = (int)(s & 7);
+            int at = known;
             for (int e = 0; e < 6; e++)
             {
                 if ((e ^ 1) == d)
@@ -1524,7 +1540,7 @@ public static class HSPipeTool
                 dist[ns] = nc;
                 prev[ns] = s;
                 atCell[ns] = n;
-                PushKey(heap, heapKey, nc, ns);
+                PushKey(heap, heapKey, nc + heur(n), ns);
             }
         }
         return null;
