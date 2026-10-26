@@ -18,7 +18,7 @@ public class HSWorkingStuffMod : IModApi
         ModEvents.PlayerSpawnedInWorld.RegisterHandler(OnSpawn);
         ModEvents.WorldShuttingDown.RegisterHandler(OnShutdown);
         ApplyHarmony();
-        Log.Out("[HSWorkingStuff] v1.0.86 long pipe runs; WordPee/WordPoo; water pump fuel; thermometer; toilets, plumbing, laundry, pipe tool. Install on the host and on every client.");
+        Log.Out("[HSWorkingStuff] v1.0.87 tree piss prompt fixed; long pipe runs; WordPee/WordPoo; water pump; plumbing. Install on the host and on every client.");
     }
 
     static void ApplyHarmony()

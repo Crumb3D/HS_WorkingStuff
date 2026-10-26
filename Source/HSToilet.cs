@@ -72,7 +72,6 @@ public static class HSNeeds
     const int Fill = 5;
 
     static readonly HashSet<string> off = new HashSet<string> { "hsneedpee", "hsneedpoo", "hsbowlfull", "hsflushnone" };
-    static readonly FastTags<TagGroup.Global> TreeTag = FastTags<TagGroup.Global>.Parse("TreeTrunk");
 
     static ulong lastTick;
     static float nextTick;
@@ -157,9 +156,24 @@ public static class HSNeeds
         return Mathf.RoundToInt(Get(p, BladderCVar));
     }
 
+    // Vanilla trees use BlockTag=TreeTrunk (enum), not the Tags=wood FastTag.
     public static bool IsTree(Block block)
     {
-        return block != null && block.HasAnyFastTags(TreeTag);
+        if (block == null)
+            return false;
+        if (block.HasTag(BlockTags.TreeTrunk))
+            return true;
+        string n = block.GetBlockName();
+        if (string.IsNullOrEmpty(n) || n.IndexOf("tree", StringComparison.OrdinalIgnoreCase) < 0)
+            return false;
+        if (n.IndexOf("Grass", StringComparison.OrdinalIgnoreCase) >= 0
+            || n.IndexOf("Bush", StringComparison.OrdinalIgnoreCase) >= 0
+            || n.IndexOf("Shrub", StringComparison.OrdinalIgnoreCase) >= 0
+            || n.IndexOf("Cactus", StringComparison.OrdinalIgnoreCase) >= 0
+            || n.IndexOf("Azalea", StringComparison.OrdinalIgnoreCase) >= 0
+            || n.IndexOf("Leaf", StringComparison.OrdinalIgnoreCase) >= 0)
+            return false;
+        return true;
     }
 
     // Look at a trunk: Press (E) to Pee (57%). Grey when the bladder is not full enough.
