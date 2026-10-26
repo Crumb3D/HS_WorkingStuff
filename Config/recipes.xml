@@ -14,23 +14,32 @@
 			<ingredient name="resourceWood" count="16"/>
 			<ingredient name="resourceYuccaFibers" count="8"/>
 		</recipe>
+		<recipe name="hsChoppingBoard" count="1" tags="learnable">
+			<ingredient name="resourceWood" count="6"/>
+		</recipe>
 		<recipe name="hsCompost" count="1" tags="learnable">
 			<ingredient name="resourceWood" count="10"/>
 		</recipe>
-		<recipe name="hsPipeStraight" count="4" craft_area="workbench" tags="learnable">
+		<recipe name="hsPipeStraight" count="4" tags="learnable">
 			<ingredient name="resourceMetalPipe" count="1"/>
 		</recipe>
-		<recipe name="hsPipeCorner" count="4" craft_area="workbench" tags="learnable">
+		<recipe name="hsPipeCorner" count="4" tags="learnable">
 			<ingredient name="resourceMetalPipe" count="1"/>
 		</recipe>
-		<recipe name="hsPipeJoint" count="4" craft_area="workbench" tags="learnable">
+		<recipe name="hsPipeJoint" count="4" tags="learnable">
 			<ingredient name="resourceMetalPipe" count="1"/>
 		</recipe>
-		<recipe name="hsWaterIntake" count="1" craft_area="workbench" tags="learnable">
+		<recipe name="hsWaterIntake" count="1" tags="learnable">
 			<ingredient name="resourceMetalPipe" count="2"/>
 			<ingredient name="resourceMechanicalParts" count="1"/>
 		</recipe>
-		<recipe name="hsWaterTank" count="1" craft_area="workbench" tags="learnable">
+		<recipe name="hsWaterPump" count="1" tags="learnable">
+			<ingredient name="resourceForgedIron" count="8"/>
+			<ingredient name="resourceMechanicalParts" count="4"/>
+			<ingredient name="resourceElectricParts" count="4"/>
+			<ingredient name="resourceMetalPipe" count="4"/>
+		</recipe>
+		<recipe name="hsWaterTank" count="1" tags="learnable">
 			<ingredient name="resourceForgedIron" count="12"/>
 			<ingredient name="resourceMetalPipe" count="4"/>
 		</recipe>
@@ -39,7 +48,7 @@
 			<ingredient name="resourceScrapPolymers" count="10"/>
 			<ingredient name="resourceYuccaFibers" count="10"/>
 		</recipe>
-		<recipe name="hsSink" count="1" craft_area="workbench" tags="learnable">
+		<recipe name="hsSink" count="1" tags="learnable">
 			<ingredient name="resourceForgedIron" count="8"/>
 			<ingredient name="resourceMetalPipe" count="4"/>
 			<ingredient name="resourceScrapBrass" count="4"/>
@@ -195,12 +204,12 @@
 			<ingredient name="resourceForgedIron" count="4"/>
 			<ingredient name="resourceMetalPipe" count="2"/>
 		</recipe>
-		<recipe name="hsShower" count="1" craft_area="workbench" tags="learnable">
+		<recipe name="hsShower" count="1" tags="learnable">
 			<ingredient name="resourceForgedIron" count="4"/>
 			<ingredient name="resourceMetalPipe" count="2"/>
 			<ingredient name="resourceScrapBrass" count="4"/>
 		</recipe>
-		<recipe name="hsBath" count="1" craft_area="workbench" tags="learnable">
+		<recipe name="hsBath" count="1" tags="learnable">
 			<ingredient name="resourceForgedIron" count="20"/>
 			<ingredient name="resourceMetalPipe" count="2"/>
 			<ingredient name="resourceScrapBrass" count="4"/>
@@ -463,11 +472,11 @@
 			<ingredient name="resourceScrapIron" count="10"/>
 			<ingredient name="resourceScrapPolymers" count="4"/>
 		</recipe>
-		<recipe name="hsToilet" count="1" craft_area="workbench" tags="learnable">
+		<recipe name="hsToilet" count="1" tags="learnable">
 			<ingredient name="resourceConcreteMix" count="8"/>
 			<ingredient name="resourceScrapIron" count="4"/>
 		</recipe>
-		<recipe name="hsUrinal" count="1" craft_area="workbench" tags="learnable">
+		<recipe name="hsUrinal" count="1" tags="learnable">
 			<ingredient name="resourceConcreteMix" count="4"/>
 			<ingredient name="resourceScrapIron" count="2"/>
 		</recipe>

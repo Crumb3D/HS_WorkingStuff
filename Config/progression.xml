@@ -3,31 +3,35 @@
 
 	<!-- Electrician magazines + Advanced Engineering: cookers, sockets, switches, consumer units / breaker panels and fuses at 25 (rank 1), fridge, fridge-freezer, freezer, boiler, air con and breakers at 45 (rank 2). -->
 	<append xpath="/progression/crafting_skills/crafting_skill[@name='craftingElectrician']/effect_group">
-		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="25,100" value="1" tags="hsMicrowave,hsMicrowaveRetro,hsCoffeeMaker,hsCoffeeMakerCommercial,hsStoveOld,hsStoveModern,hsStoveWall,hsSocketUKSingle,hsSocketUKDouble,hsSocketUSSingle,hsSocketUSDouble,hsLightSwitchUK,hsLightSwitchUS,hsCookerSwitchUK,hsRangeOutletUS,hsKettle,hsToaster,hsToasterUS,hsTVStand,hsTVWall,hsHifi,hsHifiSpeaker,hsHifiSpeakerWall,hsConsumerUnitUK,hsBreakerPanelUS,hsFuse5,hsFuse15,hsFuse30,hsFuse45">
+		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="25,100" value="1" tags="hsMicrowave,hsMicrowaveRetro,hsCoffeeMaker,hsCoffeeMakerCommercial,hsStoveOld,hsStoveModern,hsStoveWall,hsSocketUKSingle,hsSocketUKDouble,hsSocketUSSingle,hsSocketUSDouble,hsLightSwitchUK,hsLightSwitchUS,hsCookerSwitchUK,hsRangeOutletUS,hsKettle,hsToaster,hsToasterUS,hsTVStand,hsTVWall,hsHifi,hsHifiSpeaker,hsHifiSpeakerWall,hsConsumerUnitUK,hsBreakerPanelUS,hsFuse5,hsFuse15,hsFuse30,hsFuse45,hsBreaker5,hsBreaker15,hsBreaker30,hsBreaker45">
 			<requirement name="ProgressionLevel" progression_name="perkAdvancedEngineering" operation="GTE" value="1"/>
 		</passive_effect>
-		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="45,100" value="1" tags="hsFridge,hsFridgeWhite,hsFreezer,hsWaterHeater,hsWaterHeaterVanilla,hsAirCon,hsAirConCeiling,hsBreaker5,hsBreaker15,hsBreaker30,hsBreaker45">
+		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="45,100" value="1" tags="hsFridge,hsFridgeWhite,hsFreezer,hsWaterHeater,hsWaterHeaterVanilla,hsAirCon,hsAirConCeiling">
 			<requirement name="ProgressionLevel" progression_name="perkAdvancedEngineering" operation="GTE" value="2"/>
 		</passive_effect>
 	</append>
-	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingElectrician']/display_entry[@name_key='electricianT1']/unlock_entry/@item" delim="," op="add">hsMicrowave,hsMicrowaveRetro,hsCoffeeMaker,hsCoffeeMakerCommercial,hsStoveOld,hsStoveModern,hsStoveWall,hsSocketUKSingle,hsSocketUKDouble,hsSocketUSSingle,hsSocketUSDouble,hsLightSwitchUK,hsLightSwitchUS,hsCookerSwitchUK,hsRangeOutletUS,hsKettle,hsToaster,hsToasterUS,hsTVStand,hsTVWall,hsHifi,hsHifiSpeaker,hsHifiSpeakerWall,hsConsumerUnitUK,hsBreakerPanelUS,hsFuse5,hsFuse15,hsFuse30,hsFuse45</csv>
-	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingElectrician']/display_entry[@name_key='electricianT2']/unlock_entry/@item" delim="," op="add">hsFridge,hsFridgeWhite,hsFreezer,hsWaterHeater,hsWaterHeaterVanilla,hsAirCon,hsAirConCeiling,hsBreaker5,hsBreaker15,hsBreaker30,hsBreaker45</csv>
+	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingElectrician']/display_entry[@name_key='electricianT1']/unlock_entry/@item" delim="," op="add">hsMicrowave,hsMicrowaveRetro,hsCoffeeMaker,hsCoffeeMakerCommercial,hsStoveOld,hsStoveModern,hsStoveWall,hsSocketUKSingle,hsSocketUKDouble,hsSocketUSSingle,hsSocketUSDouble,hsLightSwitchUK,hsLightSwitchUS,hsCookerSwitchUK,hsRangeOutletUS,hsKettle,hsToaster,hsToasterUS,hsTVStand,hsTVWall,hsHifi,hsHifiSpeaker,hsHifiSpeakerWall,hsConsumerUnitUK,hsBreakerPanelUS,hsFuse5,hsFuse15,hsFuse30,hsFuse45,hsBreaker5,hsBreaker15,hsBreaker30,hsBreaker45</csv>
+	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingElectrician']/display_entry[@name_key='electricianT2']/unlock_entry/@item" delim="," op="add">hsFridge,hsFridgeWhite,hsFreezer,hsWaterHeater,hsWaterHeaterVanilla,hsAirCon,hsAirConCeiling</csv>
 
-	<!-- Workstation magazines + Advanced Engineering: plumbing, the thermometer, pegs, washing line and clothes airer with the dew collector (16, rank 1), radiators, shower, bath, washers and dryers with the dew gatherer (26, rank 2). -->
+	<!-- Workstation magazines + Advanced Engineering. Plumbing at 6 (chicken coop band) and Advanced Engineering 1, so a few days of looting pipes a toilet and a shower. Thermometer, water cooler and the washing line stay at 16. Radiators and the washer wait for 26 and rank 2, because heating still needs power. -->
 	<append xpath="/progression/crafting_skills/crafting_skill[@name='craftingWorkstations']/effect_group">
-		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="16,100" value="1" tags="hsPipeTool,hsPipeStraight,hsPipeCorner,hsPipeJoint,hsWaterIntake,hsWaterTank,hsSink,hsRainCatch,hsWaterCooler,hsThermometer,hsClothesPegs,hsWashingLine,hsClothesAirer">
+		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="6,100" value="1" tags="hsPipeTool,hsPipeStraight,hsPipeCorner,hsPipeJoint,hsWaterIntake,hsWaterPump,hsWaterTank,hsSink,hsRainCatch,hsToilet,hsUrinal,hsShower,hsBath">
 			<requirement name="ProgressionLevel" progression_name="perkAdvancedEngineering" operation="GTE" value="1"/>
 		</passive_effect>
-		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="26,100" value="1" tags="hsRadiator,hsRadiatorCastIron,hsShower,hsBath,hsWasher,hsWasherVanilla,hsDryer,hsDryerVanilla,hsToilet,hsUrinal,hsWallThermostat">
+		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="16,100" value="1" tags="hsWaterCooler,hsThermometer,hsClothesPegs,hsWashingLine,hsClothesAirer">
+			<requirement name="ProgressionLevel" progression_name="perkAdvancedEngineering" operation="GTE" value="1"/>
+		</passive_effect>
+		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="26,100" value="1" tags="hsRadiator,hsRadiatorCastIron,hsWasher,hsWasherVanilla,hsDryer,hsDryerVanilla,hsWallThermostat">
 			<requirement name="ProgressionLevel" progression_name="perkAdvancedEngineering" operation="GTE" value="2"/>
 		</passive_effect>
 	</append>
-	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingWorkstations']/display_entry[contains(@name_key,'workstationsT2-1')]/unlock_entry[@unlock_tier='1']/@item" delim="," op="add">hsPipeTool,hsPipeStraight,hsPipeCorner,hsPipeJoint,hsWaterIntake,hsWaterTank,hsSink,hsRainCatch,hsWaterCooler,hsThermometer,hsClothesPegs,hsWashingLine,hsClothesAirer</csv>
-	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingWorkstations']/display_entry[contains(@name_key,'workstationsT2-1')]/unlock_entry[@unlock_tier='5']/@item" delim="," op="add">hsRadiator,hsRadiatorCastIron,hsShower,hsBath,hsWasher,hsWasherVanilla,hsDryer,hsDryerVanilla,hsToilet,hsUrinal,hsWallThermostat</csv>
+	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingWorkstations']/display_entry[contains(@name_key,'workstationsT1-1')]/unlock_entry[@unlock_tier='2']/@item" delim="," op="add">hsPipeTool,hsPipeStraight,hsPipeCorner,hsPipeJoint,hsWaterIntake,hsWaterPump,hsWaterTank,hsSink,hsRainCatch,hsToilet,hsUrinal,hsShower,hsBath</csv>
+	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingWorkstations']/display_entry[contains(@name_key,'workstationsT2-1')]/unlock_entry[@unlock_tier='1']/@item" delim="," op="add">hsWaterCooler,hsThermometer,hsClothesPegs,hsWashingLine,hsClothesAirer</csv>
+	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingWorkstations']/display_entry[contains(@name_key,'workstationsT2-1')]/unlock_entry[@unlock_tier='5']/@item" delim="," op="add">hsRadiator,hsRadiatorCastIron,hsWasher,hsWasherVanilla,hsDryer,hsDryerVanilla,hsWallThermostat</csv>
 
 	<!-- Home Cooking magazines + Master Chef: drying rack, dried meat and charcoal grill at 6, cooler at 10 (rank 1), gas grill at 26 (rank 2). -->
 	<append xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/effect_group">
-		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="6,100" value="1" tags="hsDryingRack,hsDriedMeat,hsCharcoalGrill,hsFlour,hsDough,hsBreadLoaf,hsBreadSlice,hsMug">
+		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="6,100" value="1" tags="hsDryingRack,hsChoppingBoard,hsDriedMeat,hsCharcoalGrill,hsFlour,hsDough,hsBreadLoaf,hsBreadSlice,hsMug">
 			<requirement name="ProgressionLevel" progression_name="perkMasterChef" operation="GTE" value="1"/>
 		</passive_effect>
 		<passive_effect name="RecipeTagUnlocked" operation="base_set" level="10,100" value="1" tags="hsCooler,hsToast,hsMugCoffee">
@@ -37,7 +41,7 @@
 			<requirement name="ProgressionLevel" progression_name="perkMasterChef" operation="GTE" value="2"/>
 		</passive_effect>
 	</append>
-	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT1-1')]/unlock_entry[@unlock_tier='3']/@item" delim="," op="add">hsDryingRack,hsDriedMeat,hsCharcoalGrill,hsFlour,hsDough,hsBreadLoaf,hsBreadSlice,hsMug</csv>
+	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT1-1')]/unlock_entry[@unlock_tier='3']/@item" delim="," op="add">hsDryingRack,hsChoppingBoard,hsDriedMeat,hsCharcoalGrill,hsFlour,hsDough,hsBreadLoaf,hsBreadSlice,hsMug</csv>
 	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT1-1')]/unlock_entry[@unlock_tier='5']/@item" delim="," op="add">hsCooler,hsToast,hsMugCoffee</csv>
 	<csv xpath="/progression/crafting_skills/crafting_skill[@name='craftingFood']/display_entry[contains(@name_key,'foodT2-1')]/unlock_entry[@unlock_tier='5']/@item" delim="," op="add">hsGasGrill</csv>
 

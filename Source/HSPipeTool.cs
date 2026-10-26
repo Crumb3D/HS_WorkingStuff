@@ -194,8 +194,8 @@ public static class HSPipeTool
             return false;
         string n = b.GetBlockName();
         return n == HSWater.RainCatchName || n == HSWater.TankName || n == HSWater.HeaterName
-            || n == HSWater.VanillaHeaterName || n == HSWater.IntakeName
-            || b is BlockHSHeater || HSWater.IsSinkBlock(b) || HSWater.IsBarePipe(n)
+            || n == HSWater.VanillaHeaterName || n == HSWater.IntakeName || n == HSWater.PumpName
+            || b is BlockHSHeater || b is BlockHSPump || HSWater.IsSinkBlock(b) || HSWater.IsBarePipe(n)
             || HSBoiler.IsRadiator(n);
     }
 
@@ -267,7 +267,7 @@ public static class HSPipeTool
                 {
                     Vector3i p = new Vector3i(near.x + dx, near.y + dy, near.z + dz);
                     BlockValue bv = world.GetBlock(p);
-                    if (bv.isair || bv.Block == null || bv.Block.GetBlockName() != HSWater.IntakeName)
+                    if (bv.isair || bv.Block == null || !HSWater.IsWaterSourceName(bv.Block.GetBlockName()))
                         continue;
                     Vector3i parent = HSWater.Parent(p, bv);
                     if (!HSWater.TouchesWater(world, parent))
@@ -291,7 +291,10 @@ public static class HSPipeTool
         if (world == null || player == null)
             return false;
         var me = GameManager.Instance != null ? GameManager.Instance.GetPersistentLocalPlayer() : null;
-        BlockValue intakeBv = Block.GetBlockValue(HSWater.IntakeName);
+        // Prefer a Water Pump; fall back to the old flange intake.
+        string placeName = CountItem(player, HSWater.PumpName) > 0 ? HSWater.PumpName
+            : (CountItem(player, HSWater.IntakeName) > 0 ? HSWater.IntakeName : HSWater.PumpName);
+        BlockValue intakeBv = Block.GetBlockValue(placeName);
         if (intakeBv.isair)
             return false;
         int best = int.MaxValue;
@@ -324,9 +327,9 @@ public static class HSPipeTool
         return found;
     }
 
-    static int CountIntake(EntityPlayer player)
+    static int CountItem(EntityPlayer player, string itemName)
     {
-        ItemValue iv = PipeItem(HSWater.IntakeName);
+        ItemValue iv = PipeItem(itemName);
         if (iv == null || iv.IsEmpty() || player == null)
             return 0;
         int n = 0;
@@ -337,9 +340,9 @@ public static class HSPipeTool
         return n;
     }
 
-    static void TakeIntake(EntityPlayer player)
+    static void TakeItem(EntityPlayer player, string itemName)
     {
-        ItemValue iv = PipeItem(HSWater.IntakeName);
+        ItemValue iv = PipeItem(itemName);
         if (iv == null || iv.IsEmpty() || player == null)
             return;
         int n = 1;
@@ -349,7 +352,7 @@ public static class HSPipeTool
             player.inventory.DecItem(iv, n);
     }
 
-    // Places a Water Intake on the bank from the player's inventory when they aim at the stream.
+    // Places a Water Pump (or old intake) on the bank from inventory when aiming at the stream.
     static string EnsureIntake(EntityPlayerLocal player, Vector3i near, out Vector3i intake)
     {
         intake = Vector3i.zero;
@@ -358,15 +361,17 @@ public static class HSPipeTool
             return Localization.Get("hsPipeAimNewSystem");
         if (FindIntakeNear(world, near, out intake))
             return null;
-        if (CountIntake(player) <= 0)
+        string placeName = CountItem(player, HSWater.PumpName) > 0 ? HSWater.PumpName
+            : (CountItem(player, HSWater.IntakeName) > 0 ? HSWater.IntakeName : null);
+        if (placeName == null)
             return Localization.Get("hsPipeNeedIntake");
         Vector3i spot;
         if (!SuggestIntakeSpot(world, player, near, out spot))
             return Localization.Get("hsPipeNoIntakeSpot");
-        BlockValue bv = Block.GetBlockValue(HSWater.IntakeName);
+        BlockValue bv = Block.GetBlockValue(placeName);
         if (bv.isair)
             return Localization.Get("hsPipeNeedIntake");
-        TakeIntake(player);
+        TakeItem(player, placeName);
         world.SetBlockRPC(spot, bv);
         intake = spot;
         return null;

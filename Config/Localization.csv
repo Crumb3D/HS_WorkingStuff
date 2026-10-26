@@ -17,7 +17,9 @@ hsPipeDesc,blocks,Block,,,,"Joins rain catch to tank, tank to sink, tank to boil
 hsPipeTool,items,Item,,,,Pipe Tool
 hsPipeToolDesc,items,Item,,,,"Lays water pipe for you. Hold E: New Water System or Use Water System Here on a rain catch, tank, boiler, sink, radiator, intake or laid pipe, then New Connection on each thing to pipe to it, then Lay pipes. Left click is Use Water System Here, right click is New Connection. Pipe runs along floors and walls, radiators are fed under the floor, and it lays the run if you carry enough water pipes. Laid pipe is not a block: you can build walls, floors and furniture right over it, and you only see it where nothing covers it. E > Take up pipes gives a run back."
 hsWaterIntake,blocks,Block,,,,Water Intake
-hsWaterIntakeDesc,blocks,Block,,,,"Place against a lake, river, or other water block — or aim the Pipe Tool at the water with a Water Intake on you and pick New Water System / New Connection; it places the intake on the bank. Pipe it to a rain catch (cleaned only if the catch has a dew filter) or straight to a tank (murky, fine for toilets). You can still pipe it to a sink for unlimited murky water."
+hsWaterIntakeDesc,blocks,Block,,,,"Simple flange on the bank. Prefer the Water Pump for powered lake feed. Pipe to a sink for unlimited murky water."
+hsWaterPump,blocks,Block,,,,Water Pump
+hsWaterPumpDesc,blocks,Block,,,,"Place next to a lake, river or stream and wire it to a generator or battery bank (10W). While powered it pumps murky water into a piped rain catch or tank. A rain catch with a dew filter cleans it; a tank gets murky water for toilets and the like. Aim the Pipe Tool at the water with a pump on you to place it on the bank."
 hsWaterTank,blocks,Block,,,,Water Tank
 hsWaterTankDesc,blocks,Block,,,,"Holds 40 jars of water. It does not collect on its own: pipe a rain catch into it, pipe a lake intake for murky water, or pour jars and buckets in. Pipe it on to a sink for the cold tap, and through a combi boiler for the hot tap."
 hsRainCatch,blocks,Block,,,,Rain Catch
@@ -141,8 +143,11 @@ hsPipeAimNewSystem,UI,tooltip,,,K,"Aim at a rain catch, tank, boiler, sink, radi
 hsPipeAimSystem,UI,tooltip,,,K,"Aim at a rain catch, tank, boiler, sink, radiator, intake, lake / stream or laid pipe to use that water system"
 hsPipeAimPlumbing,UI,tooltip,,,K,"Aim at a rain catch, tank, boiler, sink, radiator, intake, lake / stream or laid pipe to connect it"
 hsPipeStream,UI,tooltip,,,K,Lake / stream
-hsPipeNeedIntake,UI,tooltip,,,K,"Carry a Water Intake and aim at the lake or stream again. The tool places it on the bank for you."
-hsPipeNoIntakeSpot,UI,tooltip,,,K,"No clear bank next to that water to place a Water Intake. Stand closer to the edge."
+hsPipeNeedIntake,UI,tooltip,,,K,"Carry a Water Pump (or Water Intake) and aim at the lake or stream again. The tool places it on the bank for you."
+hsPipeNoIntakeSpot,UI,tooltip,,,K,"No clear bank next to that water to place a Water Pump. Stand closer to the edge."
+hsPumpNoWater,UI,tooltip,,,K,"Place next to a lake, river or stream"
+hsPumpNoPower,UI,tooltip,,,K,"No power: wire it to a generator or battery bank"
+hsPumpRunning,UI,tooltip,,,K,"Pumping: pipe to a rain catch or tank"
 hsPipeSystemNew,UI,tooltip,,,K,New water system at {0}. Look at the next thing and pick New Connection
 hsPipeSystemExisting,UI,tooltip,,,K,"{0} is already in a water system ({1} things), using that one. Look at the next thing and pick New Connection"
 hsPipeSystemUse,UI,tooltip,,,K,Using the water system at {0} ({1} things). New connections come from here

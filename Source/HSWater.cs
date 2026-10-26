@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 
 // Rain catch collects dew/rain and pushes down its pipes into tanks.
-// A lake intake can also fill a rain catch (cleaned only if the catch has a dew filter) or a tank (always murky).
+// A lake intake or powered water pump can fill a rain catch (cleaned only if the catch has a dew filter) or a tank (always murky).
 // A tank only feeds what is in it; it does not join the pipes on one side to the pipes on the other.
 // Sinks have a cold tap (straight from a tank or intake) and a hot tap (through a powered heater).
 public static class HSWater
@@ -22,6 +22,7 @@ public static class HSWater
     public const string HeaterName = "hsWaterHeater";
     public const string VanillaHeaterName = "hsWaterHeaterVanilla";
     public const string IntakeName = "hsWaterIntake";
+    public const string PumpName = "hsWaterPump";
     public const string WaterCoolerName = "hsWaterCooler";
     public const string ShowerName = "hsShower";
     public const string BathName = "hsBath";
@@ -136,7 +137,7 @@ public static class HSWater
         if (string.IsNullOrEmpty(name))
             return false;
         return name == "hsPipeStraight" || name == "hsPipeCorner" || name == "hsPipeJoint"
-            || name == HeaterName || name == VanillaHeaterName || name == TankName || name == IntakeName
+            || name == HeaterName || name == VanillaHeaterName || name == TankName || name == IntakeName || name == PumpName
             || name == "hsSink" || name == RainCatchName
             || IsBarePipe(name);
     }
@@ -174,6 +175,34 @@ public static class HSWater
             if (world.GetWater(p).HasMass())
                 return true;
         }
+        return false;
+    }
+
+    public static bool IsWaterSourceName(string n)
+    {
+        return n == IntakeName || n == PumpName;
+    }
+
+    public static bool PumpPowered(World world, Vector3i pos)
+    {
+        var te = world != null ? world.GetTileEntity(pos) as TileEntityPowered : null;
+        return te != null && te.IsPowered;
+    }
+
+    // Passive flange intake, or a powered pump, both must sit next to water.
+    public static bool LiveWaterSource(World world, Vector3i pos)
+    {
+        if (world == null || !TouchesWater(world, pos))
+            return false;
+        BlockValue bv = world.GetBlock(pos);
+        Block b = bv.Block;
+        if (b == null)
+            return false;
+        string n = b.GetBlockName();
+        if (n == IntakeName)
+            return true;
+        if (n == PumpName)
+            return PumpPowered(world, Parent(pos, bv));
         return false;
     }
 
@@ -243,7 +272,7 @@ public static class HSWater
                 else if (!hot)
                     continue;
             }
-            if (n == IntakeName && TouchesWater(world, p))
+            if (IsWaterSourceName(n) && LiveWaterSource(world, Parent(p, bv)))
             {
                 var lake = new Source { Ok = true, Infinite = true, Quality = QualityMurky };
                 if (hot)
@@ -397,7 +426,7 @@ public static class HSWater
                         directTanks.Add(tp);
                     continue;
                 }
-                if (nn == IntakeName)
+                if (IsWaterSourceName(nn))
                 {
                     seen.Add(k);
                     continue;
@@ -410,7 +439,7 @@ public static class HSWater
         }
     }
 
-    // Live intakes on the same bare-pipe run as this fixture (rain catch or tank).
+    // Live intakes / pumps on the same bare-pipe run as this fixture (rain catch or tank).
     public static List<Vector3i> LiveIntakesFrom(World world, Vector3i start)
     {
         var found = new List<Vector3i>();
@@ -438,11 +467,11 @@ public static class HSWater
                 if (nb == null)
                     continue;
                 string nn = nb.GetBlockName();
-                if (nn == IntakeName)
+                if (IsWaterSourceName(nn))
                 {
                     seen.Add(k);
                     Vector3i ip = Parent(np, nbv);
-                    if (TouchesWater(world, ip) && intakeSeen.Add(Key(ip)))
+                    if (LiveWaterSource(world, ip) && intakeSeen.Add(Key(ip)))
                         found.Add(ip);
                     continue;
                 }
@@ -489,9 +518,9 @@ public static class HSWater
                 if (nb == null)
                     continue;
                 string nn = nb.GetBlockName();
-                if (nn == IntakeName)
+                if (IsWaterSourceName(nn))
                 {
-                    if (TouchesWater(world, np))
+                    if (LiveWaterSource(world, Parent(np, nbv)))
                         return need;
                     continue;
                 }
@@ -974,7 +1003,7 @@ public static class HSWater
         foreach (long ik in intakes)
         {
             Vector3i intake = FromKey(ik);
-            if (!TouchesWater(world, intake))
+            if (!LiveWaterSource(world, intake))
                 continue;
             float frac;
             if (!intakeFrac.TryGetValue(ik, out frac))

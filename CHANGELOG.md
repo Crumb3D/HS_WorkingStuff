@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.81
+
+- **Water Pump.** Craft it, place it next to a lake / river / stream, and wire it to a generator or battery bank (10W). While powered it pumps into a piped rain catch (clean only with a dew filter) or tank (murky, fine for toilets). Uses the vanilla air-conditioner model. Aim the Pipe Tool at the water with a pump on you and it places the pump on the bank.
+
 ## 1.0.80
 
 - **Aim the Pipe Tool at a lake or stream.** New Water System, Use Water System Here and New Connection all work on the water. If a Water Intake is already on the bank it uses that. If not, and you are carrying a Water Intake, it places one on the bank for you.

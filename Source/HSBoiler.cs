@@ -80,7 +80,7 @@ public static class HSBoiler
         string n = block.GetBlockName();
         if (IsBoiler(block))
             return true;
-        if (n == HSWater.TankName || n == HSWater.RainCatchName || n == HSWater.IntakeName)
+        if (n == HSWater.TankName || n == HSWater.RainCatchName || n == HSWater.IntakeName || n == HSWater.PumpName)
             return true;
         return HSWater.IsSinkBlock(block);
     }
@@ -418,6 +418,41 @@ public static class HSBoiler
                 return true;
         }
         return false;
+    }
+
+    // How many warm radiators reach this spot, weighted by the valve. One radiator at valve 3 is 1.
+    public static float HeatScale(World world, Vector3 at)
+    {
+        if (world == null || warmRadiators.Count == 0)
+            return 0f;
+        float now = Time.time;
+        float radius = HSWorkingStuffSettings.RadiatorRadius;
+        float sum = 0f;
+        foreach (var kv in warmRadiators)
+        {
+            if (kv.Value < now)
+                continue;
+            Vector3i rp = HSWater.FromKey(kv.Key);
+            Vector3 c = new Vector3(rp.x + 0.5f, rp.y + 0.5f, rp.z + 0.5f);
+            float scale = HSRadiatorValve.RadiusScale(HSRadiatorValve.Level(world.GetBlock(rp)));
+            float rr = radius * scale;
+            if ((c - at).sqrMagnitude <= rr * rr)
+                sum += scale;
+        }
+        return sum;
+    }
+
+    public static void VisitWarm(System.Action<Vector3i> visit)
+    {
+        if (visit == null || warmRadiators.Count == 0)
+            return;
+        float now = Time.time;
+        foreach (var kv in warmRadiators)
+        {
+            if (kv.Value < now)
+                continue;
+            visit(HSWater.FromKey(kv.Key));
+        }
     }
 
     public static void Clear()
