@@ -129,8 +129,6 @@ public class ItemActionHSPipeTool : ItemAction
 
 public static class HSPipeTool
 {
-    public const int MaxRun = 64;
-    const int Margin = 4;
     const int StepCost = 10;
     const int TurnCost = 6;
     // Pipe never crosses open air: it runs on a floor, wall or ceiling, or hidden inside full blocks.
@@ -168,6 +166,8 @@ public static class HSPipeTool
     static int endTee;
     static Vector3i startTeeAt;
     static Vector3i endTeeAt;
+    static int needStraight, needCorner, needJoint;
+    static int backStraight, backCorner, backJoint;
     static int hidden;
     static string routeError = "";
     static string routeDebug = "";
@@ -234,11 +234,151 @@ public static class HSPipeTool
         return reach;
     }
 
-    static bool Aimed(EntityPlayerLocal player, out Vector3i pos, out string name, out bool pipe)
+    static bool CellHasWater(World world, Vector3i p)
+    {
+        return world != null && world.GetWater(p).HasMass();
+    }
+
+    static bool WaterNear(World world, Vector3i p)
+    {
+        if (CellHasWater(world, p))
+            return true;
+        for (int i = 0; i < HSWater.Dirs.Length; i++)
+        {
+            if (CellHasWater(world, p + HSWater.Dirs[i]))
+                return true;
+        }
+        return false;
+    }
+
+    // Existing intake on this stretch of water, or null.
+    static bool FindIntakeNear(World world, Vector3i near, out Vector3i intake)
+    {
+        intake = Vector3i.zero;
+        if (world == null)
+            return false;
+        int best = int.MaxValue;
+        bool found = false;
+        for (int dy = -2; dy <= 2; dy++)
+        {
+            for (int dx = -3; dx <= 3; dx++)
+            {
+                for (int dz = -3; dz <= 3; dz++)
+                {
+                    Vector3i p = new Vector3i(near.x + dx, near.y + dy, near.z + dz);
+                    BlockValue bv = world.GetBlock(p);
+                    if (bv.isair || bv.Block == null || bv.Block.GetBlockName() != HSWater.IntakeName)
+                        continue;
+                    Vector3i parent = HSWater.Parent(p, bv);
+                    if (!HSWater.TouchesWater(world, parent))
+                        continue;
+                    int d = Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz);
+                    if (d >= best)
+                        continue;
+                    best = d;
+                    intake = parent;
+                    found = true;
+                }
+            }
+        }
+        return found;
+    }
+
+    // Bank cell next to the water for a new intake.
+    static bool SuggestIntakeSpot(World world, EntityPlayerLocal player, Vector3i near, out Vector3i spot)
+    {
+        spot = Vector3i.zero;
+        if (world == null || player == null)
+            return false;
+        var me = GameManager.Instance != null ? GameManager.Instance.GetPersistentLocalPlayer() : null;
+        BlockValue intakeBv = Block.GetBlockValue(HSWater.IntakeName);
+        if (intakeBv.isair)
+            return false;
+        int best = int.MaxValue;
+        bool found = false;
+        for (int dy = -1; dy <= 1; dy++)
+        {
+            for (int dx = -2; dx <= 2; dx++)
+            {
+                for (int dz = -2; dz <= 2; dz++)
+                {
+                    Vector3i p = new Vector3i(near.x + dx, near.y + dy, near.z + dz);
+                    BlockValue bv = world.GetBlock(p);
+                    if (!bv.isair)
+                        continue;
+                    if (!WaterNear(world, p))
+                        continue;
+                    if (me != null && !world.CanPlaceBlockAt(p, me))
+                        continue;
+                    if (!intakeBv.Block.CanPlaceBlockAt(world, p, intakeBv))
+                        continue;
+                    int d = Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz);
+                    if (d >= best)
+                        continue;
+                    best = d;
+                    spot = p;
+                    found = true;
+                }
+            }
+        }
+        return found;
+    }
+
+    static int CountIntake(EntityPlayer player)
+    {
+        ItemValue iv = PipeItem(HSWater.IntakeName);
+        if (iv == null || iv.IsEmpty() || player == null)
+            return 0;
+        int n = 0;
+        if (player.bag != null)
+            n += player.bag.GetItemCount(iv);
+        if (player.inventory != null)
+            n += player.inventory.GetItemCount(iv);
+        return n;
+    }
+
+    static void TakeIntake(EntityPlayer player)
+    {
+        ItemValue iv = PipeItem(HSWater.IntakeName);
+        if (iv == null || iv.IsEmpty() || player == null)
+            return;
+        int n = 1;
+        if (player.bag != null)
+            n -= player.bag.DecItem(iv, n);
+        if (n > 0 && player.inventory != null)
+            player.inventory.DecItem(iv, n);
+    }
+
+    // Places a Water Intake on the bank from the player's inventory when they aim at the stream.
+    static string EnsureIntake(EntityPlayerLocal player, Vector3i near, out Vector3i intake)
+    {
+        intake = Vector3i.zero;
+        World world = WorldNow();
+        if (world == null || player == null)
+            return Localization.Get("hsPipeAimNewSystem");
+        if (FindIntakeNear(world, near, out intake))
+            return null;
+        if (CountIntake(player) <= 0)
+            return Localization.Get("hsPipeNeedIntake");
+        Vector3i spot;
+        if (!SuggestIntakeSpot(world, player, near, out spot))
+            return Localization.Get("hsPipeNoIntakeSpot");
+        BlockValue bv = Block.GetBlockValue(HSWater.IntakeName);
+        if (bv.isair)
+            return Localization.Get("hsPipeNeedIntake");
+        TakeIntake(player);
+        world.SetBlockRPC(spot, bv);
+        intake = spot;
+        return null;
+    }
+
+    // Aim at a fixture, laid pipe, or a lake / stream (uses or places a Water Intake on the bank).
+    static bool Aimed(EntityPlayerLocal player, out Vector3i pos, out string name, out bool pipe, out bool water)
     {
         pos = Vector3i.zero;
         name = "";
         pipe = false;
+        water = false;
         World world = WorldNow();
         if (player == null || world == null)
             return false;
@@ -252,6 +392,21 @@ public static class HSPipeTool
                 name = bv.Block.GetLocalizedBlockName();
                 return true;
             }
+            if (WaterNear(world, hit))
+            {
+                Vector3i intake;
+                if (FindIntakeNear(world, hit, out intake))
+                {
+                    pos = intake;
+                    BlockValue ib = world.GetBlock(intake);
+                    name = ib.Block != null ? ib.Block.GetLocalizedBlockName() : Localization.Get("hsWaterIntake");
+                    return true;
+                }
+                pos = hit;
+                name = Localization.Get("hsPipeStream");
+                water = true;
+                return true;
+            }
         }
         Vector3i cell;
         if (!LookedAtPipe(player, Reach(player), out cell))
@@ -260,6 +415,12 @@ public static class HSPipeTool
         pipe = true;
         name = Localization.Get("hsPipeExisting");
         return true;
+    }
+
+    static bool Aimed(EntityPlayerLocal player, out Vector3i pos, out string name, out bool pipe)
+    {
+        bool water;
+        return Aimed(player, out pos, out name, out pipe, out water);
     }
 
     public static bool HasSystem
@@ -282,13 +443,23 @@ public static class HSPipeTool
     }
 
     // Starts a system at a block that is not piped to anything yet. Already piped: that system is used instead.
+    // Aiming at a lake / stream uses the Water Intake on the bank, or places one from your inventory.
     public static string NewSystem(EntityPlayerLocal player)
     {
         Vector3i pos;
         string name;
         bool pipe;
-        if (!Aimed(player, out pos, out name, out pipe) || pipe)
+        bool water;
+        if (!Aimed(player, out pos, out name, out pipe, out water) || pipe)
             return Localization.Get("hsPipeAimNewSystem");
+        if (water)
+        {
+            string err = EnsureIntake(player, pos, out pos);
+            if (err != null)
+                return err;
+            BlockValue ib = WorldNow().GetBlock(pos);
+            name = ib.Block != null ? ib.Block.GetLocalizedBlockName() : Localization.Get("hsWaterIntake");
+        }
         PickSystem(pos, false, name);
         if (parts > 1)
             return string.Format(Localization.Get("hsPipeSystemExisting"), name, parts);
@@ -301,8 +472,18 @@ public static class HSPipeTool
         Vector3i pos;
         string name;
         bool pipe;
-        if (!Aimed(player, out pos, out name, out pipe))
+        bool water;
+        if (!Aimed(player, out pos, out name, out pipe, out water))
             return Localization.Get("hsPipeAimSystem");
+        if (water)
+        {
+            string err = EnsureIntake(player, pos, out pos);
+            if (err != null)
+                return err;
+            pipe = false;
+            BlockValue ib = WorldNow().GetBlock(pos);
+            name = ib.Block != null ? ib.Block.GetLocalizedBlockName() : Localization.Get("hsWaterIntake");
+        }
         PickSystem(pos, pipe, name);
         return string.Format(Localization.Get("hsPipeSystemUse"), name, parts);
     }
@@ -314,8 +495,18 @@ public static class HSPipeTool
         Vector3i pos;
         string name;
         bool pipe;
-        if (!Aimed(player, out pos, out name, out pipe))
+        bool water;
+        if (!Aimed(player, out pos, out name, out pipe, out water))
             return Localization.Get("hsPipeAimPlumbing");
+        if (water)
+        {
+            string err = EnsureIntake(player, pos, out pos);
+            if (err != null)
+                return err;
+            pipe = false;
+            BlockValue ib = WorldNow().GetBlock(pos);
+            name = ib.Block != null ? ib.Block.GetLocalizedBlockName() : Localization.Get("hsWaterIntake");
+        }
         end = pos;
         endPipe = pipe;
         endName = name;
@@ -366,6 +557,8 @@ public static class HSPipeTool
         pathOut = null;
         startTee = 0;
         endTee = 0;
+        needStraight = needCorner = needJoint = 0;
+        backStraight = backCorner = backJoint = 0;
         hidden = 0;
         routeError = "";
         routeVersion++;
@@ -398,23 +591,97 @@ public static class HSPipeTool
         return bv.isair ? null : bv.ToItemValue();
     }
 
-    static void TakePipes(EntityPlayer player, int need)
+    static void HaveShapes(EntityPlayer player, int[] have)
     {
-        for (int i = 0; i < PipeItems.Length && need > 0; i++)
+        for (int i = 0; i < have.Length && i < PipeItems.Length; i++)
         {
+            have[i] = 0;
             ItemValue iv = PipeItem(PipeItems[i]);
-            if (iv == null || iv.IsEmpty())
+            if (iv == null || iv.IsEmpty() || player == null)
                 continue;
             if (player.bag != null)
-                need -= player.bag.DecItem(iv, need);
-            if (need > 0 && player.inventory != null)
-                need -= player.inventory.DecItem(iv, need);
+                have[i] += player.bag.GetItemCount(iv);
+            if (player.inventory != null)
+                have[i] += player.inventory.GetItemCount(iv);
         }
+    }
+
+    static void TakeShape(EntityPlayer player, int shape, int n)
+    {
+        if (player == null || n <= 0 || shape < 0 || shape >= PipeItems.Length)
+            return;
+        ItemValue iv = PipeItem(PipeItems[shape]);
+        if (iv == null || iv.IsEmpty())
+            return;
+        if (player.bag != null)
+            n -= player.bag.DecItem(iv, n);
+        if (n > 0 && player.inventory != null)
+            player.inventory.DecItem(iv, n);
+    }
+
+    static void RefundShape(EntityPlayer player, int shape, int n)
+    {
+        if (player == null || n <= 0 || shape < 0 || shape >= PipeItems.Length)
+            return;
+        ItemValue iv = PipeItem(PipeItems[shape]);
+        if (iv == null || iv.IsEmpty())
+            return;
+        var stack = new ItemStack(iv, n);
+        if (!HSInv.AddToPlayer(player, stack) && HSItem.Count(stack) > 0)
+            HSWater.GiveOrDrop(player, stack);
+    }
+
+    static void NotePiece(int oldMask, int addMask)
+    {
+        int merged = (oldMask | addMask) & 63;
+        int next = HSPipeNet.Shape(merged);
+        if (oldMask == 0)
+        {
+            AddNeed(next);
+            return;
+        }
+        int old = HSPipeNet.Shape(oldMask);
+        if (old == next)
+            return;
+        AddNeed(next);
+        AddBack(old);
+    }
+
+    static void AddNeed(int shape)
+    {
+        if (shape == 1) needCorner++;
+        else if (shape == 2) needJoint++;
+        else needStraight++;
+    }
+
+    static void AddBack(int shape)
+    {
+        if (shape == 1) backCorner++;
+        else if (shape == 2) backJoint++;
+        else backStraight++;
+    }
+
+    static void Tally()
+    {
+        needStraight = needCorner = needJoint = 0;
+        backStraight = backCorner = backJoint = 0;
+        if (path == null)
+            return;
+        for (int i = 0; i < path.Count; i++)
+            NotePiece(0, HSPipeNet.DirBit(pathIn[i]) | HSPipeNet.DirBit(pathOut[i]));
+        if (startTee != 0)
+            NotePiece(HSPipeNet.MaskAt(startTeeAt), startTee);
+        if (endTee != 0)
+            NotePiece(HSPipeNet.MaskAt(endTeeAt), endTee);
     }
 
     public static bool CanLay(EntityPlayerLocal player)
     {
-        return path != null && path.Count > 0 && CountPipes(player) >= path.Count;
+        if (path == null || (path.Count == 0 && endTee == 0))
+            return false;
+        int[] have = new int[3];
+        HaveShapes(player, have);
+        return have[0] >= needStraight && have[1] >= needCorner && have[2] >= needJoint;
     }
 
     public static string Lay(EntityPlayerLocal player)
@@ -430,16 +697,22 @@ public static class HSPipeTool
         if (path == null)
             return routeError;
         int need = path.Count;
-        int have = CountPipes(player);
-        if (have < need)
-            return string.Format(Localization.Get("hsPipeNotEnough"), need, have);
+        int[] haveN = new int[3];
+        HaveShapes(player, haveN);
+        if (haveN[0] < needStraight || haveN[1] < needCorner || haveN[2] < needJoint)
+            return string.Format(Localization.Get("hsPipeNeedShapes"), needStraight, needCorner, needJoint, haveN[0], haveN[1], haveN[2]);
         PersistentPlayerData me = GameManager.Instance.GetPersistentLocalPlayer();
         for (int i = 0; i < path.Count; i++)
         {
             if (!world.CanPlaceBlockAt(path[i], me))
                 return Localization.Get("hsPipeClaimed");
         }
-        TakePipes(player, need);
+        TakeShape(player, 0, needStraight);
+        TakeShape(player, 1, needCorner);
+        TakeShape(player, 2, needJoint);
+        RefundShape(player, 0, backStraight);
+        RefundShape(player, 1, backCorner);
+        RefundShape(player, 2, backJoint);
         for (int i = 0; i < path.Count; i++)
         {
             int mask = HSPipeNet.DirBit(pathIn[i]) | HSPipeNet.DirBit(pathOut[i]);
@@ -451,7 +724,9 @@ public static class HSPipeTool
             HSWorkingStuffNet.SendWater(HSWorkingStuffNet.PipeLay, endTeeAt, player, endTee);
         Log.Out("[HSWorkingStuff] Pipe tool laid " + need + " pipes from " + startName + " " + start.Value
             + " to " + endName + " " + end.Value + (hidden > 0 ? ", " + hidden + " under the floor" : ""));
-        string done = string.Format(Localization.Get("hsPipeLaid"), need, startName, endName);
+        string done = need > 0
+            ? string.Format(Localization.Get("hsPipeLaid"), need, startName, endName)
+            : string.Format(Localization.Get("hsPipeTeed"), endName);
         end = null;
         endPipe = false;
         endName = "";
@@ -537,6 +812,8 @@ public static class HSPipeTool
         pathOut = null;
         startTee = 0;
         endTee = 0;
+        needStraight = needCorner = needJoint = 0;
+        backStraight = backCorner = backJoint = 0;
         hidden = 0;
         routeError = "";
         routeDebug = "";
@@ -579,7 +856,10 @@ public static class HSPipeTool
         List<Vector3i> to = EndCells(world, ePos, ePipe);
         List<Vector3i> from = under ? EndCells(world, sPos, sPipe) : Nearest(run, to);
         var toSet = new HashSet<Vector3i>(to);
-        // Pipe that only runs past the new thing can't feed it from there; tee in from a little further along.
+        // The toilet pipe already fills the floor under the sink. That cell touches the sink, so it is
+        // not a new port. Tee up from the run before those cells are dropped.
+        if (TryTeeUnder(world, run, to))
+            return;
         from.RemoveAll(c => Touches(c, toSet));
         if (from.Count == 0)
         {
@@ -590,7 +870,7 @@ public static class HSPipeTool
         List<Vector3i> route = under
             ? RouteUnder(world, sPos, sPipe, from, ePos, ePipe, to, fromSet, toSet)
             : RouteSurface(world, from, to, fromSet, toSet);
-        if (route == null || route.Count == 0 || route.Count > MaxRun)
+        if (route == null || route.Count == 0)
         {
             if (routeError.Length == 0)
                 routeError = Localization.Get("hsPipeNoRoute");
@@ -626,6 +906,33 @@ public static class HSPipeTool
             endTee = HSPipeNet.DirBit(route[last] - eAt);
             endTeeAt = eAt;
         }
+        Tally();
+    }
+
+    // The run to the toilet already fills the only solid block under the sink. Sides are a bin, skirting
+    // or open air, so there is no new port. Feed the fixture by adding the upward joint on that pipe.
+    static bool TryTeeUnder(World world, List<Vector3i> from, List<Vector3i> to)
+    {
+        var set = new HashSet<Vector3i>(from);
+        foreach (Vector3i c in to)
+        {
+            Block b = world.GetBlock(c).Block;
+            if (b == null || BarePipe(world, c) || !HSWater.IsSinkBlock(b))
+                continue;
+            Vector3i under = c + Vector3i.down;
+            if (!set.Contains(under) || !HSPipeNet.Has(under) || HSPipeNet.Joins(under, c))
+                continue;
+            path = new List<Vector3i>();
+            pathIn = new List<Vector3i>();
+            pathOut = new List<Vector3i>();
+            endTee = HSPipeNet.DirBit(Vector3i.up);
+            endTeeAt = under;
+            hidden = 0;
+            routeError = "";
+            Tally();
+            return true;
+        }
+        return false;
     }
 
     static bool Touches(Vector3i c, HashSet<Vector3i> set)
@@ -941,7 +1248,20 @@ public static class HSPipeTool
         var goals = new HashSet<Vector3i>(toPorts.Keys);
         routeDebug = "surface: " + from.Count + " start cells, " + seeds.Count + " ways out, " + goals.Count + " ways in; start "
             + Around(world, from) + " | end " + Around(world, to);
-        return Dijkstra(seeds, goals, enter, 0);
+        if (seeds.Count == 0)
+        {
+            routeError = string.Format(Localization.Get("hsPipeNoExit"), startName);
+            return null;
+        }
+        if (goals.Count == 0)
+        {
+            routeError = string.Format(Localization.Get("hsPipeNoEntry"), endName);
+            return null;
+        }
+        List<Vector3i> found = Dijkstra(seeds, goals, enter, 0);
+        if (found == null && routeError.Length == 0)
+            routeError = BlockedAt(world, seeds, goals, enter);
+        return found;
     }
 
     // Radiators are fed under the floor: a drop from the boiler (or other end) to the floor, a hidden run
@@ -982,7 +1302,11 @@ public static class HSPipeTool
             };
             under = Dijkstra(new List<Seed> { new Seed { Cell = entryA, Dir = 3 } }, new HashSet<Vector3i> { entryB }, enter, UnderVertCost);
             if (under == null)
+            {
+                if (routeError.Length == 0)
+                    routeError = BlockedAt(world, new List<Seed> { new Seed { Cell = entryA, Dir = 3 } }, new HashSet<Vector3i> { entryB }, enter);
                 return null;
+            }
         }
         var route = new List<Vector3i>(riserA);
         route.AddRange(under);
@@ -1105,117 +1429,158 @@ public static class HSPipeTool
     }
 
     // Cheapest run from any seed to any goal cell (both included). Bends cost a little so runs stay straight.
+    // There is no length cap. The search only stops if it has walked an absurd amount of floor without arriving.
     static List<Vector3i> Dijkstra(List<Seed> seeds, HashSet<Vector3i> goals, Func<Vector3i, int> enter, int vertExtra)
     {
         if (seeds.Count == 0 || goals.Count == 0)
             return null;
-        Vector3i min = seeds[0].Cell;
-        Vector3i max = seeds[0].Cell;
-        foreach (Seed s in seeds) { min = Vector3i.Min(min, s.Cell); max = Vector3i.Max(max, s.Cell); }
-        foreach (Vector3i g in goals) { min = Vector3i.Min(min, g); max = Vector3i.Max(max, g); }
-        min -= new Vector3i(Margin, Margin, Margin);
-        max += new Vector3i(Margin, Margin, Margin);
-        if (min.y < 1) min.y = 1;
-        if (max.y > 253) max.y = 253;
-        int sx = max.x - min.x + 1;
-        int sy = max.y - min.y + 1;
-        int sz = max.z - min.z + 1;
-        if (sx <= 0 || sy <= 0 || sz <= 0)
-            return null;
-        if (sx > MaxRun + 2 * Margin || sy > MaxRun + 2 * Margin || sz > MaxRun + 2 * Margin || sx + sy + sz > MaxRun + 6 * Margin + 6)
-        {
-            routeDebug += " | search area too big " + sx + "x" + sy + "x" + sz;
-            return null;
-        }
         Vector3i[] dirs = HSWater.Dirs;
-        int cells = sx * sy * sz;
-        var dist = new int[cells * 6];
-        var prev = new int[cells * 6];
-        var cost = new int[cells];
-        for (int i = 0; i < dist.Length; i++)
-        {
-            dist[i] = int.MaxValue;
-            prev[i] = -1;
-        }
-        for (int i = 0; i < cost.Length; i++)
-            cost[i] = int.MinValue;
-        Func<Vector3i, int> index = p =>
-        {
-            if (p.x < min.x || p.y < min.y || p.z < min.z || p.x > max.x || p.y > max.y || p.z > max.z)
-                return -1;
-            return ((p.x - min.x) * sy + (p.y - min.y)) * sz + (p.z - min.z);
-        };
-        Func<int, Vector3i, int> enterAt = (idx, p) =>
-        {
-            if (cost[idx] == int.MinValue)
-                cost[idx] = enter(p);
-            return cost[idx];
-        };
+        var dist = new Dictionary<long, int>();
+        var prev = new Dictionary<long, long>();
+        var cellCost = new Dictionary<long, int>();
+        var atCell = new Dictionary<long, Vector3i>();
         var heap = new List<long>();
+        var heapKey = new List<long>();
+        Func<Vector3i, int> price = p =>
+        {
+            long ck = CellKey(p);
+            int c;
+            if (!cellCost.TryGetValue(ck, out c))
+            {
+                c = enter(p);
+                cellCost[ck] = c;
+            }
+            return c;
+        };
         foreach (Seed sd in seeds)
         {
-            int idx = index(sd.Cell);
-            if (idx < 0)
-                continue;
-            int c = enterAt(idx, sd.Cell);
+            int c = price(sd.Cell);
             if (c < 0)
                 continue;
-            int s = idx * 6 + sd.Dir;
-            if (c >= dist[s])
+            long s = (CellKey(sd.Cell) << 3) | (uint)(sd.Dir & 7);
+            int old;
+            if (dist.TryGetValue(s, out old) && c >= old)
                 continue;
             dist[s] = c;
-            Push(heap, c, s);
+            atCell[s] = sd.Cell;
+            PushKey(heap, heapKey, c, s);
         }
-        int limit = (MaxRun + 1) * (StepCost + InBlockCost + TurnCost + vertExtra);
+        int expanded = 0;
         while (heap.Count > 0)
         {
-            long top = Pop(heap);
+            long top = PopKey(heap, heapKey, out long s);
             int at = (int)(top >> 32);
-            int s = (int)(top & 0xFFFFFFFF);
-            if (at > limit)
-                break;
-            if (at != dist[s])
+            int known;
+            if (!dist.TryGetValue(s, out known) || at != known)
                 continue;
-            int idx = s / 6;
-            int d = s % 6;
-            var p = new Vector3i(idx / (sy * sz) + min.x, (idx / sz) % sy + min.y, idx % sz + min.z);
+            if (++expanded > 80000)
+            {
+                routeError = Localization.Get("hsPipeTooBig");
+                return null;
+            }
+            Vector3i p;
+            if (!atCell.TryGetValue(s, out p))
+                continue;
             if (goals.Contains(p))
             {
                 var run = new List<Vector3i>();
-                for (int t = s; t >= 0; t = prev[t])
+                long t = s;
+                int guard = 0;
+                while (guard++ < 100000)
                 {
-                    int ti = t / 6;
-                    run.Add(new Vector3i(ti / (sy * sz) + min.x, (ti / sz) % sy + min.y, ti % sz + min.z));
+                    Vector3i cell;
+                    if (!atCell.TryGetValue(t, out cell))
+                        break;
+                    run.Add(cell);
+                    long back;
+                    if (!prev.TryGetValue(t, out back))
+                        break;
+                    t = back;
                 }
                 run.Reverse();
                 return run;
             }
+            int d = (int)(s & 7);
             for (int e = 0; e < 6; e++)
             {
                 if ((e ^ 1) == d)
                     continue;
                 Vector3i n = p + dirs[e];
-                int nidx = index(n);
-                if (nidx < 0)
+                if (n.y < 1 || n.y > 253)
                     continue;
-                int ec = enterAt(nidx, n);
+                int ec = price(n);
                 if (ec < 0)
                     continue;
-                int ns = nidx * 6 + e;
+                long ns = (CellKey(n) << 3) | (uint)e;
                 int nc = at + ec + (e != d ? TurnCost : 0) + (dirs[e].y != 0 ? vertExtra : 0);
-                if (nc >= dist[ns])
+                int nd;
+                if (dist.TryGetValue(ns, out nd) && nc >= nd)
                     continue;
                 dist[ns] = nc;
                 prev[ns] = s;
-                Push(heap, nc, ns);
+                atCell[ns] = n;
+                PushKey(heap, heapKey, nc, ns);
             }
         }
         return null;
     }
 
-    static void Push(List<long> heap, int cost, int state)
+    static long CellKey(Vector3i p)
     {
-        heap.Add(((long)cost << 32) | (uint)state);
+        return ((long)(p.x + 500000) << 42) | ((long)(p.y & 511) << 21) | (long)(p.z + 500000);
+    }
+
+    // The reachable pipe stops somewhere. Name that cell, and what is sitting in it.
+    static string BlockedAt(World world, List<Seed> seeds, HashSet<Vector3i> goals, Func<Vector3i, int> enter)
+    {
+        var seen = new HashSet<long>();
+        var q = new Queue<Vector3i>();
+        foreach (Seed s in seeds)
+        {
+            if (seen.Add(CellKey(s.Cell)))
+                q.Enqueue(s.Cell);
+        }
+        Vector3i best = Vector3i.zero;
+        int bestD = int.MaxValue;
+        bool found = false;
+        int guard = 0;
+        while (q.Count > 0 && guard++ < 8000)
+        {
+            Vector3i p = q.Dequeue();
+            foreach (Vector3i d in HSWater.Dirs)
+            {
+                Vector3i n = p + d;
+                if (n.y < 1 || n.y > 253 || !seen.Add(CellKey(n)))
+                    continue;
+                if (enter(n) >= 0)
+                {
+                    q.Enqueue(n);
+                    continue;
+                }
+                int md = int.MaxValue;
+                foreach (Vector3i g in goals)
+                    md = Math.Min(md, Math.Abs(n.x - g.x) + Math.Abs(n.y - g.y) + Math.Abs(n.z - g.z));
+                if (md < bestD)
+                {
+                    bestD = md;
+                    best = n;
+                    found = true;
+                }
+            }
+        }
+        if (!found)
+            return Localization.Get("hsPipeNoRoute");
+        BlockValue bv = world.GetBlock(best);
+        if (bv.isair || bv.Block == null)
+            return string.Format(Localization.Get("hsPipeBlockedAir"), best.x, best.y, best.z);
+        string what = bv.Block.GetLocalizedBlockName();
+        return string.Format(Localization.Get("hsPipeBlockedBlock"), best.x, best.y, best.z, what);
+    }
+
+    static void PushKey(List<long> heap, List<long> keys, int cost, long state)
+    {
+        heap.Add((long)cost << 32);
+        keys.Add(state);
         int i = heap.Count - 1;
         while (i > 0)
         {
@@ -1225,16 +1590,22 @@ public static class HSPipeTool
             long t = heap[parent];
             heap[parent] = heap[i];
             heap[i] = t;
+            long k = keys[parent];
+            keys[parent] = keys[i];
+            keys[i] = k;
             i = parent;
         }
     }
 
-    static long Pop(List<long> heap)
+    static long PopKey(List<long> heap, List<long> keys, out long state)
     {
         long top = heap[0];
+        state = keys[0];
         int last = heap.Count - 1;
         heap[0] = heap[last];
+        keys[0] = keys[last];
         heap.RemoveAt(last);
+        keys.RemoveAt(last);
         int i = 0;
         while (true)
         {
@@ -1248,6 +1619,9 @@ public static class HSPipeTool
             long t = heap[m];
             heap[m] = heap[i];
             heap[i] = t;
+            long k = keys[m];
+            keys[m] = keys[i];
+            keys[i] = k;
             i = m;
         }
         return top;
@@ -1266,6 +1640,11 @@ public static class HSPipeTool
                 n++;
         }
         return n;
+    }
+
+    static string PieceLine()
+    {
+        return string.Format(Localization.Get("hsPipePieces"), needStraight, needCorner, needJoint);
     }
 
     static string Where(Vector3i? p, string name)
@@ -1293,10 +1672,14 @@ public static class HSPipeTool
             route = Localization.Get("hsPipeRoutePending");
         else if (path == null)
             route = routeError;
+        else if (path.Count == 0 && endTee != 0)
+            route = string.Format(Localization.Get("hsPipeTeeUnder"), endName) + "\n" + PieceLine();
         else
         {
+            bool fit = CanLay(player);
             route = string.Format(Localization.Get("hsPipeRoute"), path.Count, Bends(),
-                have >= path.Count ? Localization.Get("hsPipeEnough") : string.Format(Localization.Get("hsPipeShort"), path.Count - have));
+                fit ? Localization.Get("hsPipeEnough") : Localization.Get("hsPipeShortShapes"))
+                + "\n" + PieceLine();
             if (hidden > 0)
                 route += "\n" + string.Format(Localization.Get("hsPipeUnderFloor"), hidden);
         }
@@ -1313,7 +1696,7 @@ public static class HSPipeTool
     public static void UpdatePreview(EntityPlayerLocal player, bool holding)
     {
         bool want = holding && path != null && start != null && end != null;
-        bool enough = want && CountPipes(player) >= path.Count;
+        bool enough = want && CanLay(player);
         int key = want ? routeVersion * 2 + (enough ? 1 : 0) : -1;
         if (key == previewKey)
             return;

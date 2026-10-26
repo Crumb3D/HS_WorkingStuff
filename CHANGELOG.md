@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.80
+
+- **Aim the Pipe Tool at a lake or stream.** New Water System, Use Water System Here and New Connection all work on the water. If a Water Intake is already on the bank it uses that. If not, and you are carrying a Water Intake, it places one on the bank for you.
+
 ## 1.0.79
 
 - **Lake and river intakes fill storage.** Pipe an intake to a rain catch and it feeds the catch from the water. The catch only cleans that water if a dew filter is fitted; without the filter it stays murky. Pipe the intake straight to a tank for murky water (toilets and the like). You can still pipe an intake to a sink for unlimited murky water.
