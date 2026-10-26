@@ -141,9 +141,10 @@
 			<property name="CreativeMode" value="Player" />
 			<property name="DescriptionKey" value="hsWaterPumpDesc" />
 			<property name="SlotItem" value="smallEngine" />
-			<property name="MaxFuel" value="500" />
-			<property name="MaxPower" value="500" />
-			<property name="OutputPerFuel" value="500" />
+			<!-- Same fuel economy as generatorbank: more engines drain the buffer faster → more gas. -->
+			<property name="MaxFuel" value="1000" />
+			<property name="MaxPower" value="12250" />
+			<property name="OutputPerFuel" value="11250" />
 			<property name="OutputPerStack" value="100" />
 			<property name="Material" value="Mmetal" />
 			<property name="Shape" value="ModelEntity" />

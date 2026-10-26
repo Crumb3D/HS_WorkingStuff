@@ -200,6 +200,30 @@ static class HSPatchPumpStatsBindings
     }
 }
 
+// While the pump is on it loads itself by MaxOutput (engines), so fuel burns like a genny under load.
+[HarmonyPatch(typeof(PowerSource), "HandleSendPower")]
+static class HSPatchPumpFuelDraw
+{
+    static void Postfix(PowerSource __instance)
+    {
+        if (__instance == null || !__instance.IsOn || __instance.MaxOutput == 0)
+            return;
+        if (!(__instance is PowerGenerator))
+            return;
+        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+        if (world == null || __instance.TileEntity == null)
+            return;
+        Block b = world.GetBlock(__instance.TileEntity.ToWorldPos()).Block;
+        if (b == null || b.GetBlockName() != HSWater.PumpName)
+            return;
+        ushort draw = __instance.MaxOutput;
+        if (__instance.CurrentPower > draw)
+            __instance.CurrentPower -= draw;
+        else
+            __instance.CurrentPower = 0;
+    }
+}
+
 // UI Turn On button also uses the underwater check — skip side water for the pump.
 [HarmonyPatch(typeof(XUiC_PowerSourceStats), "btnOn_OnPress")]
 static class HSPatchPumpTurnOn

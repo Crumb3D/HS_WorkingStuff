@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.85
+
+- **Water Pump fuel like a generator bank.** Same fuel buffer / gas-per-fill as a genny. While it is on it draws power equal to its engines, so more engines burn petrol faster (and still pump faster).
+
 ## 1.0.84
 
 - **Water Pump on the bank.** Put it on dry land next to the water, not in the water. Side water no longer blocks Turn On. Water detection covers bank edges and diagonals. More small engines pump faster. Stats show Water and Pipes. Take works without a land claim. Tooltip on open shows the full status.
