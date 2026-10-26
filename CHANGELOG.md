@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.89
+
+- **Take up stretch.** Pipe Tool E menu: pick one end (rain catch, tank, …), then the other. Only that run comes up; tees keep other branches. Red preview while you aim. **Take up pipes** still pulls a whole joined network.
+
 ## 1.0.88
 
 - **Water Pump: 6 engines = 6x.** Rate counted quality-weighted generator power before, so junk engines looked like half. Now it counts engines in the bank. `IntakePerHour` default is 10 (was 2), so a full bank fills a tank in under a game hour.

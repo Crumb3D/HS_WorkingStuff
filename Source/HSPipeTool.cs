@@ -85,6 +85,7 @@ public class ItemActionHSPipeTool : ItemAction
             radial.CreateRadialEntry(2, "ui_game_symbol_map_cursor", hasSystem ? white : grey, "UIAtlas", "", Localization.Get("hsPipeRadialNew"));
             radial.CreateRadialEntry(3, "ui_game_symbol_assemble", canLay ? white : grey, "UIAtlas", "", Localization.Get("hsPipeRadialLay"));
             radial.CreateRadialEntry(4, "ui_game_symbol_wrench", white, "UIAtlas", "", Localization.Get("hsPipeRadialTakeUp"));
+            radial.CreateRadialEntry(5, "ui_game_symbol_trash", white, "UIAtlas", "", Localization.Get("hsPipeRadialTakeStretch"));
             radial.SetCommonData(default(GUI_2.UIUtils.ButtonIcon), HandleCommand,
                 new XUiC_Radial.RadialContextHoldingSlotIndex(player.inventory.holdingItemIdx), -1, false, StillHolding);
         }
@@ -116,6 +117,7 @@ public class ItemActionHSPipeTool : ItemAction
                 case 2: msg = HSPipeTool.NewConnection(player); break;
                 case 3: msg = HSPipeTool.Lay(player); break;
                 case 4: msg = HSPipeTool.TakeUp(player); break;
+                case 5: msg = HSPipeTool.TakeUpStretch(player); break;
                 default: return;
             }
             HSPipeTool.Tell(player, msg);
@@ -176,6 +178,12 @@ public static class HSPipeTool
     static float nextRoute;
     static int routeVersion;
     static int previewKey = -1;
+    // Take up stretch: first end, then the other (rain catch → tank, etc.).
+    static Vector3i? stretchA;
+    static bool stretchAPipe;
+    static string stretchAName = "";
+    static List<Vector3i> stretchPath;
+    static long stretchPreviewKey = -1;
 
     public static void Tell(EntityPlayerLocal player, string msg)
     {
@@ -745,6 +753,7 @@ public static class HSPipeTool
         World world = WorldNow();
         if (world == null || player == null)
             return "";
+        ClearStretchPick();
         Vector3i found;
         Vector3i? cell = null;
         if (LookedAtPipe(player, Reach(player), out found))
@@ -771,6 +780,184 @@ public static class HSPipeTool
             return Localization.Get("hsPipeClaimed");
         HSWorkingStuffNet.SendWater(HSWorkingStuffNet.PipeRemove, cell.Value, player, 0);
         return "";
+    }
+
+    static void ClearStretchPick()
+    {
+        stretchA = null;
+        stretchAPipe = false;
+        stretchAName = "";
+        stretchPath = null;
+        stretchPreviewKey = -1;
+    }
+
+    // Pipe cells that touch this fixture (or the cell itself if it is laid pipe).
+    static List<Vector3i> PipePorts(World world, Vector3i pos, bool pipe)
+    {
+        var ports = new List<Vector3i>();
+        if (world == null)
+            return ports;
+        if (pipe)
+        {
+            if (HSPipeNet.Has(pos))
+                ports.Add(pos);
+            return ports;
+        }
+        var seen = new HashSet<long>();
+        foreach (Vector3i c in EndCells(world, pos, false))
+        {
+            foreach (Vector3i d in HSWater.Dirs)
+            {
+                Vector3i n = c + d;
+                if (!HSPipeNet.Has(n) || !HSPipeNet.Joins(c, n))
+                    continue;
+                if (seen.Add(HSWater.Key(n)))
+                    ports.Add(n);
+            }
+        }
+        return ports;
+    }
+
+    // Aim at first end, then the other: only that stretch comes up (tees keep other branches).
+    public static string TakeUpStretch(EntityPlayerLocal player)
+    {
+        World world = WorldNow();
+        if (world == null || player == null)
+            return "";
+        Vector3i pos;
+        string name;
+        bool pipe;
+        bool water;
+        if (!Aimed(player, out pos, out name, out pipe, out water) || water)
+            return Localization.Get(stretchA == null ? "hsPipeAimStretchFirst" : "hsPipeAimStretchSecond");
+        if (stretchA == null)
+        {
+            if (PipePorts(world, pos, pipe).Count == 0)
+                return Localization.Get("hsPipeNoneHere");
+            stretchA = pos;
+            stretchAPipe = pipe;
+            stretchAName = name;
+            stretchPath = null;
+            stretchPreviewKey = -1;
+            return string.Format(Localization.Get("hsPipeStretchPicked"), name);
+        }
+        if (stretchA.Value == pos && stretchAPipe == pipe)
+        {
+            ClearStretchPick();
+            return Localization.Get("hsPipeStretchCancel");
+        }
+        List<Vector3i> from = PipePorts(world, stretchA.Value, stretchAPipe);
+        List<Vector3i> to = PipePorts(world, pos, pipe);
+        if (from.Count == 0 || to.Count == 0)
+        {
+            ClearStretchPick();
+            return Localization.Get("hsPipeNoneHere");
+        }
+        List<Vector3i> path = HSPipeNet.FindStretch(from, to);
+        if (path == null || path.Count == 0)
+        {
+            ClearStretchPick();
+            return string.Format(Localization.Get("hsPipeStretchNoPath"), stretchAName, name);
+        }
+        PersistentPlayerData me = GameManager.Instance.GetPersistentLocalPlayer();
+        for (int i = 0; i < path.Count; i++)
+        {
+            if (!world.CanPlaceBlockAt(path[i], me))
+            {
+                ClearStretchPick();
+                return Localization.Get("hsPipeClaimed");
+            }
+        }
+        bool aPipe = stretchAPipe;
+        Vector3i aPos = stretchA.Value;
+        ClearStretchPick();
+        HSWorkingStuffNet.SendPipeStretch(aPos, aPipe, pos, pipe, player);
+        return "";
+    }
+
+    // Authority: find the laid path again and take it up, refunding pieces.
+    public static void HandleStretchRemove(Vector3i a, bool aPipe, Vector3i b, bool bPipe, EntityPlayer player)
+    {
+        World world = WorldNow();
+        if (world == null || player == null)
+            return;
+        List<Vector3i> from = PipePorts(world, a, aPipe);
+        List<Vector3i> to = PipePorts(world, b, bPipe);
+        if (from.Count == 0 || to.Count == 0)
+            return;
+        List<Vector3i> path = HSPipeNet.FindStretch(from, to);
+        if (path == null || path.Count == 0)
+            return;
+        int[] shapes = new int[3];
+        int n = HSPipeNet.RemoveStretch(path, shapes);
+        if (n <= 0 && shapes[0] == 0 && shapes[1] == 0 && shapes[2] == 0)
+        {
+            // Path was only tee faces trimmed — still report something useful.
+            HSWorkingStuffNet.Tell(player, Localization.Get("hsPipeStretchTrimmed"));
+            return;
+        }
+        for (int s = 0; s < shapes.Length && s < PipeItems.Length; s++)
+        {
+            if (shapes[s] <= 0)
+                continue;
+            ItemValue iv = ItemClass.GetItem(PipeItems[s]);
+            if (iv != null && !iv.IsEmpty())
+                HSWater.GiveOrDrop(player, new ItemStack(iv, shapes[s]));
+        }
+        HSWorkingStuffNet.Tell(player, HSLoc.Format("hsPipeTook", "Took up {0} straight, {1} corners and {2} joints", shapes[0], shapes[1], shapes[2]));
+        HSInv.NotifyPlayer(player);
+    }
+
+    // Live preview of the stretch while the first end is picked and you look at the other.
+    public static void UpdateStretchPreview(EntityPlayerLocal player, bool holding)
+    {
+        if (!holding || stretchA == null || player == null)
+        {
+            if (stretchPreviewKey != -2)
+            {
+                stretchPreviewKey = -2;
+                if (stretchPath != null)
+                {
+                    stretchPath = null;
+                    // Lay preview owns SetPreview when a route is active; only clear when idle.
+                    if (path == null)
+                        HSPipeNet.SetPreview(null, null, false);
+                }
+            }
+            return;
+        }
+        World world = WorldNow();
+        if (world == null)
+            return;
+        Vector3i pos;
+        string name;
+        bool pipe;
+        bool water;
+        long key = -1;
+        List<Vector3i> show = null;
+        if (Aimed(player, out pos, out name, out pipe, out water) && !water
+            && !(pos == stretchA.Value && pipe == stretchAPipe))
+        {
+            List<Vector3i> from = PipePorts(world, stretchA.Value, stretchAPipe);
+            List<Vector3i> to = PipePorts(world, pos, pipe);
+            if (from.Count > 0 && to.Count > 0)
+                show = HSPipeNet.FindStretch(from, to);
+            key = show != null ? HSWater.Key(pos) ^ (show.Count * 397L) ^ routeVersion : HSWater.Key(pos);
+        }
+        if (key == stretchPreviewKey)
+            return;
+        stretchPreviewKey = key;
+        stretchPath = show;
+        if (show == null || show.Count == 0 || path != null)
+        {
+            if (path == null)
+                HSPipeNet.SetPreview(null, null, false);
+            return;
+        }
+        var masks = new List<int>(show.Count);
+        for (int i = 0; i < show.Count; i++)
+            masks.Add(HSPipeNet.MaskAt(show[i]));
+        HSPipeNet.SetPreview(show, masks, false);
     }
 
     static List<Vector3i> Cells(World world, Vector3i parent)
@@ -1704,10 +1891,15 @@ public static class HSPipeTool
             if (hidden > 0)
                 route += "\n" + string.Format(Localization.Get("hsPipeUnderFloor"), hidden);
         }
+        string stretch = stretchA == null
+            ? ""
+            : Localization.Get("hsPipeHudStretch") + " " + Where(stretchA, stretchAName) + "\n"
+                + Localization.Get("hsPipeHudStretchHint") + "\n";
         return Localization.Get("hsPipeHudTitle") + "\n"
             + Localization.Get("hsPipeHudSystem") + " " + Where(start, startName)
             + (start != null ? "  " + string.Format(Localization.Get("hsPipeHudParts"), parts) : "") + "\n"
             + Localization.Get("hsPipeHudConnect") + " " + Where(end, endName) + "\n"
+            + stretch
             + route + "\n"
             + string.Format(Localization.Get("hsPipeHudHave"), have) + "\n"
             + Localization.Get("hsPipeHudHelp");
@@ -1716,6 +1908,12 @@ public static class HSPipeTool
     // The planned route is drawn as real pipe, green when you carry enough, red when short.
     public static void UpdatePreview(EntityPlayerLocal player, bool holding)
     {
+        if (holding && stretchA != null && path == null)
+        {
+            UpdateStretchPreview(player, true);
+            return;
+        }
+        UpdateStretchPreview(player, false);
         bool want = holding && path != null && start != null && end != null;
         bool enough = want && CanLay(player);
         int key = want ? routeVersion * 2 + (enough ? 1 : 0) : -1;

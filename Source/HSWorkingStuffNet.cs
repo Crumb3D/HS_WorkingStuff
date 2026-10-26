@@ -41,6 +41,7 @@ public static class HSWorkingStuffNet
     public const byte Salvage = 32;
     public const byte ShareSync = 33;
     public const byte LightLink = 34;
+    public const byte PipeRemoveStretch = 35;
 
     public static bool IsAuthority
     {
@@ -168,6 +169,21 @@ public static class HSWorkingStuffNet
         if (player == null)
             return;
         ToServer(Pkg().OfText(LightLink, player.entityId, sw, 0, text));
+    }
+
+    // Take up only the pipe stretch between two ends (fixtures or laid pipe cells).
+    public static void SendPipeStretch(Vector3i a, bool aPipe, Vector3i b, bool bPipe, EntityPlayer player)
+    {
+        if (player == null)
+            return;
+        string text = b.x + "," + b.y + "," + b.z + "," + (bPipe ? "1" : "0");
+        int arg = aPipe ? 1 : 0;
+        if (IsAuthority)
+        {
+            HSPipeTool.HandleStretchRemove(a, aPipe, b, bPipe, player);
+            return;
+        }
+        ToServer(Pkg().OfText(PipeRemoveStretch, player.entityId, a, arg, text));
     }
 
     public static void BroadcastShare(Vector3i pos, string text)
@@ -634,6 +650,23 @@ public abstract class NetPackageHSWorkingStuffCore : NetPackage
             {
                 if (HSWorkingStuffNet.IsAuthority)
                     HSLights.Link(pos, text);
+                return;
+            }
+            if (kind == HSWorkingStuffNet.PipeRemoveStretch)
+            {
+                if (!HSWorkingStuffNet.IsAuthority)
+                    return;
+                EntityPlayer stretchPlayer = world != null ? world.GetEntity(entityId) as EntityPlayer : null;
+                if (stretchPlayer == null && Sender != null && world != null)
+                    stretchPlayer = world.GetEntity(Sender.entityId) as EntityPlayer;
+                if (stretchPlayer == null || string.IsNullOrEmpty(text))
+                    return;
+                string[] f = text.Split(',');
+                int bx, by, bz, bp;
+                if (f.Length < 4 || !int.TryParse(f[0], out bx) || !int.TryParse(f[1], out by)
+                    || !int.TryParse(f[2], out bz) || !int.TryParse(f[3], out bp))
+                    return;
+                HSPipeTool.HandleStretchRemove(pos, units != 0, new Vector3i(bx, by, bz), bp != 0, stretchPlayer);
                 return;
             }
             if (world == null)

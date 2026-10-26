@@ -126,6 +126,148 @@ public static class HSPipeNet
         return removed;
     }
 
+    // Shortest laid-pipe path between two seed sets (pipe cells next to each end). Null if none.
+    public static List<Vector3i> FindStretch(IEnumerable<Vector3i> fromSeeds, IEnumerable<Vector3i> toSeeds)
+    {
+        var goals = new HashSet<long>();
+        foreach (Vector3i g in toSeeds)
+        {
+            if (Has(g))
+                goals.Add(HSWater.Key(g));
+        }
+        if (goals.Count == 0)
+            return null;
+        var q = new Queue<Vector3i>();
+        var came = new Dictionary<long, long>();
+        var seen = new HashSet<long>();
+        foreach (Vector3i s in fromSeeds)
+        {
+            if (!Has(s))
+                continue;
+            long sk = HSWater.Key(s);
+            if (!seen.Add(sk))
+                continue;
+            came[sk] = sk;
+            q.Enqueue(s);
+        }
+        Vector3i hit = Vector3i.zero;
+        bool found = false;
+        int walked = 0;
+        while (q.Count > 0 && walked < 8192)
+        {
+            Vector3i c = q.Dequeue();
+            walked++;
+            long ck = HSWater.Key(c);
+            if (goals.Contains(ck))
+            {
+                hit = c;
+                found = true;
+                break;
+            }
+            for (int i = 0; i < HSWater.Dirs.Length; i++)
+            {
+                Vector3i n = c + HSWater.Dirs[i];
+                long nk = HSWater.Key(n);
+                if (seen.Contains(nk) || !cells.ContainsKey(nk) || !Joins(c, n))
+                    continue;
+                seen.Add(nk);
+                came[nk] = ck;
+                q.Enqueue(n);
+            }
+        }
+        if (!found)
+            return null;
+        var path = new List<Vector3i>();
+        long cur = HSWater.Key(hit);
+        while (true)
+        {
+            path.Add(HSWater.FromKey(cur));
+            long prev = came[cur];
+            if (prev == cur)
+                break;
+            cur = prev;
+            if (path.Count > 8192)
+                break;
+        }
+        path.Reverse();
+        return path;
+    }
+
+    // Remove only this stretch. Tees keep arms that leave the path (other branches stay).
+    public static int RemoveStretch(List<Vector3i> path, int[] shapes)
+    {
+        if (!HSWorkingStuffNet.IsAuthority || path == null || path.Count == 0)
+            return 0;
+        var onPath = new HashSet<long>();
+        for (int i = 0; i < path.Count; i++)
+            onPath.Add(HSWater.Key(path[i]));
+        int removed = 0;
+        for (int i = 0; i < path.Count; i++)
+        {
+            Vector3i c = path[i];
+            if (!Has(c))
+                continue;
+            int oldMask = MaskAt(c);
+            int keep = 0;
+            for (int d = 0; d < HSWater.Dirs.Length; d++)
+            {
+                int bit = 1 << d;
+                if ((oldMask & bit) == 0)
+                    continue;
+                Vector3i n = c + HSWater.Dirs[d];
+                if (!Has(n) || !Joins(c, n))
+                    continue;
+                if (!onPath.Contains(HSWater.Key(n)))
+                    keep |= bit;
+            }
+            if (keep == 0)
+            {
+                if (shapes != null)
+                {
+                    int shape = Shape(oldMask);
+                    if (shape >= 0 && shape < shapes.Length)
+                        shapes[shape]++;
+                }
+                // Drop reciprocal faces on neighbours so dead stubs do not linger.
+                for (int d = 0; d < HSWater.Dirs.Length; d++)
+                {
+                    if ((oldMask & (1 << d)) == 0)
+                        continue;
+                    Vector3i n = c + HSWater.Dirs[d];
+                    if (!Has(n))
+                        continue;
+                    int nb = MaskAt(n) & ~DirBit(c - n);
+                    SetCell(n, nb);
+                    HSWorkingStuffNet.BroadcastPipe(n, nb);
+                }
+                SetCell(c, 0);
+                HSWorkingStuffNet.BroadcastPipe(c, 0);
+                removed++;
+            }
+            else if (keep != oldMask)
+            {
+                SetCell(c, keep);
+                HSWorkingStuffNet.BroadcastPipe(c, keep);
+                // Cleared arms: clear the neighbour face that pointed along the stretch.
+                int cleared = oldMask & ~keep;
+                for (int d = 0; d < HSWater.Dirs.Length; d++)
+                {
+                    if ((cleared & (1 << d)) == 0)
+                        continue;
+                    Vector3i n = c + HSWater.Dirs[d];
+                    if (!Has(n))
+                        continue;
+                    int nb = MaskAt(n) & ~DirBit(c - n);
+                    SetCell(n, nb);
+                    HSWorkingStuffNet.BroadcastPipe(n, nb);
+                }
+            }
+        }
+        if (removed > 0 || path.Count > 0)
+            dirty = true;
+        return removed;
+    }
+
     public static void SendAll(int entityId)
     {
         foreach (var kv in cells)

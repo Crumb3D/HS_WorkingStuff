@@ -219,6 +219,16 @@ blockcommand_valvedown,UI,commands,,,K,Turn down
 blockcommand_heatingon,UI,commands,,,K,Central heating on
 blockcommand_heatingoff,UI,commands,,,K,Central heating off
 hsPipeRadialTakeUp,UI,tooltip,,,K,Take up pipes
+hsPipeRadialTakeStretch,UI,tooltip,,,K,Take up stretch
+hsPipeAimStretchFirst,UI,tooltip,,,K,"Aim at one end of the run (rain catch, tank, sink, boiler, intake or laid pipe)"
+hsPipeAimStretchSecond,UI,tooltip,,,K,Aim at the other end of the run to take up
+hsPipeStretchPicked,UI,tooltip,,,K,Stretch from {0}. Aim at the other end and Take up stretch again
+hsPipeStretchCancel,UI,tooltip,,,K,Take up stretch cancelled
+hsPipeStretchNoPath,UI,tooltip,,,K,No laid pipe between {0} and {1}
+hsPipeStretchTrimmed,UI,tooltip,,,K,"Cleared that branch at the joint; other pipes left alone"
+hsPipeStretchTook,UI,tooltip,,,K,Took up {0} pipes from {1} to {2}
+hsPipeHudStretch,UI,tooltip,,,K,Take up stretch from:
+hsPipeHudStretchHint,UI,tooltip,,,K,Aim at the other end and Take up stretch again (red preview). Same end cancels.
 hsPipeNoneHere,UI,tooltip,,,K,"No laid pipe here: look at it, or at the block it joins"
 hsPipeRemoved,UI,tooltip,,,K,Took up {0} pipes
 hsFreezer,blocks,Block,,,,Chest Freezer
