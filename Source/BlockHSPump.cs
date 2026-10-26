@@ -6,6 +6,10 @@ using UnityEngine;
 // Sit on dry land next to water (not in it). More engines pump faster.
 public class BlockHSPump : BlockGenerator
 {
+    // Genny start/stop come from PowerGenerator. Continuous rumble is on the vanilla prefab's
+    // Activated child — our mesh has none, so play generator_run while the pump is on.
+    public const string RunSound = "generator_run";
+
     readonly BlockActivationCommand[] pumpCmds = new BlockActivationCommand[]
     {
         new BlockActivationCommand("open", "hand", true),
@@ -17,6 +21,20 @@ public class BlockHSPump : BlockGenerator
     {
         base.OnBlockEntityTransformAfterActivated(_world, _blockPos, _blockValue, _ebcd);
         HSModelHit.Wire(_ebcd);
+        if ((_blockValue.meta & 2) != 0)
+            HSPumpSound.PlayRun(_blockPos);
+    }
+
+    public override void OnBlockRemoved(WorldBase _world, Chunk _chunk, Vector3i _blockPos, BlockValue _blockValue)
+    {
+        HSPumpSound.StopRun(_blockPos);
+        base.OnBlockRemoved(_world, _chunk, _blockPos, _blockValue);
+    }
+
+    public override void OnBlockUnloaded(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue)
+    {
+        HSPumpSound.StopRun(_blockPos);
+        base.OnBlockUnloaded(_world, _blockPos, _blockValue);
     }
 
     public override string GetPowerSourceIcon()
@@ -89,6 +107,35 @@ public class BlockHSPump : BlockGenerator
             return true;
         }
         return base.OnBlockActivated(_commandName, _world, _blockPos, _blockValue, _player);
+    }
+}
+
+static class HSPumpSound
+{
+    public static Vector3 At(Vector3i pos)
+    {
+        return pos.ToVector3();
+    }
+
+    public static void PlayRun(Vector3i pos)
+    {
+        Audio.Manager.BroadcastPlay(At(pos), BlockHSPump.RunSound);
+    }
+
+    public static void StopRun(Vector3i pos)
+    {
+        Audio.Manager.BroadcastStop(At(pos), BlockHSPump.RunSound);
+    }
+
+    public static bool IsPumpPower(PowerSource src)
+    {
+        if (src == null || !(src is PowerGenerator))
+            return false;
+        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
+        if (world == null || src.TileEntity == null)
+            return false;
+        Block b = world.GetBlock(src.TileEntity.ToWorldPos()).Block;
+        return b != null && b.GetBlockName() == HSWater.PumpName;
     }
 }
 
@@ -197,6 +244,22 @@ static class HSPatchPumpStatsBindings
                 value = water ? "1" : "0";
                 break;
         }
+    }
+}
+
+// Continuous genny rumble while the pump runs (start/stop already come from PowerGenerator).
+[HarmonyPatch(typeof(PowerSource), "HandleOnOffSound")]
+static class HSPatchPumpRunSound
+{
+    static void Postfix(PowerSource __instance)
+    {
+        if (!HSPumpSound.IsPumpPower(__instance))
+            return;
+        Vector3i pos = __instance.Position;
+        if (__instance.IsOn)
+            HSPumpSound.PlayRun(pos);
+        else
+            HSPumpSound.StopRun(pos);
     }
 }
 

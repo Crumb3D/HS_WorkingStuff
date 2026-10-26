@@ -2,6 +2,11 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.92
+
+- **Thermometer Outside = compass temp.** Outside on the wall thermometer is the same value as the top HUD figure (`_outsidetemp`), not a separate raw weather reading.
+- **Water Pump sounds like a genny.** Start / stop were already the generator clips; while it is on it now also plays the same continuous generator rumble.
+
 ## 1.0.91
 
 - **Compass temp is outside again.** Top HUD shows true outdoor weather. Room on the wall thermometer is derived from that (lag / insulation / heating). Indoor core temp still follows the room so the house protects you.

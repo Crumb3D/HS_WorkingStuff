@@ -30,11 +30,26 @@ public static class HSRoomTemp
         HSRadiatorHeat.Clear();
     }
 
-    // True outdoor air: same base the compass HUD uses before shelter (WeatherManager + height).
+    // Biome outdoor air at a world point (WeatherManager + height). Room physics uses this.
     public static float Weather(Vector3 at)
     {
         float air = WeatherManager.GetTemperature();
         return air + Utils.FastLerp(0f, -20f, (at.y - 130f) / 100f);
+    }
+
+    // Exact same number as the compass top temp (_outsidetemp). Thermometer Outside must match this.
+    public static float HudOutside(EntityAlive who, Vector3 fallbackAt)
+    {
+        EntityPlayerLocal lp = who as EntityPlayerLocal;
+        if (lp != null && lp.Buffs != null)
+            return lp.Buffs.GetCustomVar("_outsidetemp");
+        if (lp == null && GameManager.Instance != null && GameManager.Instance.World != null)
+        {
+            lp = GameManager.Instance.World.GetPrimaryPlayer();
+            if (lp != null && lp.Buffs != null)
+                return lp.Buffs.GetCustomVar("_outsidetemp");
+        }
+        return Weather(fallbackAt);
     }
 
     public static bool Heating(World world, Vector3 at)
@@ -49,7 +64,8 @@ public static class HSRoomTemp
 
     public static float Room(World world, Vector3 at)
     {
-        float outdoor = Weather(at);
+        // Indoor air tracks the same outdoor figure the compass shows, then lag / heating apply.
+        float outdoor = HudOutside(null, at);
         float mass = Mass(world, at);
         float shell = Shell(outdoor, mass);
         float target = shell;
@@ -339,7 +355,8 @@ public static class HSPatchRoomCoreTemp
     }
 }
 
-// Wall thermometer: room air where it hangs (from outdoor weather via Room), and true Outside weather.
+// Outside on the thermometer is the same number as the compass HUD (_outsidetemp).
+// Room is still local air at the block (lag / insulation / heating from outdoor weather).
 public class BlockHSThermometer : Block
 {
     public override void OnBlockEntityTransformAfterActivated(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, BlockEntityData _ebcd)
@@ -356,7 +373,7 @@ public class BlockHSThermometer : Block
         if (world == null)
             return name;
         float room = HSRoomTemp.Room(world, at);
-        float outside = HSRoomTemp.Weather(at);
+        float outside = HSRoomTemp.HudOutside(_entityFocusing, at);
         string text = name + "\n" + HSLoc.Format("hsThermoRoom", "Room: {0}", HSRoomTemp.Format(room))
             + "   " + HSLoc.Format("hsThermoOutside", "Outside: {0}", HSRoomTemp.Format(outside));
         string state;
