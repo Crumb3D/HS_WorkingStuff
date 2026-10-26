@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.83
+
+- **Wall thermometer temps.** Room no longer snaps to a fake 21°C comfort reading that matched the compass. Outside is the real weather (same base as the game). Room follows outdoor air with lag, and only heating / air con pulls it away. Compass temp indoors is the room air; Outside on the thermometer is weather.
+
 ## 1.0.82
 
 - **Water Pump has its own power.** Open it like a generator bank: put in small engines and petrol, then turn it on. No wiring to another generator. While it is on and next to water it pumps into a piped rain catch or tank. Looking at it (and the open window header) shows whether it has water, whether it is piped, and whether it is running. Custom pump mesh and icon.

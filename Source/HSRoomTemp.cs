@@ -30,41 +30,10 @@ public static class HSRoomTemp
         HSRadiatorHeat.Clear();
     }
 
-    // Outdoor air where this spot is: that biome's weather, then the height drop vanilla uses.
+    // True outdoor air: same base the compass HUD uses before shelter (WeatherManager + height).
     public static float Weather(Vector3 at)
     {
         float air = WeatherManager.GetTemperature();
-        World world = GameManager.Instance != null ? GameManager.Instance.World : null;
-        if (world != null)
-        {
-            try
-            {
-                int x = Mathf.FloorToInt(at.x);
-                int z = Mathf.FloorToInt(at.z);
-                BiomeDefinition biome = world.GetBiomeInWorld(x, z);
-                if (biome == null)
-                    biome = world.GetBiome(x, z);
-                WeatherManager wm = WeatherManager.Instance;
-                if (biome != null && wm != null && wm.biomeWeather != null)
-                {
-                    for (int i = 0; i < wm.biomeWeather.Count; i++)
-                    {
-                        WeatherManager.BiomeWeather bw = wm.biomeWeather[i];
-                        if (bw == null || bw.biomeDefinition == null || bw.biomeDefinition.m_Id != biome.m_Id)
-                            continue;
-                        float picked = bw.parameterFinals != null && bw.parameterFinals.Length > 0 ? bw.parameterFinals[0] : 0f;
-                        if (picked > -0.5f && picked < 0.5f)
-                        {
-                            float rolled = biome.WeatherGetValue(BiomeDefinition.Probabilities.ProbType.Temperature);
-                            picked = (rolled > 0.5f || rolled < -0.5f) ? rolled : air;
-                        }
-                        air = picked;
-                        break;
-                    }
-                }
-            }
-            catch { }
-        }
         return air + Utils.FastLerp(0f, -20f, (at.y - 130f) / 100f);
     }
 
@@ -107,19 +76,18 @@ public static class HSRoomTemp
         return Stored(world, at, target, shell, mass, hvac);
     }
 
-    // Heavy walls keep almost all of the biome. Timber takes more of the edge off.
+    // Without heating / air con the room follows outdoor air. Mass only slows that change (Stored).
+    // Do not snap toward 70F comfort — that made "Room" look like the sheltered HUD reading.
     static float Shell(float outdoor, float mass)
     {
-        float edge = HSWorkingStuffSettings.IndoorInsulation;
         if (mass < 0.5f)
-            edge *= 0.2f;
-        else
-        {
-            float hold = Mathf.Max(0.35f, mass);
-            edge *= 1.15f / hold;
-            edge = Mathf.Min(edge, HSWorkingStuffSettings.IndoorInsulation * 2.2f);
-        }
-        return outdoor < Comfort ? Mathf.Min(Comfort, outdoor + edge) : Mathf.Max(Comfort, outdoor - edge);
+            return outdoor;
+        // Heavy shell mutes outdoor extremes a little (insulation degrees), still centred on outdoor.
+        float mute = Mathf.Clamp(HSWorkingStuffSettings.IndoorInsulation * 0.15f * Mathf.Min(mass, 2.5f), 0f, 8f);
+        float delta = outdoor - Comfort;
+        if (Mathf.Abs(delta) <= mute)
+            return outdoor;
+        return outdoor - Mathf.Sign(delta) * mute;
     }
 
     static float Stored(World world, Vector3 at, float target, float shell, float mass, bool hvac)
@@ -303,6 +271,7 @@ public static class HSRoomTemp
 }
 
 // Vanilla pulls a sheltered player's temperature 30F towards 70F at once. This swaps that for the room temperature above.
+// Compass HUD "_outsidetemp" is this value: outdoors = weather, indoors = room air (not the old comfort bias).
 [HarmonyPatch(typeof(PlayerEntityStats), "GetOutsideTemperature")]
 public static class HSPatchRoomTemp
 {
@@ -333,7 +302,8 @@ public static class HSPatchRoomTemp
     }
 }
 
-// Wall thermometer: room temperature where it hangs, the weather outside, and what the heating is doing.
+// Wall thermometer: room air where it hangs, true outdoor weather, and what the heating is doing.
+// Compass temp while indoors is room air too — Outside here is raw weather, not the HUD reading.
 public class BlockHSThermometer : Block
 {
     public override void OnBlockEntityTransformAfterActivated(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, BlockEntityData _ebcd)
@@ -350,8 +320,9 @@ public class BlockHSThermometer : Block
         if (world == null)
             return name;
         float room = HSRoomTemp.Room(world, at);
+        float outside = HSRoomTemp.Weather(at);
         string text = name + "\n" + HSLoc.Format("hsThermoRoom", "Room: {0}", HSRoomTemp.Format(room))
-            + "   " + HSLoc.Format("hsThermoOutside", "Outside: {0}", HSRoomTemp.Format(HSRoomTemp.Weather(at)));
+            + "   " + HSLoc.Format("hsThermoOutside", "Outside: {0}", HSRoomTemp.Format(outside));
         string state;
         if (HSRoomTemp.Heating(world, at))
             state = HSLoc.Get("hsThermoHeating", "Radiator heating the room");
