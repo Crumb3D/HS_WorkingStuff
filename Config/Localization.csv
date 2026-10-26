@@ -3,11 +3,11 @@ hsConnectToIp,UI,Menu,K,,K,Connect to IP
 hsAuthServerStarting,UI,Menu,K,,K,Server is Starting up please wait
 hsFridgeWindow,UI,Menu,,K,K,Fridge
 hsFridge,blocks,Block,,,,Working Fridge
-hsFridgeDesc,blocks,Block,,,,"A powered fridge. Keep it wired and food lasts four times longer. Unpowered it is just a box. E to open, store perishables, or pull spoiled food."
+hsFridgeDesc,blocks,Block,,,,"A powered fridge. Keep it wired and food lasts about 7 days (about 3 days on you). Unpowered it is just a box. E to open, store perishables, or pull spoiled food."
 hsCooler,blocks,Block,,,,Working Cooler
 hsCoolerDesc,blocks,Block,,,,"An ice chest. Food inside lasts twice as long. No power needed."
 hsDryingRack,blocks,Block,,,,Drying Rack
-hsDryingRackDesc,blocks,Block,,,,"Hang raw meat here for about a day to make dried meat that keeps longer."
+hsDryingRackDesc,blocks,Block,,,,"A wooden rack with bars and hooks. Hang raw meat here for about a day to make dried meat that keeps longer."
 hsCompost,blocks,Block,,,,Compost Box
 hsCompostDesc,blocks,Block,,,,"Spoiled food left in here turns into nitrate powder after about a day."
 hsPipeStraight,blocks,Block,,,,Water Pipe
@@ -17,11 +17,11 @@ hsPipeDesc,blocks,Block,,,,"Joins rain catch to tank, tank to sink, tank to boil
 hsPipeTool,items,Item,,,,Pipe Tool
 hsPipeToolDesc,items,Item,,,,"Lays water pipe for you. Hold E: New Water System or Use Water System Here on a rain catch, tank, boiler, sink, radiator, intake or laid pipe, then New Connection on each thing to pipe to it, then Lay pipes. Left click is Use Water System Here, right click is New Connection. Pipe runs along floors and walls, radiators are fed under the floor, and it lays the run if you carry enough water pipes. Laid pipe is not a block: you can build walls, floors and furniture right over it, and you only see it where nothing covers it. E > Take up pipes gives a run back."
 hsWaterIntake,blocks,Block,,,,Water Intake
-hsWaterIntakeDesc,blocks,Block,,,,"Place against a lake, river, or other water block. Pipe from here to a sink for unlimited murky water."
+hsWaterIntakeDesc,blocks,Block,,,,"Place against a lake, river, or other water block. Pipe it to a rain catch (cleaned only if the catch has a dew filter) or straight to a tank (murky, fine for toilets). You can still pipe it to a sink for unlimited murky water."
 hsWaterTank,blocks,Block,,,,Water Tank
-hsWaterTankDesc,blocks,Block,,,,"Holds 40 jars of water. It does not collect on its own: pipe a rain catch into it, or pour jars and buckets in. Pipe it on to a sink for the cold tap, and through a combi boiler for the hot tap."
+hsWaterTankDesc,blocks,Block,,,,"Holds 40 jars of water. It does not collect on its own: pipe a rain catch into it, pipe a lake intake for murky water, or pour jars and buckets in. Pipe it on to a sink for the cold tap, and through a combi boiler for the hot tap."
 hsRainCatch,blocks,Block,,,,Rain Catch
-hsRainCatchDesc,blocks,Block,,,,"Collects dew and rain under open sky, no jars needed. Bare it gives murky water. Install a dew filter for clean water; a dew gatherer and tarp speed it up. Pipe it to a water tank and it fills the tank by itself."
+hsRainCatchDesc,blocks,Block,,,,"Collects dew and rain under open sky, no jars needed. Bare it gives murky water. Install a dew filter for clean water; a dew gatherer and tarp speed dew and rain up. Pipe a lake intake into it and it fills from the lake too — clean only with a dew filter, otherwise murky. Pipe it to a water tank and it fills the tank by itself."
 hsSink,blocks,Block,,,,Working Sink
 hsSinkDesc,blocks,Block,,,,"Two taps. Cold comes straight from a piped tank or lake intake, as clean or murky as that water is. Hot comes through a powered combi boiler and is always boiled. A tap with no supply shows greyed out with what it needs. POI kitchen sinks work the same way if you pipe them."
 hsWaterHeater,blocks,Block,,,,Combi Boiler
@@ -31,10 +31,10 @@ hsWaterHeaterVanillaDesc,blocks,Block,,,,"A POI cylinder heater repaired into a 
 hsStoveOld,blocks,Block,,,,Electric Cooker
 hsStoveModern,blocks,Block,,,,Electric Cooker
 hsStoveWall,blocks,Block,,,,Electric Wall Oven
-hsStoveDesc,blocks,Block,,,,"An electric cooker. Same recipes and tools as a campfire (pot, grill, beaker). No wood. Wire it to power or it will not cook."
+hsStoveDesc,blocks,Block,,,,"An electric cooker. Same recipes and tools as a campfire (pot, grill, beaker), about a fifth faster, and no wood. Wire it to power or it will not cook."
 hsMicrowave,blocks,Block,,,,Microwave
 hsMicrowaveRetro,blocks,Block,,,,Retro Microwave
-hsMicrowaveDesc,blocks,Block,,,,"A cheap powered microwave. Boils water, makes coffee and tea, bakes potatoes, corn on the cob, vegetable stew, sham chowder, spaghetti and gumbo. No pot or grill needed, but you still have to know the recipe. Wire it to power, 5W. Close the door to cook, look at it for the time left. Dings when it is done. Hold E for Defrost to thaw frozen food you carry."
+hsMicrowaveDesc,blocks,Block,,,,"A cheap powered microwave. About 30% faster than the electric cooker. Boils water, makes coffee and tea, bakes potatoes, corn on the cob, vegetable stew, sham chowder, spaghetti and gumbo. No pot or grill needed, but you still have to know the recipe. Wire it to power, 5W. Close the door to cook, look at it for the time left. Dings when it is done. Hold E for Defrost to thaw frozen food you carry. A cooker, campfire or grill can defrost too."
 hsMicrowavePowered,UI,tooltip,,,K,Powered: ready to cook
 hsMicrowaveUnpowered,UI,tooltip,,,K,No power: wire this microwave to cook
 hsMicrowaveCooking,UI,tooltip,,,K,Cooking {0}: {1} left
@@ -54,7 +54,7 @@ hsSpoiledFood,items,Item,,,,Spoiled Food
 hsSpoiledFoodDesc,items,Item,,,,"This food sat too long. Compost it for nitrate, or eat it if you like a gamble."
 hsDriedMeat,items,Item,,,,Dried Meat
 hsDriedMeatDesc,items,Item,,,,"Dried on a rack. Keeps about three weeks."
-hsFridgePowered,UI,tooltip,,,K,Powered: food lasts 4x longer
+hsFridgePowered,UI,tooltip,,,K,Powered: food lasts about 7 days
 hsFridgeUnpowered,UI,tooltip,,,K,Unpowered: spoils at normal speed
 hsFridgeEmptyFood,UI,tooltip,,,K,No perishable food stored
 hsFridgeFoodOnly,UI,tooltip,,,K,Only food that spoils goes in here
@@ -124,7 +124,10 @@ hsSinkHot,UI,tooltip,,,K,Hot: {0}
 hsSinkHotNoHeater,UI,tooltip,,,K,Hot: needs pipes to a combi boiler
 hsSinkHotNoPower,UI,tooltip,,,K,Hot: the boiler has no power
 hsSinkHotDry,UI,tooltip,,,K,Hot: the boiler has no tank or intake behind it
-hsSinkColdEmpty,UI,tooltip,,,K,Cold: the tank is empty. Pipe a rain catch to it or pour water in
+hsSinkColdEmpty,UI,tooltip,,,K,"Cold: the tank is empty. Pipe a rain catch or lake intake to it, or pour water in"
+hsRainLakeClean,UI,tooltip,,,K,Lake intake: cleaning to clean water
+hsRainLakeMurky,UI,tooltip,,,K,Lake intake: murky until a dew filter is fitted
+hsTankLakeMurky,UI,tooltip,,,K,Lake intake: filling with murky water
 hsSinkHotEmpty,UI,tooltip,,,K,Hot: the tank behind the boiler is empty
 hsPipeToolHint,UI,tooltip,,,K,"Pipe Tool: E for menu, left click use water system here, right click new connection"
 hsPipeRadialNewSystem,UI,tooltip,,,K,New Water System
@@ -150,7 +153,19 @@ hsPipeLaid,UI,tooltip,,,K,Laid {0} pipes: {1} to {2}. Look at the next thing and
 hsPipeSameBlock,UI,tooltip,,,K,That is the water system itself
 hsPipeEndGone,UI,tooltip,,,K,The water system or the thing you are connecting is gone
 hsPipeTouching,UI,tooltip,,,K,"Those two already touch, no pipe needed"
-hsPipeNoRoute,UI,tooltip,,,K,"No route along walls or floors: blocked, or longer than 64 pipes"
+hsPipeNoRoute,UI,tooltip,,,K,"No route. Pipe runs inside a solid floor or along a wall, and it will not cross open air"
+hsPipeNoExit,UI,tooltip,,,K,"No way out of {0}. Pipe leaves through a solid block under it, or along a wall at its base"
+hsPipeNoEntry,UI,tooltip,,,K,"No way into {0}. Pipe arrives from a solid block under it, or along a wall at its base"
+hsPipeTeeUnder,UI,tooltip,,,K,The pipe already runs through the floor under {0}. Pick Lay pipes to tee a joint up into it. The straight piece comes back
+hsPipeTeed,UI,tooltip,,,K,Fed {0} from the pipe already in the floor under it
+hsPipePieces,UI,tooltip,,,K,"Uses {0} straight, {1} corners, {2} joints"
+hsPipeNeedShapes,UI,tooltip,,,K,"Need {0} straight, {1} corners and {2} joints. You have {3}, {4} and {5}"
+hsPipeShortShapes,UI,tooltip,,,K,"Short of the straight, corner or joint pieces this run uses."
+hsPipeTook,UI,tooltip,,,K,"Took up {0} straight, {1} corners and {2} joints"
+hsTankPoured,UI,tooltip,,,K,Poured {0} in. The tank holds {1} of {2}
+hsPipeBlockedAir,UI,tooltip,,,K,"Blocked by open air at {0} {1} {2}. Pipe will not cross that. Run it inside a solid floor, or along a wall"
+hsPipeBlockedBlock,UI,tooltip,,,K,"Blocked at {0} {1} {2} by {3}. Pipe only goes through a full floor or wall"
+hsPipeTooBig,UI,tooltip,,,K,"That run crosses a huge area of floor and still has not arrived. Drop a tank part way and connect it in two goes"
 hsPipeNotSet,UI,tooltip,,,K,not set
 hsPipeRouteNoSystem,UI,tooltip,,,K,Route: pick New Water System or Use Water System Here
 hsPipeRoutePending,UI,tooltip,,,K,Route: look at a thing and pick New Connection
@@ -199,24 +214,30 @@ hsPipeRadialTakeUp,UI,tooltip,,,K,Take up pipes
 hsPipeNoneHere,UI,tooltip,,,K,"No laid pipe here: look at it, or at the block it joins"
 hsPipeRemoved,UI,tooltip,,,K,Took up {0} pipes
 hsFreezer,blocks,Block,,,,Chest Freezer
-hsFreezerDesc,blocks,Block,,,,"A powered chest freezer. Keep it wired (10W) and food in it does not spoil at all, but it freezes solid after 2 hours. Frozen food can't be eaten or cooked: let it thaw, or Defrost it at a microwave. Unpowered it is just a box. E to open, store perishables, or pull spoiled food."
+hsFreezerDesc,blocks,Block,,,,"A powered chest freezer. Keep it wired (10W) and food lasts about 90 days, and it freezes solid after 2 hours. Frozen food can't be eaten or cooked until you defrost it at a microwave, cooker, campfire or grill, or leave it out to thaw. Unpowered it is just a box. E to open, store perishables, or pull spoiled food."
 hsFreezerWindow,UI,Menu,,K,K,Freezer
-hsFreezerPowered,UI,tooltip,,,K,Powered: frozen food does not spoil
+hsFreezerPowered,UI,tooltip,,,K,Powered: food lasts about 90 days and freezes
 hsWaterCooler,blocks,Block,,,,Plumbed Water Cooler
 hsWaterCoolerDesc,blocks,Block,,,,"A water cooler plumbed into your water system. Pipe it to a tank like a sink. It has its own filter, so even murky tank water comes out clean: drink from it or fill jars."
 hsCoolerFiltered,UI,tooltip,,,K,Built-in filter: comes out clean
 hsShower,blocks,Block,,,,Shower
-hsShowerDesc,blocks,Block,,,,"Pipe it to a powered combi boiler for hot water. A shower uses 2 jars of hot water and washes off all your smell for 10 minutes: carried meat, food and sickness will not draw zombies by smell."
+hsShowerDesc,blocks,Block,,,,"Pipe it for water. A shower uses 2 jars. Hot water from a powered combi washes off nearly all your smell for 10 minutes. Cold water still washes, but only about half the smell comes off, and only for 5 minutes."
 hsBath,blocks,Block,,,,Bath
-hsBathDesc,blocks,Block,,,,"Pipe it to a powered combi boiler for hot water. A bath uses 4 jars of hot water and washes off all your smell for 20 minutes: carried meat, food and sickness will not draw zombies by smell."
+hsBathDesc,blocks,Block,,,,"Pipe it for water. A bath uses 4 jars. Hot water from a powered combi washes off all your smell for 20 minutes. Cold water still washes, but only about half the smell comes off, and only for 10 minutes."
 blockcommand_wash,UI,commands,,,K,Wash
-hsWashUses,UI,tooltip,,,K,A wash uses {0} jars of hot water
-hsWashShort,UI,tooltip,,,K,Not enough hot water: a wash needs {0} jars
+hsWashUses,UI,tooltip,,,K,A wash uses {0} jars. Hot water cleans more than cold
+hsWashShort,UI,tooltip,,,K,Not enough water: a wash needs {0} jars. Hot water cleans more
 hsWashShower,UI,tooltip,,,K,"Showered: nearly all of your body smell is gone, and nothing smells on you for 10 minutes"
 hsWashBath,UI,tooltip,,,K,"Bathed: all of your body smell is gone, and nothing smells on you for 20 minutes"
+hsWashColdShower,UI,tooltip,,,K,"Cold shower: about half your body smell is gone, and nothing smells on you for 5 minutes"
+hsWashColdBath,UI,tooltip,,,K,"Cold bath: about half your body smell is gone, and nothing smells on you for 10 minutes"
+hsSinkWashedCold,UI,tooltip,,,K,Washed up in cold water: about half as much smell off
 buffHSWashedName,buffs,Buff,,,,Freshly Showered
 buffHSWashedBathName,buffs,Buff,,,,Freshly Bathed
 buffHSWashedDesc,buffs,Buff,,,,"You are clean. Nothing you carry or ate gives off a smell zombies can follow."
+buffHSWashedColdName,buffs,Buff,,,K,Cold Wash
+buffHSWashedColdBathName,buffs,Buff,,,K,Cold Bath
+buffHSWashedColdDesc,buffs,Buff,,,,"A cold wash. About half your body smell is gone, and it does not last as long as hot water."
 hsAirCon,blocks,Block,,,,Wall Air Conditioner
 hsAirConDesc,blocks,Block,,,,"A wall-mounted home air conditioner. Place it on a wall at head height or above. Wire it to power (20W) and it keeps you cool within about 6 blocks, the summer version of a radiator."
 hsAirConOn,UI,tooltip,,,K,Powered: cooling within {0} blocks
@@ -230,8 +251,8 @@ hsCharcoalGrillDesc,blocks,Block,,,,"A barbecue. Grills corn, meat, steak and po
 hsAirConCeiling,blocks,Block,,,,Ceiling Air Conditioner
 hsAirConCeilingDesc,blocks,Block,,,,"A commercial ceiling cassette air conditioner. Place it against a ceiling. Wire it to power (30W) and it keeps you cool within about 6 blocks."
 hsFridgeWhite,blocks,Block,,,,Fridge-Freezer (White)
-hsFridgeWhiteDesc,blocks,Block,,,,"A tall white UK fridge-freezer, two blocks high. Keep it wired (5W). It has two compartments: tap E for the fridge, where food lasts four times longer, or hold E and pick Open freezer, where food freezes solid in about 4 hours (a chest freezer takes 2) and barely spoils. Store food puts it in the fridge."
-hsFridgeFreezerPowered,UI,tooltip,,,K,"Powered: fridge food lasts 4x longer, freezer food freezes"
+hsFridgeWhiteDesc,blocks,Block,,,,"A tall white UK fridge-freezer, two blocks high. Keep it wired (5W). It has two compartments: tap E for the fridge, where food lasts about 7 days, or hold E and pick Open freezer, where food lasts about 30 days and freezes solid in about 4 hours (a chest freezer takes 2 and lasts about 90 days). Frozen food has to be defrosted at a microwave, cooker, campfire or grill. Store food puts it in the fridge."
+hsFridgeFreezerPowered,UI,tooltip,,,K,"Powered: fridge about 7 days, freezer about 30 days and it freezes"
 hsFridgeTemp,UI,tooltip,,,K,Fridge: {0}
 hsFreezerTemp,UI,tooltip,,,K,Freezer: {0}
 hsWasher,blocks,Block,,,,Washing Machine
@@ -255,11 +276,11 @@ hsLaundryPowered,UI,tooltip,,,K,Powered
 hsLaundryNoPower,UI,tooltip,,,K,No power: wire it up first
 hsWasherHolds,UI,tooltip,,,K,{0} clothes or armour inside
 hsDryerHolds,UI,tooltip,,,K,{0} wet items inside
-hsWasherEmpty,UI,tooltip,,,K,Nothing to wash: put clothes or armour in first
+hsWasherEmpty,UI,tooltip,,,K,Nothing you're wearing or carrying needs a wash
 hsWasherStarted,UI,tooltip,,,K,Running: about {0} seconds
 hsWasherRunning,UI,tooltip,,,K,Running: {0}s left
 hsWasherBusy,UI,tooltip,,,K,Already running
-hsDryerEmpty,UI,tooltip,,,K,Nothing wet to dry
+hsDryerEmpty,UI,tooltip,,,K,Nothing you're wearing or carrying is wet
 hsWasherShort,UI,tooltip,,,K,Not enough water: a wash needs {0} jars
 hsLaundryWashInfo,UI,tooltip,,,K,This one is {0}% dirty. Washing takes {1}s
 hsLaundryDryInfo,UI,tooltip,,,K,This one is {0}% wet. Drying takes {1}s
@@ -279,14 +300,15 @@ hsClothesWorn,UI,tooltip,,,K,Worn
 hsClothesDirty,UI,tooltip,,,K,Dirty
 hsClothesFilthy,UI,tooltip,,,K,Filthy
 hsClothesDirt,UI,tooltip,,,K,{0}: {1}% dirty
+hsClothesNeedsWash,UI,tooltip,,,K,Needs a wash. The Dirty Clothes icon is on
 hsClothesSmell,UI,tooltip,,,K,Adds to your smell: wash it in a washing machine
 hsClothesWet,UI,tooltip,,,K,"Wet: cold to wear, dries in {0} h. A washing line, airer or dryer is quicker"
 buffHSSmellyName,buffs,Buff,,,,Unwashed
-buffHSSmellyDesc,buffs,Buff,,,,The number is extra metres zombies can smell you. Have a shower or a bath to clear it.
+buffHSSmellyDesc,buffs,Buff,,,,"The number is extra metres zombies can smell you. Sweating builds it faster. A shower, a bath, or a dip in a lake clears it."
 buffHSSmellyValue,buffs,Buff,,,,{0:0} m
 buffHSDirtyClothesName,buffs,Buff,,,,Dirty Clothes
-buffHSDirtyClothesDesc,buffs,Buff,,,,The number is extra metres from dirty clothes. Wash them in a washing machine.
-buffHSDirtyClothesValue,buffs,Buff,,,,{0:0} m
+buffHSDirtyClothesDesc,buffs,Buff,,,,"The number is how dirty your worst piece is. Wash them in a machine. About half dirty, they start drawing zombies."
+buffHSDirtyClothesValue,buffs,Buff,,,,{0:0}%
 buffHSWetClothesName,buffs,Buff,,,,Wet Clothes
 buffHSWetClothesDesc,buffs,Buff,,,,The number is hours until the wet clothes dry on you. A dryer is quicker.
 buffHSWetClothesValue,buffs,Buff,,,,{0:0} h
@@ -296,9 +318,9 @@ hsSocketUSSingle,blocks,Block,,,,US Outlet (Single)
 hsSocketUSDouble,blocks,Block,,,,US Outlet (Duplex)
 hsLightSwitchUK,blocks,Block,,,,UK Light Switch
 hsCookerSwitchUK,blocks,Block,,,,UK Cooker Switch (45A)
-hsSocketUKDesc,blocks,Block,,,,"A UK 13A wall socket with its own switch. Wire power into it, then wire from it to the appliance: one plug for a single socket, two for a double. Switch it off and everything plugged in goes off."
-hsSocketUSDesc,blocks,Block,,,,"A US wall outlet, always live with no switch. Wire power into it, then wire from it to the appliance: one plug for a single outlet, two for a duplex."
-hsLightSwitchUKDesc,blocks,Block,,,,"A UK rocker light switch. Wire power into it, then wire your lights or air con from it. Chain more switches on from it like sockets: power always goes through, and each switch only turns its own lights on and off."
+hsSocketUKDesc,blocks,Block,,,,"A UK 13A wall socket with its own switch. It only goes on a solid wall, not on an appliance. Wire power into it, then wire from it to the appliance: one plug for a single socket, two for a double. Place a kettle, toaster or hi-fi in that same block and the socket stays on the wall behind it. Switch it off and everything plugged in goes off."
+hsSocketUSDesc,blocks,Block,,,,"A US wall outlet, always live with no switch. It only goes on a solid wall, not on an appliance. Wire power into it, then wire from it to the appliance: one plug for a single outlet, two for a duplex. Place a kettle, toaster or hi-fi in that same block and the outlet stays on the wall behind it."
+hsLightSwitchUKDesc,blocks,Block,,,,"A UK rocker light switch. It only goes on a solid wall. Wire power into it, then wire your lights or air con from it. With the wire tool, click the switch and then a house light to run that light from the switch. It comes on only while the switch is on and the switch has power. Chain more switches on from it like sockets: power always goes through, and each switch only turns its own lights on and off."
 hsCookerSwitchUKDesc,blocks,Block,,,,A UK 45A cooker switch with a red rocker and neon. Wire power into it and from it to one cooker.
 hsPlugFullOne,UI,tooltip,,,K,This socket takes one plug and it is already in use
 hsPlugFullMany,UI,tooltip,,,K,This socket takes {0} plugs and both are in use
@@ -306,7 +328,7 @@ hsPlugUsed,UI,tooltip,,,K,Plugs: {0} of {1} in use
 hsPlugPowered,UI,tooltip,,,K,Live
 hsPlugNoPower,UI,tooltip,,,K,"No power: wire it from a generator, battery bank or solar bank"
 hsLightSwitchUS,blocks,Block,,,,US Light Switch
-hsLightSwitchUSDesc,blocks,Block,,,,"A US toggle light switch: lever up for on, down for off. Wire power into it, then wire your lights or air con from it. Chain more switches on from it like sockets: power always goes through, and each switch only turns its own lights on and off."
+hsLightSwitchUSDesc,blocks,Block,,,,"A US toggle light switch: lever up for on, down for off. It only goes on a solid wall. Wire power into it, then wire your lights or air con from it. With the wire tool, click the switch and then a house light to run that light from the switch. It comes on only while the switch is on and the switch has power. Chain more switches on from it like sockets: power always goes through, and each switch only turns its own lights on and off."
 washup,UI,commands,,,K,Wash up
 blockcommand_washup,UI,commands,,,K,"Wash up (1 jar, about 5 m less smell)"
 hsLblWash,UI,tooltip,,,K,Wash
@@ -375,7 +397,8 @@ hsToasterUnpowered,UI,tooltip,,,K,No power: the socket is off
 hsToasterToasting,UI,tooltip,,,K,Toasting: {0} left
 hsFrozenHours,UI,tooltip,,,K,Frozen: thaws in {0}h at room temperature
 hsFrozenMins,UI,tooltip,,,K,Frozen: thaws in {0} min at room temperature
-hsFrozenNoEat,UI,tooltip,,,K,"It's frozen solid. Let it thaw, or defrost it in a microwave."
+hsFrozenNoEat,UI,tooltip,,,K,"It's frozen solid. Let it thaw, or defrost it at a microwave, cooker, campfire or grill."
+hsDefrostNoPower,UI,tooltip,,,K,No power: wire this cooker to defrost
 hsdefrost,UI,commands,,,K,Defrost
 blockcommand_hsdefrost,UI,commands,,,K,Defrost the frozen food on you
 hsDefrostNone,UI,tooltip,,,K,Nothing frozen on you
@@ -407,8 +430,8 @@ hstvprev,UI,commands,,,K,Previous channel
 blockcommand_hstvprev,UI,commands,,,K,Previous channel
 hsConsumerUnitUK,blocks,Block,,,,Consumer Unit (UK)
 hsBreakerPanelUS,blocks,Block,,,,Breaker Panel (US)
-hsConsumerUnitUKDesc,blocks,Block,,,,"A UK consumer unit with 6 ways and a main switch. Wire it from a generator, battery bank or solar bank, then wire one circuit out of it per way: sockets, switches or lights. A circuit is dead until you fit a fuse or breaker for it: hold one and use the panel. Too much load on a circuit blows its fuse or trips its breaker. Sockets can link on to one more socket each, so a whole ring of sockets can share one circuit."
-hsBreakerPanelUSDesc,blocks,Block,,,,"A US breaker panel with 8 ways and a main breaker. Wire it from a generator, battery bank or solar bank, then wire one circuit out of it per way: outlets, switches or lights. A circuit is dead until you fit a fuse or breaker for it: hold one and use the panel. Too much load on a circuit blows its fuse or trips its breaker. Outlets can link on to one more outlet each, so a whole run of outlets can share one circuit."
+hsConsumerUnitUKDesc,blocks,Block,,,,"A UK consumer unit with 6 ways and a main switch. Wire it from a generator, battery bank or solar bank, then wire one circuit out of it per way: sockets, switches or lights. A circuit is dead until you fit a breaker: hold a 5A, 15A, 30A or 45A breaker and use the panel. The switches stand vertical. Too much load trips the breaker. Sockets can link on to one more socket each, so a whole ring of sockets can share one circuit."
+hsBreakerPanelUSDesc,blocks,Block,,,,"A US breaker panel with 8 ways and a main breaker. Wire it from a generator, battery bank or solar bank, then wire one circuit out of it per way: outlets, switches or lights. A circuit is dead until you fit a breaker: hold a 5A, 15A, 30A or 45A breaker and use the panel. The switches lie horizontal. Too much load trips the breaker. Outlets can link on to one more outlet each, so a whole run of outlets can share one circuit."
 hsFuse5,items,Item,,,,5A Fuse
 hsFuse15,items,Item,,,,15A Fuse
 hsFuse30,items,Item,,,,30A Fuse
@@ -423,7 +446,7 @@ hsFuseBlownDesc,items,Item,,,,"A blown fuse. Too much was drawn through it and t
 hsBreakerDesc,items,Item,,,,"A circuit breaker for a consumer unit or breaker panel. Each amp carries 5W. Too much load trips it instead of burning out: reset it at the panel. You can also switch a circuit off at its breaker."
 hscircnext,UI,commands,,,K,Next circuit
 blockcommand_hscircnext,UI,commands,,,K,Select the next circuit
-hscircfit,UI,commands,,,K,Fit fuse / breaker
+hscircfit,UI,commands,,,K,Fit breaker
 blockcommand_hscircfit,UI,commands,,,K,Fit the fuse or breaker you are holding in the selected circuit
 hscircout,UI,commands,,,K,Take out
 blockcommand_hscircout,UI,commands,,,K,Take the fuse or breaker out of the selected circuit
@@ -438,7 +461,7 @@ hsPanelMainOff,UI,tooltip,,,K,"Main switch: OFF, every circuit is dead"
 hsPanelNoPower,UI,tooltip,,,K,"No power in: wire the panel from a generator, battery bank or solar bank"
 hsPanelNoCircuits,UI,tooltip,,,K,"No circuits: wire sockets, switches or lights out of the panel, one wire per circuit ({0} ways)"
 hsPanelWays,UI,tooltip,,,K,{0} of {1} ways in use. Hold a fuse or breaker to fit it in the selected circuit.
-hsPanelHoldFuse,UI,tooltip,,,K,Hold a fuse or a breaker to fit it
+hsPanelHoldFuse,UI,tooltip,,,K,"Hold a breaker to fit it. 5A, 15A, 30A or 45A"
 hsPanelFitted,UI,tooltip,,,K,Fitted a {0} for {1}
 hsPanelFull,UI,tooltip,,,K,This panel has {0} ways and every one has a circuit on it
 hsBreakerRating,UI,tooltip,,,K,{0}A breaker
@@ -520,6 +543,7 @@ hsCisternHold,UI,tooltip,,,K,Hold a jar or bucket of water to fill the cistern
 hsCisternFull,UI,tooltip,,,K,The cistern is full
 hsCisternFilled,UI,tooltip,,,K,Cistern filled: {0} jars
 hsTreePee,UI,tooltip,,,K,Went against the tree
+hsTreePeePrompt,UI,tooltip,,,K,Press {0} to Pee ({1}%)
 hsUrinalPoo,UI,tooltip,,,K,A urinal is no good for that. Use a toilet
 hsAccidentPee,UI,tooltip,,,K,You wet yourself. Your clothes are soaked and you smell
 hsAccidentPoo,UI,tooltip,,,K,You didn't make it. Your clothes are filthy and you smell
@@ -603,3 +627,14 @@ hsKettleReady,UI,tooltip,,,K,Powered
 hsMugHasPJ,UI,tooltip,,,K,A PJ Tops bag is in: pick it up and pour the boiled kettle onto it
 hsMugHasYorkie,UI,tooltip,,,K,A Yorkie Brew bag is in: pick it up and pour the boiled kettle onto it
 hsMugEmpty,UI,tooltip,,,K,Empty: hold a tea bag to put one in
+hsChoppingBoard,blocks,Block,,,,Chopping Board
+hsChoppingBoardDesc,blocks,Block,,,,"A wooden board for a counter. Put frozen food on it. It defrosts in about 24 hours, then spoils in about 3 days, the same as in your pack."
+hsFrozenName,UI,tooltip,,,K,Frozen {0}
+hsFrozenKeeps,UI,tooltip,,,K,Frozen. Spoils in {0} days
+hsFrozenThenHours,UI,tooltip,,,K,"Frozen. Defrosts in {0}h, then spoils in {1} days"
+hsFrozenThenMins,UI,tooltip,,,K,"Frozen. Defrosts in {0} min, then spoils in {1} days"
+buffHSLoudName,buffs,Buff,,,,Noisy
+buffHSLoudDesc,buffs,Buff,,,,"The number is how many metres zombies can hear the loudest machine near you. Walls cut it. Shut the door, or switch the machine off."
+buffHSLoudValue,buffs,Buff,,,,{0:0} m
+hsLightWired,UI,tooltip,,,K,Wired to the light switch. It comes on when the switch is on and has power
+hsLightTooFar,UI,tooltip,,,K,That light is too far from the switch

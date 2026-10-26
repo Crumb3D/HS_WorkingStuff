@@ -2,6 +2,97 @@
 
 Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.79
+
+- **Lake and river intakes fill storage.** Pipe an intake to a rain catch and it feeds the catch from the water. The catch only cleans that water if a dew filter is fitted; without the filter it stays murky. Pipe the intake straight to a tank for murky water (toilets and the like). You can still pipe an intake to a sink for unlimited murky water.
+
+## 1.0.78
+
+- **Look at a tree and you see Press (E) to Pee (57%).** The bladder percent is in the brackets. When you do not need to go, the prompt is grey and the radial Pee is dimmed.
+
+## 1.0.77
+
+- **Wash and dry only the piece you pick.** The washer and dryer no longer pull your whole outfit into the queue. One click queues that one dirty or wet item (or as many as the craft count, of that same piece).
+- **The dryer no longer turns one shirt into 255.** Wearing a piece no longer counts as enough for any craft amount, and laundry output is always one item.
+
+## 1.0.76
+
+- **UK breakers stand in the consumer unit.** They were tipped flat so they stuck into the wall. They stand on the face of the board.
+- **The chopping board and the drying rack open, and they can be broken.** Put meat on the rack and it dries. Put frozen food on the board and it defrosts. Hold E to search them, and a tool breaks them.
+- **Sockets go on a wall again.** The plate sits against the wall behind it.
+- **Leads stay on the wall.** A power lead runs along the wall to the appliance. A wall speaker's lead goes up the wall and along the ceiling. They no longer cut across the floor.
+- **The washer and the dryer take what you are wearing or carrying.** You do not put clothes into the machine. The clothes you have on are listed with the ones in your bag. Wash takes the dirty ones. Dry takes the wet ones.
+
+## 1.0.75
+
+- **The game loads again.** The chopping board was using a placement class the game does not have, so blocks.xml failed and the rest of the red errors followed it.
+
+## 1.0.74
+
+- **Chopping board and drying rack are their own models.** The board is a thick wooden board with a juice groove and a handle, and it sits on a counter. The drying rack is a wooden frame with hanging bars and hooks. Put the meat in the rack.
+
+## 1.0.73
+
+- **A TV with no power has a black screen.** The picture only comes on while the set is switched on, plugged in and the socket has power.
+- **Both boards take breakers.** The UK consumer unit and the US breaker panel take the 5A, 15A, 30A and 45A breakers. UK switches stand vertical. US switches lie horizontal. A fuse already in a board becomes a breaker of the same amp. Breakers unlock with the consumer unit.
+- **Cables stay on the walls.** A wall speaker’s cable goes up behind the hi-fi, along the edge of the ceiling and down. A stand speaker’s cable goes down to the floor, along the edge of the floor and up. A power lead goes from the plug, down the wall, to the bottom of the appliance. They go around windows.
+- **House lights can use your light switch.** With the wire tool, click the switch, then click a light that is already in the house. It comes on only while the switch is on and the switch has power.
+- **Frozen food does not stack with the same food when it is not frozen.**
+- **Sockets only go on a solid wall.** Place the socket first, then a kettle, toaster or hi-fi in that same block. The socket stays on the wall behind it. Pick the appliance up and the socket comes back.
+- **Freezer times show the freezer's days.** A chest freezer shows about 90 days, a fridge about 7. Frozen food is named Frozen. It defrosts in 24 hours in your pack or on a chopping board, and in 12 hours in a fridge. The spoil clock starts once it is soft. A chest freezer keeps it frozen.
+- **Chopping board.** Craft it with the drying rack and put it on a counter. Frozen food on it defrosts in 24 hours.
+- **Drying rack.** Hang raw meat on it for about a day.
+- **Noisy.** A running machine shows an icon with your smell icons. The number is how many metres zombies can hear it. Walls cut it.
+
+## 1.0.72
+
+- **A cold wash still works, and it cleans less.** A shower or bath with only cold water takes about half your body smell off, for half as long as hot water. A cold sink wash takes about half as much smell off as a hot one.
+- **Food lasts 3 days on you, 7 in a powered fridge, 30 in the fridge-freezer compartment and 90 in a chest freezer.** It still freezes in a freezer. Frozen food has to be defrosted at a microwave, cooker, campfire or grill before you can eat or cook it. Dried meat and jerky still last longer.
+- **Wet clothes are not a crafting recipe.** The washer and dryer still wash and dry what you are wearing or carrying. A workbench, or a search while crafting clothes, no longer lists a wet version you cannot craft.
+
+## 1.0.71
+
+- **A stack of jars fills the tank.** Pouring ten jars adds ten. Each jar you pour becomes an empty jar.
+- **A repaired medicine cabinet stays shut.** Closing an empty one no longer snaps it back open.
+- **The repaired toaster stays on the counter.** It keeps the vanilla half-block lift instead of sinking into the cabinet.
+- **A sink tees off the pipe already under it.** The run to the toilet can feed the sink beside it. That tee uses a joint and gives the straight piece back.
+- **Bends use corners, branches use joints.** Laying and taking up return the piece that was actually there.
+- **Coffee maker, cooker, toaster and kettle can be picked up** on your land claim. Hold E, Pick up, once the machine is empty.
+
+## 1.0.70
+
+- **Unlocks say so.** Reading a magazine or taking the perk that opens an HS recipe shows the same line as a schematic: New Recipe Unlocked, one after another.
+- **A sink on a pipe you already laid gets fed.** If the run to the toilet fills the floor under the sink, Lay pipes tees up into it. No extra pipe.
+
+## 1.0.69
+
+- **The pipe tool says what blocked the run.** Open air or the block in the way, with the coordinates. There is no 64-pipe cap.
+
+## 1.0.68
+
+- **Sweat and fields dirty your clothes.** An unwashed body sweats into what you wear. Walking through fields, crops, mud or sand dirties them faster again. The **Dirty Clothes** icon comes on at about 20% and shows the percent. At about half dirty they draw zombies. Wash them in the machine.
+- **Sweat draws zombies.** Running or a hot body builds Unwashed twice as fast. The icon is the extra metres. A shower, a bath, or a dip in a lake clears it.
+- **The handbook matches the pipes.** Workstation magazine 6 and Advanced Engineering 1, hand-crafted: pipe tool, pipes, tank, sink, toilet, urinal, shower and bath. A toilet needs no power. Heating and the washer stay at 26.
+
+## 1.0.67
+
+- **The cooker is worth using.** Same pot, grill and beaker as a campfire, no wood, and about a fifth faster. The microwave is about 30% faster than the cooker, still the short menu, and the door still pauses it. Coffee, the kettle, the toaster and the washer keep their own times.
+- **A radiator heats the nearest blocks first.** Warmth walks out through the walls, and the air follows. Once it reaches an outside face it draws zombies, weaker than a campfire. The noise of a running machine is still the louder dinner bell.
+- **Plumbing is early.** Pipe tool, pipes, intake, tank, sink, rain catch, toilet, urinal, shower and bath unlock at workstation magazine 6 and Advanced Engineering 1, and they are hand-crafted. A few days of looting pipes a toilet and a shower. The water cooler, thermometer and washing line stay at 16. Radiators, the washer and the dryer stay at 26, because heating still waits on power.
+
+## 1.0.66
+
+- **Solid steel holds the biome.** A steel room keeps desert heat and snow cold, and lets it go sooner than brick, concrete or cobble. A steel desert house wants air con. A steel snow house wants radiators. Corrugated sheet follows the weather. New setting: `SteelHeatHold`.
+
+## 1.0.65
+
+- **The walls keep the biome.** A room no longer shares one temperature with every other house. Brick, concrete, cobble and stone hold desert heat and snow cold for hours. Timber lets that go sooner. A desert brick house wants air con. A snow brick house wants radiators, and one radiator is not enough to bring a heavy cold room up to the thermostat. The heat or the cold stays in the masonry after you switch off.
+
+## 1.0.64
+
+- **An accident stinks straight away.** Wetting yourself soaks and dirties every piece you are wearing and puts you well into Unwashed. Soiling yourself makes the clothes filthy and the body smell as bad as it gets. Zombies smell it the same way they smell carried meat. A wall, a closed window or a shut door on the way to them muffles that side; an open door does not. Needs HS Better Ears 1.0.1.
+- **The hi-fi rings from the speakers.** With none wired it stays silent, so it does not call zombies.
+
 ## 1.0.63
 
 - **The house is a dinner bell.** A running washer, dryer, cooker, microwave, toaster, kettle, coffee maker, air con, firing boiler, TV or hi-fi pulses noise. Idle zombies hear it and come looking. The fridge stays quiet.

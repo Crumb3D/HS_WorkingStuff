@@ -1,6 +1,6 @@
 using HarmonyLib;
 
-// Storage only. Fills from a piped rain catch, or by pouring jars and buckets in.
+// Storage only. Fills from a piped rain catch, a lake intake (murky), or by pouring jars and buckets in.
 public class BlockHSTank : Block
 {
     public float TakeDelay = 5f;
@@ -57,7 +57,7 @@ public class BlockHSTank : Block
 
     public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
-        return _blockValue.Block.GetLocalizedBlockName() + "\n" + HSWater.TankPrompt(_blockPos);
+        return _blockValue.Block.GetLocalizedBlockName() + "\n" + HSWater.TankPrompt(_world as World, _blockPos);
     }
 
     public override bool HasBlockActivationCommands(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-// Rain catch collects and pushes down its pipes into tanks. A tank only feeds what is in it;
-// it does not join the pipes on one side to the pipes on the other.
+// Rain catch collects dew/rain and pushes down its pipes into tanks.
+// A lake intake can also fill a rain catch (cleaned only if the catch has a dew filter) or a tank (always murky).
+// A tank only feeds what is in it; it does not join the pipes on one side to the pipes on the other.
 // Sinks have a cold tap (straight from a tank or intake) and a hot tap (through a powered heater).
 public static class HSWater
 {
@@ -59,6 +60,7 @@ public static class HSWater
     }
 
     static readonly Dictionary<long, Tank> tanks = new Dictionary<long, Tank>();
+    static readonly Dictionary<long, float> intakeFrac = new Dictionary<long, float>();
     static readonly List<Vector3i> migrate = new List<Vector3i>();
     static readonly Vector3i[] dirs = new Vector3i[]
     {
@@ -346,6 +348,118 @@ public static class HSWater
         return found;
     }
 
+    // From an intake: rain catches and tanks on bare pipe. A rain catch stops the walk (it takes the feed).
+    // Tanks found without passing a rain catch get a direct murky fill.
+    public static void ReachFromIntake(World world, Vector3i intake, List<Vector3i> catches, List<Vector3i> directTanks)
+    {
+        if (catches != null)
+            catches.Clear();
+        if (directTanks != null)
+            directTanks.Clear();
+        if (world == null)
+            return;
+        int limit = HSWorkingStuffSettings.PipeSearchLimit + 27;
+        var q = new Queue<Vector3i>();
+        var seen = new HashSet<long>();
+        var catchSeen = new HashSet<long>();
+        var tankSeen = new HashSet<long>();
+        q.Enqueue(intake);
+        seen.Add(Key(intake));
+        int walked = 0;
+        while (q.Count > 0 && walked < limit)
+        {
+            Vector3i p = q.Dequeue();
+            walked++;
+            for (int i = 0; i < dirs.Length; i++)
+            {
+                Vector3i np = p + dirs[i];
+                long k = Key(np);
+                if (seen.Contains(k) || !HSPipeNet.Joins(p, np))
+                    continue;
+                BlockValue nbv = world.GetBlock(np);
+                Block nb = nbv.Block;
+                if (nb == null)
+                    continue;
+                string nn = nb.GetBlockName();
+                if (nn == RainCatchName)
+                {
+                    seen.Add(k);
+                    Vector3i cp = Parent(np, nbv);
+                    if (catches != null && catchSeen.Add(Key(cp)))
+                        catches.Add(cp);
+                    continue;
+                }
+                if (nn == TankName)
+                {
+                    seen.Add(k);
+                    Vector3i tp = Parent(np, nbv);
+                    if (directTanks != null && tankSeen.Add(Key(tp)))
+                        directTanks.Add(tp);
+                    continue;
+                }
+                if (nn == IntakeName)
+                {
+                    seen.Add(k);
+                    continue;
+                }
+                if (!IsBarePipe(nn) && !HSPipeNet.Has(np))
+                    continue;
+                seen.Add(k);
+                q.Enqueue(np);
+            }
+        }
+    }
+
+    // Live intakes on the same bare-pipe run as this fixture (rain catch or tank).
+    public static List<Vector3i> LiveIntakesFrom(World world, Vector3i start)
+    {
+        var found = new List<Vector3i>();
+        if (world == null)
+            return found;
+        int limit = HSWorkingStuffSettings.PipeSearchLimit + 27;
+        var q = new Queue<Vector3i>();
+        var seen = new HashSet<long>();
+        var intakeSeen = new HashSet<long>();
+        q.Enqueue(start);
+        seen.Add(Key(start));
+        int walked = 0;
+        while (q.Count > 0 && walked < limit)
+        {
+            Vector3i p = q.Dequeue();
+            walked++;
+            for (int i = 0; i < dirs.Length; i++)
+            {
+                Vector3i np = p + dirs[i];
+                long k = Key(np);
+                if (seen.Contains(k) || !HSPipeNet.Joins(p, np))
+                    continue;
+                BlockValue nbv = world.GetBlock(np);
+                Block nb = nbv.Block;
+                if (nb == null)
+                    continue;
+                string nn = nb.GetBlockName();
+                if (nn == IntakeName)
+                {
+                    seen.Add(k);
+                    Vector3i ip = Parent(np, nbv);
+                    if (TouchesWater(world, ip) && intakeSeen.Add(Key(ip)))
+                        found.Add(ip);
+                    continue;
+                }
+                if (nn == TankName || nn == RainCatchName)
+                {
+                    seen.Add(k);
+                    continue;
+                }
+                if (!IsBarePipe(nn) && !HSPipeNet.Has(np))
+                    continue;
+                seen.Add(k);
+                q.Enqueue(np);
+            }
+        }
+        return found;
+    }
+
     // Draws up to need jars for a boiler's heating loop from tanks (or a lake intake) on its own pipes.
     // Sinks, radiators, rain catches and other boilers are not a way through. Authority only.
     public static int FillFromSupply(World world, Vector3i boiler, int need)
@@ -519,86 +633,90 @@ public static class HSWater
         return n;
     }
 
-    public static bool PourIntoTank(EntityPlayer player, Vector3i pos, bool all)
+    // Units added. A stack of 10 jars adds 10, and only those jars become empty.
+    public static int PourIntoTank(EntityPlayer player, Vector3i pos, bool all)
     {
         Tank t = GetTank(pos);
+        int before = t.Units;
         int cap = HSWorkingStuffSettings.TankCapacity;
         int bucket = HSWorkingStuffSettings.BucketUnits;
-        int added = PourArray(HSInv.GetBagStacks(player), ref t, cap, bucket, all);
-        added += PourArray(HSInv.GetToolStacks(player), ref t, cap, bucket, all);
-        if (added <= 0 && !all)
-            added += PourHolding(player, ref t, cap, bucket);
-        if (added <= 0)
-            return false;
+        PourArray(player, HSInv.GetBagStacks(player), ref t, cap, bucket, all);
+        PourArray(player, HSInv.GetToolStacks(player), ref t, cap, bucket, all);
+        if (t.Units == before && !all)
+            PourHolding(player, ref t, cap, bucket, false);
+        if (t.Units <= before)
+            return 0;
         SetTank(pos, t);
-        return true;
+        return t.Units - before;
     }
 
-    static int PourArray(ItemStack[] stacks, ref Tank t, int cap, int bucket, bool all)
+    static void PourArray(EntityPlayer player, ItemStack[] stacks, ref Tank t, int cap, int bucket, bool all)
     {
         if (stacks == null)
-            return 0;
-        int n = 0;
+            return;
         for (int i = 0; i < stacks.Length; i++)
         {
             if (t.Units >= cap)
                 break;
-            ItemStack s = stacks[i];
-            ItemValue ivPour = HSItem.Val(s);
-            if (s == null || s.IsEmpty() || ivPour == null || ivPour.ItemClass == null)
+            if (!PourStack(player, stacks[i], ref t, cap, bucket, all))
                 continue;
-            string name = ivPour.ItemClass.Name;
-            int give = 0;
-            string empty = null;
-            if (name == "drinkJarRiverWater" || name == "drinkJarBoiledWater")
-            {
-                give = 1;
-                empty = "drinkJarEmpty";
-            }
-            else if (name == "bucketRiverWater")
-            {
-                give = bucket;
-                empty = "bucketEmpty";
-            }
-            else
-                continue;
-            int space = cap - t.Units;
-            if (space <= 0)
-                break;
-            int q = ItemQuality(name);
-            t.Quality = t.Units <= 0 ? q : MixQuality(t.Quality, q);
-            t.Units += give;
-            if (t.Units > cap)
-                t.Units = cap;
-            int c = HSItem.Count(s);
-            HSItem.SetVal(s, ItemClass.GetItem(empty));
-            HSItem.SetCount(s, c);
-            n++;
             if (!all)
                 break;
         }
-        return n;
     }
 
-    static int PourHolding(EntityPlayer player, ref Tank t, int cap, int bucket)
+    static bool PourStack(EntityPlayer player, ItemStack s, ref Tank t, int cap, int bucket, bool all)
+    {
+        ItemValue ivPour = HSItem.Val(s);
+        if (s == null || s.IsEmpty() || ivPour == null || ivPour.ItemClass == null)
+            return false;
+        string name = ivPour.ItemClass.Name;
+        int each;
+        string empty;
+        if (name == "drinkJarRiverWater" || name == "drinkJarBoiledWater")
+        {
+            each = 1;
+            empty = "drinkJarEmpty";
+        }
+        else if (name == "bucketRiverWater")
+        {
+            each = bucket;
+            empty = "bucketEmpty";
+        }
+        else
+            return false;
+        int room = (cap - t.Units) / each;
+        if (room <= 0)
+            return false;
+        int have = HSItem.Count(s);
+        int take = all ? Math.Min(have, room) : Math.Min(have, 1);
+        if (take <= 0)
+            return false;
+        int q = ItemQuality(name);
+        t.Quality = t.Units <= 0 ? q : MixQuality(t.Quality, q);
+        t.Units += take * each;
+        if (take == have)
+        {
+            HSItem.SetVal(s, ItemClass.GetItem(empty));
+            HSItem.SetCount(s, have);
+        }
+        else
+        {
+            HSItem.SetCount(s, have - take);
+            var empties = new ItemStack(ItemClass.GetItem(empty), take);
+            if (!HSInv.AddToPlayer(player, empties))
+                GiveOrDrop(player, new ItemStack(ItemClass.GetItem(empty), take));
+        }
+        return true;
+    }
+
+    static void PourHolding(EntityPlayer player, ref Tank t, int cap, int bucket, bool all)
     {
         int kind = HoldingKind(player);
         if (kind != 3 && kind != 4)
-            return 0;
-        if (t.Units >= cap)
-            return 0;
+            return;
         ItemStack data = HSInv.GetHeld(player);
-        ItemValue ivHold = HSItem.Val(data);
-        if (data == null || ivHold == null || ivHold.ItemClass == null)
-            return 0;
-        int give = kind == 4 ? bucket : 1;
-        int q = ItemQuality(ivHold.ItemClass.Name);
-        t.Quality = t.Units <= 0 ? q : MixQuality(t.Quality, q);
-        t.Units += give;
-        if (t.Units > cap)
-            t.Units = cap;
-        HSItem.SetVal(data, ItemClass.GetItem(kind == 4 ? "bucketEmpty" : "drinkJarEmpty"));
-        return 1;
+        PourStack(player, data, ref t, cap, bucket, all);
     }
 
     public static bool TakeFromSource(ref Source src, int need)
@@ -820,8 +938,105 @@ public static class HSWater
             if (t.Units != beforeUnits || t.Quality != beforeQuality)
                 changed.Add(pos);
         }
+        TickIntakeFeeds(world, hours, changed);
         for (int i = 0; i < changed.Count; i++)
             HSWorkingStuffNet.BroadcastTank(changed[i]);
+    }
+
+    // Lake / river intake fills a piped rain catch (clean only with a dew filter) or a tank (always murky).
+    static void TickIntakeFeeds(World world, float hours, List<Vector3i> changed)
+    {
+        if (world == null || hours <= 0f)
+            return;
+        float rate = hours * HSWorkingStuffSettings.IntakePerHour;
+        if (rate <= 0f)
+            return;
+        var intakes = new HashSet<long>();
+        var keys = new List<long>(tanks.Keys);
+        for (int i = 0; i < keys.Count; i++)
+        {
+            Vector3i pos = FromKey(keys[i]);
+            if (world.GetChunkFromWorldPos(pos) == null)
+                continue;
+            BlockValue bv = world.GetBlock(pos);
+            Block b = bv.Block;
+            if (b == null || bv.ischild)
+                continue;
+            string n = b.GetBlockName();
+            if (n != RainCatchName && n != TankName)
+                continue;
+            List<Vector3i> live = LiveIntakesFrom(world, pos);
+            for (int j = 0; j < live.Count; j++)
+                intakes.Add(Key(live[j]));
+        }
+        var catches = new List<Vector3i>();
+        var directTanks = new List<Vector3i>();
+        foreach (long ik in intakes)
+        {
+            Vector3i intake = FromKey(ik);
+            if (!TouchesWater(world, intake))
+                continue;
+            float frac;
+            if (!intakeFrac.TryGetValue(ik, out frac))
+                frac = 0f;
+            frac += rate;
+            int units = (int)frac;
+            frac -= units;
+            intakeFrac[ik] = frac;
+            if (units <= 0)
+                continue;
+            ReachFromIntake(world, intake, catches, directTanks);
+            for (int c = 0; c < catches.Count; c++)
+                AddIntakeToCatch(world, catches[c], units, changed);
+            for (int t = 0; t < directTanks.Count; t++)
+                AddIntakeToTank(world, directTanks[t], units, changed);
+        }
+    }
+
+    static void AddIntakeToCatch(World world, Vector3i catchPos, int units, List<Vector3i> changed)
+    {
+        Tank t = GetTank(catchPos);
+        int beforeUnits = t.Units;
+        int beforeQuality = t.Quality;
+        int cap = HSWorkingStuffSettings.RainCatchCapacity;
+        if ((t.Mods & ModFilter) != 0 && t.Units > 0 && t.Quality < QualityClean)
+            t.Units = 0;
+        int space = cap - t.Units;
+        if (space <= 0)
+        {
+            if (t.Units > 0)
+                PushToTanks(world, catchPos, ref t, changed);
+            SetTank(catchPos, t);
+            if (t.Units != beforeUnits || t.Quality != beforeQuality)
+                changed.Add(catchPos);
+            return;
+        }
+        int add = units < space ? units : space;
+        int incoming = (t.Mods & ModFilter) != 0 ? QualityClean : QualityMurky;
+        t.Quality = t.Units <= 0 ? incoming : MixQuality(t.Quality, incoming);
+        t.Units += add;
+        if (t.Units > 0)
+            PushToTanks(world, catchPos, ref t, changed);
+        SetTank(catchPos, t);
+        if (t.Units != beforeUnits || t.Quality != beforeQuality)
+            changed.Add(catchPos);
+    }
+
+    static void AddIntakeToTank(World world, Vector3i tankPos, int units, List<Vector3i> changed)
+    {
+        Tank t = GetTank(tankPos);
+        int beforeUnits = t.Units;
+        int beforeQuality = t.Quality;
+        int cap = HSWorkingStuffSettings.TankCapacity;
+        int space = cap - t.Units;
+        if (space <= 0)
+            return;
+        int add = units < space ? units : space;
+        t.Quality = t.Units <= 0 ? QualityMurky : MixQuality(t.Quality, QualityMurky);
+        t.Units += add;
+        SetTank(tankPos, t);
+        if (t.Units != beforeUnits || t.Quality != beforeQuality)
+            changed.Add(tankPos);
     }
 
     static void PushToTanks(World world, Vector3i catchPos, ref Tank c, List<Vector3i> changed)
@@ -919,9 +1134,12 @@ public static class HSWater
         return HSLoc.Format("hsTankPrompt", "{0}/{1} {2}", t.Units, cap, q);
     }
 
-    public static string TankPrompt(Vector3i pos)
+    public static string TankPrompt(World world, Vector3i pos)
     {
-        return LevelText(GetTank(pos), HSWorkingStuffSettings.TankCapacity);
+        string level = LevelText(GetTank(pos), HSWorkingStuffSettings.TankCapacity);
+        if (world != null && LiveIntakesFrom(world, pos).Count > 0)
+            return level + "\n" + HSLoc.Get("hsTankLakeMurky", "Lake intake: filling with murky water");
+        return level;
     }
 
     public static string ModsPrompt(int mods)
@@ -949,10 +1167,15 @@ public static class HSWater
         string feed = FeedTanks(world, pos).Count > 0
             ? HSLoc.Get("hsRainFeeds", "Piped to a tank")
             : HSLoc.Get("hsRainNoFeed", "Not piped to a tank");
+        string lake = world != null && LiveIntakesFrom(world, pos).Count > 0
+            ? "\n" + ((t.Mods & ModFilter) != 0
+                ? HSLoc.Get("hsRainLakeClean", "Lake intake: cleaning to clean water")
+                : HSLoc.Get("hsRainLakeMurky", "Lake intake: murky until a dew filter is fitted"))
+            : "";
         string sky = world != null && !OpenToSky(world, pos, world.GetBlock(pos).Block)
             ? "\n" + HSLoc.Get("hsRainCovered", "Covered: needs open sky")
             : "";
-        return level + "\n" + ModsPrompt(t.Mods) + "\n" + feed + sky;
+        return level + "\n" + ModsPrompt(t.Mods) + "\n" + feed + lake + sky;
     }
 
     public static string ColdReasonKey(Taps taps)
@@ -972,7 +1195,7 @@ public static class HSWater
     public static string ColdReason(Taps taps)
     {
         if (taps.ColdEmpty)
-            return HSLoc.Get("hsSinkColdEmpty", "Cold: the tank is empty. Pipe a rain catch to it or pour water in");
+            return HSLoc.Get("hsSinkColdEmpty", "Cold: the tank is empty. Pipe a rain catch or lake intake to it, or pour water in");
         return HSLoc.Get("hsSinkColdNone", "Cold: no tank or intake piped in");
     }
 

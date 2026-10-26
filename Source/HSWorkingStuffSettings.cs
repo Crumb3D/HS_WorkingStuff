@@ -11,8 +11,8 @@ public static class HSWorkingStuffSettings
     public static bool HideNews = true;
     public static bool HoldJoinUntilReady = true;
 
-    public static float SpoilDays = 7f;
-    public static float FridgeMultiplier = 0.25f;
+    public static float SpoilDays = 3f;
+    public static float FridgeMultiplier = 0.428571f;
     public static float CoolerMultiplier = 0.5f;
     public static float WarningDays = 1f;
     public static int TankCapacity = 40;
@@ -20,13 +20,14 @@ public static class HSWorkingStuffSettings
     public static int BucketUnits = 4;
     public static float RainPerHour = 0.25f;
     public static float DewPerHour = 0.125f;
+    public static float IntakePerHour = 1f;
     public static int PipeSearchLimit = 48;
     public static float DryDays = 1f;
     public static float CompostDays = 1f;
     public static float HotWaterSeconds = 30f;
     public static int RadiatorWatts = 5;
     public static float RadiatorRadius = 5f;
-    public static float FreezerMultiplier = 0f;
+    public static float FreezerMultiplier = 0.033333f;
     public static float FridgeFreezerMultiplier = 0.1f;
     public static float FridgeFreezerFreezeHours = 4f;
     public static float FridgeTemp = 39f;
@@ -39,6 +40,9 @@ public static class HSWorkingStuffSettings
     public static bool EnableRoomTemperature = true;
     public static float IndoorInsulation = 15f;
     public static float IndoorLagHours = 3f;
+    public static float WoodHeatHold = 0.55f;
+    public static float StoneHeatHold = 2.5f;
+    public static float SteelHeatHold = 1.8f;
     public static float RadiatorHeat = 40f;
     public static float ThermostatHeat = 68f;
     public static float AirConCool = 30f;
@@ -60,8 +64,8 @@ public static class HSWorkingStuffSettings
     public static float WetClothesCold = 6f;
     public static bool EnableFreezing = true;
     public static float FreezeHours = 2f;
-    public static float ThawHours = 2f;
-    public static float FridgeThawHours = 8f;
+    public static float ThawHours = 24f;
+    public static float FridgeThawHours = 12f;
     public static float TVVolume = 0.8f;
     public static float TVHearRange = 15f;
     public static float TVViewRange = 40f;
@@ -98,8 +102,8 @@ public static class HSWorkingStuffSettings
         EnableConnectToIp = true;
         HideNews = true;
         HoldJoinUntilReady = true;
-        SpoilDays = 7f;
-        FridgeMultiplier = 0.25f;
+        SpoilDays = 3f;
+        FridgeMultiplier = 0.428571f;
         CoolerMultiplier = 0.5f;
         WarningDays = 1f;
         TankCapacity = 40;
@@ -107,13 +111,14 @@ public static class HSWorkingStuffSettings
         BucketUnits = 4;
         RainPerHour = 0.25f;
         DewPerHour = 0.125f;
+        IntakePerHour = 1f;
         PipeSearchLimit = 48;
         DryDays = 1f;
         CompostDays = 1f;
         HotWaterSeconds = 30f;
         RadiatorWatts = 5;
         RadiatorRadius = 5f;
-        FreezerMultiplier = 0f;
+        FreezerMultiplier = 0.033333f;
         FridgeFreezerMultiplier = 0.1f;
         FridgeFreezerFreezeHours = 4f;
         FridgeTemp = 39f;
@@ -126,6 +131,9 @@ public static class HSWorkingStuffSettings
         EnableRoomTemperature = true;
         IndoorInsulation = 15f;
         IndoorLagHours = 3f;
+        WoodHeatHold = 0.55f;
+        StoneHeatHold = 2.5f;
+        SteelHeatHold = 1.8f;
         RadiatorHeat = 40f;
         ThermostatHeat = 68f;
         AirConCool = 30f;
@@ -147,8 +155,8 @@ public static class HSWorkingStuffSettings
         WetClothesCold = 6f;
         EnableFreezing = true;
         FreezeHours = 2f;
-        ThawHours = 2f;
-        FridgeThawHours = 8f;
+        ThawHours = 24f;
+        FridgeThawHours = 12f;
         TVVolume = 0.8f;
         TVHearRange = 15f;
         TVViewRange = 40f;
@@ -215,6 +223,7 @@ public static class HSWorkingStuffSettings
         ReadInt(text, "BucketUnits", ref BucketUnits);
         ReadFloat(text, "RainPerHour", ref RainPerHour);
         ReadFloat(text, "DewPerHour", ref DewPerHour);
+        ReadFloat(text, "IntakePerHour", ref IntakePerHour);
         ReadInt(text, "PipeSearchLimit", ref PipeSearchLimit);
         ReadFloat(text, "DryDays", ref DryDays);
         ReadFloat(text, "CompostDays", ref CompostDays);
@@ -236,6 +245,9 @@ public static class HSWorkingStuffSettings
         ReadBool(text, "EnableRoomTemperature", ref EnableRoomTemperature);
         ReadFloat(text, "IndoorInsulation", ref IndoorInsulation);
         ReadFloat(text, "IndoorLagHours", ref IndoorLagHours);
+        ReadFloat(text, "WoodHeatHold", ref WoodHeatHold);
+        ReadFloat(text, "StoneHeatHold", ref StoneHeatHold);
+        ReadFloat(text, "SteelHeatHold", ref SteelHeatHold);
         ReadFloat(text, "RadiatorHeat", ref RadiatorHeat);
         ReadFloat(text, "ThermostatHeat", ref ThermostatHeat);
         ReadFloat(text, "AirConCool", ref AirConCool);

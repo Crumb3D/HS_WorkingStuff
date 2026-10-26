@@ -15,9 +15,10 @@ public class HSWorkingStuffMod : IModApi
         HSWorkingStuffNet.RegisterPackage();
         ModEvents.GameUpdate.RegisterHandler(OnGameUpdate);
         ModEvents.GameStartDone.RegisterHandler(OnStart);
+        ModEvents.PlayerSpawnedInWorld.RegisterHandler(OnSpawn);
         ModEvents.WorldShuttingDown.RegisterHandler(OnShutdown);
         ApplyHarmony();
-        Log.Out("[HSWorkingStuff] v1.0.44 toilets and urinals, bladder and bowels, washing lines and clothes airers, consumer units and breaker panels with fuses and breakers, chained sockets, TVs, hi-fi with speakers, fridge, fridge-freezer, chest freezer with frozen food, cooler, stove, microwave, coffee maker, kettle, toaster, wheat and bread, tea, grills, plumbing, water cooler, shower, bath, combi boiler, radiators, air con, washer, dryer, thermometer, sockets, room temperature, smell, laundry, pipe tool, and 7-day food. Install on the host and on every client.");
+        Log.Out("[HSWorkingStuff] v1.0.79 lake intake fills rain catch or tank; toilets and urinals, bladder and bowels, washing lines and clothes airers, consumer units and breaker panels, chained sockets, TVs, hi-fi with speakers, fridge, fridge-freezer, chest freezer with frozen food, cooler, stove, microwave, coffee maker, kettle, toaster, wheat and bread, tea, grills, plumbing, water cooler, shower, bath, combi boiler, radiators, air con, washer, dryer, thermometer, sockets, room temperature, smell, laundry, pipe tool, and 3-day food. Install on the host and on every client.");
     }
 
     static void ApplyHarmony()
@@ -57,6 +58,7 @@ public class HSWorkingStuffMod : IModApi
             HSAirCon.ClientTick();
             HSAirCon.SoundTick();
             HSLaundry.ClientTick();
+            HSUnlock.ClientTick();
             HSLaundry.ServerTick();
             HSHouseNoise.ServerTick();
             HSTV.ServerTick();
@@ -65,6 +67,8 @@ public class HSWorkingStuffMod : IModApi
             HSDrying.ServerTick();
             HSNeeds.ClientTick();
             HSFlipper.Tick();
+            HSLights.Tick();
+            HSShare.Tick();
         }
         catch (Exception e)
         {
@@ -76,16 +80,26 @@ public class HSWorkingStuffMod : IModApi
     static void OnStart(ref ModEvents.SGameStartDoneData data)
     {
         HSWater.Load();
+        HSShare.Reset();
         if (HSWorkingStuffNet.IsAuthority)
         {
             HSBoiler.Load();
             HSPipeNet.Load();
             HSCircuits.Load();
+            HSLights.Load();
+            HSShare.Load();
         }
         HSWorkingStuffNet.RegisterPackage();
         HSLaundryCraft.Register();
         HSFlipper.InjectFurniture();
         HSJoinHold.Tick();
+    }
+
+    static void OnSpawn(ref ModEvents.SPlayerSpawnedInWorldData data)
+    {
+        if (!HSWorkingStuffNet.IsAuthority || data.IsLocalPlayer)
+            return;
+        HSShare.SendAll(data.EntityId);
     }
 
     static void OnShutdown(ref ModEvents.SWorldShuttingDownData data)
@@ -97,11 +111,14 @@ public class HSWorkingStuffMod : IModApi
         HSPipeNet.Clear();
         HSCircuits.Save();
         HSCircuits.Clear();
+        HSLights.Save();
+        HSShare.Save();
         HSJoinHold.Clear();
         HSAirCon.Clear();
         HSTV.Clear();
         HSKettle.Clear();
         HSLaundry.Clear();
+        HSUnlock.Clear();
         HSLaundryCraft.Clear();
         HSDrying.Clear();
         HSNeeds.Clear();
