@@ -1,5 +1,18 @@
 public class BlockHSStorage : BlockCompositeTileEntity
 {
+    public override bool CanPlaceBlockAt(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, bool _bOmitCollideCheck = false)
+    {
+        if (!base.CanPlaceBlockAt(_world, _blockPos, _blockValue, _bOmitCollideCheck))
+            return false;
+        if (_blockValue.Block == null || _blockValue.Block.GetBlockName() != "hsChoppingBoard")
+            return true;
+        World w = _world as World;
+        if (w == null)
+            return true;
+        BlockValue under = w.GetBlock(_blockPos + Vector3i.down);
+        return !under.isair && !under.ischild && under.Block != null && !HSPlugs.Glass(under.Block);
+    }
+
     BlockActivationCommand[] extra = new BlockActivationCommand[]
     {
         new BlockActivationCommand("storefood", "store_all_down", true),

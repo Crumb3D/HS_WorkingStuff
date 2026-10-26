@@ -18,6 +18,29 @@ public static class HSPipeNet
         return cells.ContainsKey(HSWater.Key(p));
     }
 
+    public static int MaskAt(Vector3i p)
+    {
+        byte m;
+        return cells.TryGetValue(HSWater.Key(p), out m) ? m : 0;
+    }
+
+    // 0 straight or a stub, 1 corner, 2 joint.
+    public static int Shape(int mask)
+    {
+        int m = mask & 63;
+        int arms = 0;
+        for (int i = 0; i < 6; i++)
+        {
+            if ((m & (1 << i)) != 0)
+                arms++;
+        }
+        if (arms >= 3)
+            return 2;
+        if (arms == 2 && m != 3 && m != 12 && m != 48)
+            return 1;
+        return 0;
+    }
+
     public static int DirBit(Vector3i d)
     {
         Vector3i[] dirs = HSWater.Dirs;
@@ -69,7 +92,7 @@ public static class HSPipeNet
     }
 
     // Takes up every ghost pipe joined to this cell, face to face.
-    public static int RemoveRun(Vector3i p)
+    public static int RemoveRun(Vector3i p, int[] shapes)
     {
         if (!HSWorkingStuffNet.IsAuthority || !Has(p))
             return 0;
@@ -88,6 +111,12 @@ public static class HSPipeNet
                     continue;
                 seen.Add(nk);
                 q.Enqueue(n);
+            }
+            if (shapes != null)
+            {
+                int shape = Shape(MaskAt(c));
+                if (shape >= 0 && shape < shapes.Length)
+                    shapes[shape]++;
             }
             SetCell(c, 0);
             HSWorkingStuffNet.BroadcastPipe(c, 0);

@@ -103,15 +103,15 @@ public class BlockHSFridge : BlockPowered
         string power;
         if (IsFreezer(_blockValue))
             power = powered
-                ? HSLoc.Get("hsFreezerPowered", "Powered: frozen food does not spoil")
+                ? HSLoc.Get("hsFreezerPowered", "Powered: food lasts about 90 days and freezes")
                 : HSLoc.Get("hsFridgeUnpowered", "Unpowered: spoils at normal speed");
         else if (HSFrozen.HasCompartment(_blockValue.Block))
             power = powered
-                ? HSLoc.Get("hsFridgeFreezerPowered", "Powered: fridge food lasts 4x longer, freezer food freezes")
+                ? HSLoc.Get("hsFridgeFreezerPowered", "Powered: fridge about 7 days, freezer about 30 days and it freezes")
                 : HSLoc.Get("hsFridgeUnpowered", "Unpowered: spoils at normal speed");
         else
             power = powered
-                ? HSLoc.Get("hsFridgePowered", "Powered: food lasts 4x longer")
+                ? HSLoc.Get("hsFridgePowered", "Powered: food lasts about 7 days")
                 : HSLoc.Get("hsFridgeUnpowered", "Unpowered: spoils at normal speed");
         string oldest = te != null ? te.OldestLabel() : "";
         return _blockValue.Block.GetLocalizedBlockName() + "\n" + Temps(_world, _blockPos, _blockValue, powered) + "\n" + power + "\n" + oldest;

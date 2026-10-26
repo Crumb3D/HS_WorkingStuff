@@ -1,5 +1,12 @@
 public class BlockHSToaster : BlockHSStove
 {
+    public override bool CanPlaceBlockAt(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, bool _bOmitCollideCheck = false)
+    {
+        if (HSShare.OnSocket(_world, _blockPos))
+            return base.CanPlaceBlockAt(_world, _blockPos, _blockValue, true);
+        return base.CanPlaceBlockAt(_world, _blockPos, _blockValue, _bOmitCollideCheck);
+    }
+
     public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)
     {
         string name = _blockValue.Block.GetLocalizedBlockName();

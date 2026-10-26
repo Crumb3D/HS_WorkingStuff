@@ -169,6 +169,24 @@ public static class HSAirCon
         return false;
     }
 
+    // How many running air conditioners reach this spot. One unit is 1.
+    public static float CoolScale(World world, Vector3 at)
+    {
+        if (world == null || units.Count == 0)
+            return 0f;
+        float r = HSWorkingStuffSettings.AirConRadius;
+        float rr = r * r;
+        float sum = 0f;
+        foreach (long k in units)
+        {
+            Vector3i p = HSWater.FromKey(k);
+            Vector3 c = new Vector3(p.x + 0.5f, p.y + 0.5f, p.z + 0.5f);
+            if ((c - at).sqrMagnitude <= rr && world.GetChunkFromWorldPos(p) != null && IsRunning(world, p))
+                sum += 1f;
+        }
+        return sum;
+    }
+
     public static void Clear()
     {
         units.Clear();

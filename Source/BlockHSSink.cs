@@ -212,7 +212,7 @@ public static class HSPatchRadialGrey
         try
         {
             Block b = _blockValue.Block;
-            if (b == null || !(b is BlockHSSink || b is BlockHSRainCatch || b is BlockHSToilet || HSWater.IsSinkBlock(b)))
+            if (b == null || !(b is BlockHSSink || b is BlockHSRainCatch || b is BlockHSToilet || HSWater.IsSinkBlock(b) || HSNeeds.IsTree(b)))
                 return;
             BlockActivationCommand[] cmds = b.GetBlockActivationCommands(_world, _blockValue, _blockPos, _entityFocusing);
             XUiC_RadialEntry[] items = __instance.menuItem;

@@ -11,6 +11,7 @@ OUT = os.path.abspath(argv[0]) if argv else os.path.join(os.path.dirname(bpy.dat
 os.makedirs(OUT, exist_ok=True)
 
 ICONS = [
+    ("HSWaterPump", "hsWaterPump"),
     ("HSCombiBoiler", "hsCombiBoiler"),
     ("HSPanelRadiator", "hsPanelRadiator"),
     ("HSChestFreezer", "hsChestFreezer"),
@@ -42,6 +43,8 @@ ICONS = [
     ("HSIconBreaker", "hsBreaker"),
     ("HSWashingLine", "hsWashingLine", 10),
     ("HSClothesAirer", "hsClothesAirer", 25),
+    ("HSChoppingBoard", "hsChoppingBoard", 55),
+    ("HSDryingRack", "hsDryingRack", 20),
     ("HSIconPegs", "hsClothesPegs", 35),
     ("HSIconWheatSeed", "hsPlantedWheat1"),
     ("HSIconWheat", "hsCropWheat"),

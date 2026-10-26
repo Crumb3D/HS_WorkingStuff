@@ -135,33 +135,44 @@
 			<property name="FilterTags" value="MC_playerBlocks,SC_plumbing" />
 		</block>
 
-		<!-- Powered pump at the water's edge. Vanilla AC unit model. Wire like a fridge / boiler. -->
+		<!-- Self-powered pump at the water's edge. Engines + fuel like a generator bank. Custom HS mesh. -->
 		<block name="hsWaterPump">
 			<property name="Class" value="HSPump, HSWorkingStuff" />
 			<property name="CreativeMode" value="Player" />
 			<property name="DescriptionKey" value="hsWaterPumpDesc" />
+			<property name="SlotItem" value="smallEngine" />
+			<property name="MaxFuel" value="500" />
+			<property name="MaxPower" value="500" />
+			<property name="OutputPerFuel" value="500" />
+			<property name="OutputPerStack" value="100" />
 			<property name="Material" value="Mmetal" />
 			<property name="Shape" value="ModelEntity" />
-			<property name="Model" value="@:Entities/Appliances/ACUnitPrefab.prefab" />
+			<property name="Model" value="#@modfolder:Resources/HSWorkingStuff.unity3d?HSWaterPump" />
+			<property name="ModelOffset" value="0,0,0" />
 			<property name="HandleFace" value="Bottom" />
 			<property name="Place" value="TowardsPlacerInverted" />
 			<property name="Collide" value="movement,melee,bullet,arrow,rocket" />
 			<property name="Path" value="solid" />
 			<property name="WaterFlow" value="permitted" />
-			<property name="RequiredPower" value="10" />
-			<property name="TakeDelay" value="5" />
+			<property name="StabilitySupport" value="false" />
+			<property name="TakeDelay" value="8" />
 			<property name="MaxDamage" value="400" />
-			<property name="DisplayType" value="blockElectrical" />
+			<property name="DisplayType" value="blockElectricalHardened" />
 			<property name="UnlockedBy" value="craftingWorkstations,perkAdvancedEngineering" />
-			<property name="CustomIcon" value="airConditioner" />
+			<property name="CustomIcon" value="hsWaterPump" />
+			<property name="SoundPickup" value="bankgenerator_grab" />
+			<property name="SoundPlace" value="bankgenerator_place" />
 			<property class="RepairItems">
-				<property name="resourceForgedIron" value="4" />
-				<property name="resourceMechanicalParts" value="2" />
+				<property name="resourceForgedIron" value="6" />
+				<property name="resourceMechanicalParts" value="4" />
 				<property name="resourceElectricParts" value="2" />
 			</property>
-			<drop event="Destroy" name="resourceScrapIron" count="4,8" />
+			<drop event="Harvest" name="resourceScrapIron" count="8,16" tag="allHarvest,perkJunkMiner" />
+			<drop event="Harvest" name="resourceForgedIron" count="2" tag="salvageHarvest" />
+			<drop event="Harvest" name="resourceMechanicalParts" count="2" tag="salvageHarvest" />
+			<drop event="Destroy" count="0" />
 			<property name="Group" value="Science,TCScience,Building" />
-			<property name="Tags" value="electricianSkill,workstationSkill" />
+			<property name="Tags" value="electricianSkill,workstationSkill,scrap100" />
 			<property name="FilterTags" value="MC_playerBlocks,SC_electrical,SC_plumbing" />
 		</block>
 

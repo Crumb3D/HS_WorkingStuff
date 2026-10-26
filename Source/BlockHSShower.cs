@@ -1,4 +1,4 @@
-// Shower and bath: hot water from a combi boiler washes all the smell off for a while.
+// Shower and bath: hot water washes the smell off. Cold water still washes, and it cleans less.
 public class BlockHSShower : BlockHSSink
 {
     public float TakeDelay = 5f;
@@ -34,7 +34,7 @@ public class BlockHSShower : BlockHSSink
         if (!taps.Hot.Ok)
             return name + "\n" + HSWater.HotReason(taps);
         return name + "\n" + HSWater.TapLine(taps.Hot) + "\n"
-            + HSLoc.Format("hsWashUses", "A wash uses {0} jars of hot water", Jars);
+            + HSLoc.Format("hsWashUses", "A wash uses {0} jars. Hot water cleans more than cold", Jars);
     }
 
     public override BlockActivationCommand[] GetBlockActivationCommands(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)

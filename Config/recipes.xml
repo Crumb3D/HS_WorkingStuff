@@ -34,8 +34,8 @@
 			<ingredient name="resourceMechanicalParts" count="1"/>
 		</recipe>
 		<recipe name="hsWaterPump" count="1" tags="learnable">
-			<ingredient name="resourceForgedIron" count="8"/>
-			<ingredient name="resourceMechanicalParts" count="4"/>
+			<ingredient name="resourceForgedIron" count="10"/>
+			<ingredient name="resourceMechanicalParts" count="8"/>
 			<ingredient name="resourceElectricParts" count="4"/>
 			<ingredient name="resourceMetalPipe" count="4"/>
 		</recipe>

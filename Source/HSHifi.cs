@@ -31,13 +31,25 @@ public class BlockHSHifi : BlockPowered
         if (player == null)
             player = _ebcd.transform.gameObject.AddComponent<HSHifiPlayer>();
         player.Pos = _blockPos;
+        if (!_blockValue.ischild && _ebcd != null)
+            HSShare.Attach(_ebcd.transform, _blockPos);
+    }
+
+    public override bool CanPlaceBlockAt(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, bool _bOmitCollideCheck = false)
+    {
+        if (HSShare.OnSocket(_world, _blockPos))
+            return base.CanPlaceBlockAt(_world, _blockPos, _blockValue, true);
+        return base.CanPlaceBlockAt(_world, _blockPos, _blockValue, _bOmitCollideCheck);
     }
 
     public override void OnBlockAdded(WorldBase world, Chunk _chunk, Vector3i _blockPos, BlockValue _blockValue, PlatformUserIdentifierAbs _addedByPlayer)
     {
         base.OnBlockAdded(world, _chunk, _blockPos, _blockValue, _addedByPlayer);
         if (!_blockValue.ischild)
+        {
             HSHifi.Track(_blockPos);
+            HSShare.Claim(world, _blockPos);
+        }
     }
 
     public override void OnBlockLoaded(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue)
@@ -49,6 +61,8 @@ public class BlockHSHifi : BlockPowered
 
     public override void OnBlockRemoved(WorldBase world, Chunk _chunk, Vector3i _blockPos, BlockValue _blockValue)
     {
+        if (!_blockValue.ischild)
+            HSShare.QueueRestore(_blockPos);
         HSHifi.Untrack(_blockPos);
         base.OnBlockRemoved(world, _chunk, _blockPos, _blockValue);
     }
@@ -197,6 +211,25 @@ public static class HSHifi
             BlockValue bv = world.GetBlock(p);
             if (bv.Block is BlockHSHifi && IsOn(bv) && Playing(bv) && HSTV.Live(world, p))
                 visit(p);
+        }
+    }
+
+    // The music comes out of the speakers. A hi-fi with none wired is silent, so it does not ring outside.
+    public static void VisitSpeakers(World world, System.Action<Vector3i> visit)
+    {
+        if (world == null || visit == null || hifis.Count == 0)
+            return;
+        foreach (long k in hifis)
+        {
+            Vector3i p = HSWater.FromKey(k);
+            if (world.GetChunkFromWorldPos(p) == null)
+                continue;
+            BlockValue bv = world.GetBlock(p);
+            if (!(bv.Block is BlockHSHifi) || !IsOn(bv) || !Playing(bv) || !HSTV.Live(world, p))
+                continue;
+            List<Vector3i> speakers = Speakers(world, p);
+            for (int i = 0; i < speakers.Count; i++)
+                visit(speakers[i]);
         }
     }
 
@@ -757,9 +790,10 @@ public class HSHifiPlayer : MonoBehaviour
                 cables[i].SetActive(false);
     }
 
-    // Open air is allowed only to reach a wall; once on a wall the cheap path is up, along the ceiling, and down.
+    // The cable stays on a real wall. Glass does not count, so it goes around a window.
     static List<Vector3> CablePoints(World world, Vector3i from, Vector3i to, Vector3 a, Vector3 b)
     {
+        int mode = RouteMode(world, to);
         List<Vector3i> cells = CableRoute(world, from, to);
         var pts = new List<Vector3>();
         pts.Add(a);
@@ -770,23 +804,15 @@ public class HSHifiPlayer : MonoBehaviour
                 Vector3i c = cells[i];
                 if (c == from || c == to)
                     continue;
-                if (!OnWall(world, c) && !OnCeil(world, c))
-                    continue;
-                pts.Add(Against(world, c));
+                pts.Add(Against(world, c, mode));
             }
         }
-        pts.Add(b);
-        if (pts.Count < 3)
+        if (cells == null)
         {
-            pts.Clear();
             pts.Add(a);
-            Vector3 upA = new Vector3(a.x, a.y + 2.4f, a.z);
-            Vector3 upB = new Vector3(b.x, b.y + 2.4f, b.z);
-            pts.Add(upA);
-            pts.Add(new Vector3(upA.x, upA.y, upB.z));
-            pts.Add(upB);
-            pts.Add(b);
+            return pts;
         }
+        pts.Add(b);
         int k = 1;
         while (k < pts.Count - 1)
         {
@@ -803,8 +829,9 @@ public class HSHifiPlayer : MonoBehaviour
     static List<Vector3i> CableRoute(World world, Vector3i from, Vector3i to)
     {
         const int reach = 16;
-        Vector3i min = Vector3i.Min(from, to) - new Vector3i(reach, 1, reach);
-        Vector3i max = Vector3i.Max(from, to) + new Vector3i(reach, 10, reach);
+        int mode = RouteMode(world, to);
+        Vector3i min = Vector3i.Min(from, to) - new Vector3i(reach, 8, reach);
+        Vector3i max = Vector3i.Max(from, to) + new Vector3i(reach, 16, reach);
         if (min.y < 1)
             min.y = 1;
         if (max.y > 253)
@@ -851,7 +878,7 @@ public class HSHifiPlayer : MonoBehaviour
                 Vector3i n = cur + dirs[d];
                 if (n.x < min.x || n.y < min.y || n.z < min.z || n.x > max.x || n.y > max.y || n.z > max.z)
                     continue;
-                int step = CableStep(world, from, to, n, dirs[d], came);
+                int step = CableStep(world, from, to, n, dirs[d], came, mode);
                 if (step < 0)
                     continue;
                 int nc = bestC + step;
@@ -880,30 +907,61 @@ public class HSHifiPlayer : MonoBehaviour
         return path;
     }
 
-    static int CableStep(World world, Vector3i start, Vector3i end, Vector3i to, Vector3i dir, Vector3i came)
+    // 0 = stand speaker (down, along the floor edge, up). 1 = wall speaker (up, along the ceiling edge, down).
+    // 2 = a power lead (down the socket's wall to the bottom of the appliance, then along a wall).
+    static int RouteMode(World world, Vector3i to)
+    {
+        Block block = world.GetBlock(to).Block;
+        string n = block != null ? block.GetBlockName() : "";
+        if (n == "hsHifiSpeakerWall")
+            return 1;
+        if (n == "hsHifiSpeaker")
+            return 0;
+        return 2;
+    }
+
+    public static List<Vector3> LeadPoints(World world, Vector3i from, Vector3i to, Vector3 a, Vector3 b)
+    {
+        return CablePoints(world, from, to, a, b);
+    }
+
+    static int CableStep(World world, Vector3i start, Vector3i end, Vector3i to, Vector3i dir, Vector3i came, int mode)
     {
         if (to != start && to != end)
         {
             BlockValue bv = world.GetBlock(to);
             if (!bv.isair)
                 return -1;
+            if (!OnWall(world, to))
+                return -1;
         }
-        bool wall = OnWall(world, to);
         bool ceil = OnCeil(world, to);
+        bool floor = OnFloor(world, to);
         bool vert = dir.y != 0;
         int c;
-        if (wall && ceil && !vert)
-            c = 6;
-        else if (wall && vert)
-            c = 8;
-        else if (wall)
-            c = 12;
-        else if (ceil && !vert)
-            c = 55;
-        else if (vert)
-            c = 90;
+        if (mode == 1)
+        {
+            if (ceil && !vert)
+                c = 4;
+            else if (vert)
+                c = 7;
+            else
+                c = 16;
+        }
+        else if (mode == 0)
+        {
+            if (floor && !vert)
+                c = 4;
+            else if (vert)
+                c = 7;
+            else
+                c = 16;
+        }
         else
-            c = 110;
+        {
+            // Stay on the wall. A run along the floor is the long way across the room.
+            c = 4;
+        }
         if (came != Vector3i.zero && came != dir)
             c += 4;
         return c;
@@ -911,8 +969,7 @@ public class HSHifiPlayer : MonoBehaviour
 
     static bool Solid(World world, Vector3i p)
     {
-        BlockValue bv = world.GetBlock(p);
-        return !bv.isair && !bv.ischild && bv.Block != null;
+        return HSPlugs.PlaceWall(world, p);
     }
 
     static bool OnWall(World world, Vector3i c)
@@ -926,21 +983,28 @@ public class HSHifiPlayer : MonoBehaviour
         return Solid(world, c + new Vector3i(0, 1, 0));
     }
 
-    static Vector3 Against(World world, Vector3i c)
+    static bool OnFloor(World world, Vector3i c)
+    {
+        return Solid(world, c + new Vector3i(0, -1, 0));
+    }
+
+    static Vector3 Against(World world, Vector3i c, int mode)
     {
         Vector3 p = c.ToVector3() + new Vector3(0.5f, 0.5f, 0.5f) - Origin.position;
-        const float d = 0.44f;
+        const float d = 0.46f;
         Vector3 o = Vector3.zero;
-        if (Solid(world, c + new Vector3i(1, 0, 0)))
-            o.x += d;
-        if (Solid(world, c + new Vector3i(-1, 0, 0)))
-            o.x -= d;
-        if (Solid(world, c + new Vector3i(0, 0, 1)))
-            o.z += d;
-        if (Solid(world, c + new Vector3i(0, 0, -1)))
-            o.z -= d;
-        if (Solid(world, c + new Vector3i(0, 1, 0)))
-            o.y += d;
+        bool xp = Solid(world, c + new Vector3i(1, 0, 0));
+        bool xn = Solid(world, c + new Vector3i(-1, 0, 0));
+        bool zp = Solid(world, c + new Vector3i(0, 0, 1));
+        bool zn = Solid(world, c + new Vector3i(0, 0, -1));
+        if (xp && !xn) o.x = d;
+        else if (xn && !xp) o.x = -d;
+        if (zp && !zn) o.z = d;
+        else if (zn && !zp) o.z = -d;
+        if (mode == 0 && Solid(world, c + new Vector3i(0, -1, 0)))
+            o.y = -d;
+        else if (mode != 2 && Solid(world, c + new Vector3i(0, 1, 0)))
+            o.y = d;
         return p + o;
     }
 

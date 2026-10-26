@@ -43,6 +43,8 @@
 				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffSmellGrace"/>
 				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="smell" operation="set" value="0"/>
 				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashedBath"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashedCold"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashedColdBath"/>
 			</effect_group>
 		</buff>
 
@@ -54,11 +56,45 @@
 				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffSmellGrace"/>
 				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="smell" operation="set" value="0"/>
 				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashed"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashedCold"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashedColdBath"/>
+			</effect_group>
+		</buff>
+
+		<!-- Cold shower and bath: half the smell comes off, and the clean spell is half as long. -->
+		<buff name="buffHSWashedCold" name_key="buffHSWashedColdName" description_key="buffHSWashedColdDesc" icon="ui_game_symbol_water" icon_color="140,180,210">
+			<stack_type value="replace"/>
+			<duration value="300"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffSmell"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffSmellGrace"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="smell" operation="set" value="0"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashed"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashedBath"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashedColdBath"/>
+			</effect_group>
+		</buff>
+
+		<buff name="buffHSWashedColdBath" name_key="buffHSWashedColdBathName" description_key="buffHSWashedColdDesc" icon="ui_game_symbol_water" icon_color="140,180,210">
+			<stack_type value="replace"/>
+			<duration value="600"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffSmell"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffSmellGrace"/>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="smell" operation="set" value="0"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashed"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashedBath"/>
+				<triggered_effect trigger="onSelfBuffStart" action="RemoveBuff" buff="buffHSWashedCold"/>
 			</effect_group>
 		</buff>
 
 		<!-- Marker from the server after washing up at a sink; the player's own machine takes the smell off once. -->
 		<buff name="buffHSWashedSink" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="6"/>
+		</buff>
+
+		<buff name="buffHSWashedSinkCold" hidden="true">
 			<stack_type value="replace"/>
 			<duration value="6"/>
 		</buff>
@@ -75,7 +111,7 @@
 		<buff name="buffHSDirtyClothes" name_key="buffHSDirtyClothesName" description_key="buffHSDirtyClothesDesc" icon="ui_game_symbol_smell" icon_color="150,110,60">
 			<stack_type value="ignore"/>
 			<duration value="0"/>
-			<display_value value=".hsSmellClothesM"/>
+			<display_value value=".hsDirtPct"/>
 			<display_value_key value="buffHSDirtyClothesValue"/>
 			<display_value_format value="FlooredToInt"/>
 		</buff>
@@ -93,6 +129,14 @@
 			<duration value="0"/>
 			<display_value value="hsBladder"/>
 			<display_value_key value="buffHSNeedPeeValue"/>
+			<display_value_format value="FlooredToInt"/>
+		</buff>
+
+		<buff name="buffHSLoud" name_key="buffHSLoudName" description_key="buffHSLoudDesc" icon="ui_game_symbol_noise" icon_color="220,140,40">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+			<display_value value=".hsNoiseM"/>
+			<display_value_key value="buffHSLoudValue"/>
 			<display_value_format value="FlooredToInt"/>
 		</buff>
 

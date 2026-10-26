@@ -14,9 +14,22 @@ public static class HSSpoil
     static float nextTick;
     static ulong lastWorldTime;
 
-    public static ulong LifeTicks
+    public static float Days(ItemValue iv)
     {
-        get { return (ulong)Mathf.Max(1000f, HSWorkingStuffSettings.SpoilDays * TicksPerDay); }
+        float d = HSWorkingStuffSettings.SpoilDays;
+        if (iv != null && iv.ItemClass != null && iv.ItemClass.Properties != null
+            && iv.ItemClass.Properties.Values.ContainsKey("SpoilDays"))
+        {
+            float n = iv.ItemClass.Properties.GetFloat("SpoilDays");
+            if (n > 0.05f)
+                d = n;
+        }
+        return d;
+    }
+
+    public static ulong LifeTicksFor(ItemValue iv)
+    {
+        return (ulong)Mathf.Max(1000f, Days(iv) * TicksPerDay);
     }
 
     public static bool IsPerishable(ItemValue iv)
@@ -138,10 +151,21 @@ public static class HSSpoil
             return -1f;
         EnsureStamp(iv, now);
         float acc = GetAcc(iv);
-        float life = HSWorkingStuffSettings.SpoilDays;
+        float life = Days(iv);
         float left = life - acc / TicksPerDay;
         if (left < 0f)
             left = 0f;
+        return left;
+    }
+
+    // Player-days left, stretched by the container. A chest freezer's 0.033 rate is about 90 days.
+    public static float CalendarDays(ItemValue iv, ulong now, float rate)
+    {
+        float left = RemainingDays(iv, now);
+        if (left < 0f)
+            return left;
+        if (rate > 0.001f)
+            left /= rate;
         return left;
     }
 
@@ -188,17 +212,18 @@ public static class HSSpoil
         ulong last = ReadLast(iv, now);
         if (now <= last)
             return;
-        if (HSFrozen.Tick(iv, cold, now - last))
-            rate = 0f;
-        if (rate <= 0f)
+        bool frozen = HSFrozen.Tick(iv, cold, now - last);
+        HSFrozen.Mark(iv, rate, cold);
+        // Thawing food waits. The 3-day or 7-day clock starts once it is soft. A freezer keeps it frozen and still spoils, slowly.
+        if (rate <= 0f || (frozen && cold < 0f))
         {
             WriteLast(iv, now);
             return;
         }
-        float add = (now - last) * Mathf.Max(0.05f, rate);
+        float add = (now - last) * rate;
         float acc = GetAcc(iv) + add;
         WriteLast(iv, now);
-        float life = LifeTicks;
+        float life = LifeTicksFor(iv);
         if (acc >= life)
         {
             SpoilNow(stack);
@@ -363,6 +388,8 @@ public static class HSSpoil
                     continue;
                 if (!iv.HasMetadata(MetaDry))
                     iv.SetMetadata(MetaDry, 0f);
+                HSItem.SetVal(s, iv);
+                TickDry(s, now);
             }
             return;
         }
@@ -447,12 +474,12 @@ public static class HSSpoil
     {
         if (stack == null || stack.IsEmpty() || !IsPerishable(HSItem.Val(stack)))
             return null;
-        string frozen = HSFrozen.TooltipLine(stack);
-        if (frozen != null)
-            return frozen;
         World world = GameManager.Instance != null ? GameManager.Instance.World : null;
         ulong now = world != null ? world.worldTime : 0UL;
-        float left = RemainingDays(HSItem.Val(stack), now);
+        string frozen = HSFrozen.TooltipLine(stack, now);
+        if (frozen != null)
+            return frozen;
+        float left = CalendarDays(HSItem.Val(stack), now, HSFrozen.SpoilRate(HSItem.Val(stack)));
         if (left <= 0f)
             return HSLoc.Get("hsSpoilSoon", "Spoiling now");
         if (left < 1f)

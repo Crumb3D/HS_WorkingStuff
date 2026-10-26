@@ -1,7 +1,7 @@
 using UnityEngine;
 
-// Closed-up rooms cut how far smell (and the dinner-bell idea) travels. An open door or window
-// next to you leaks it outside. Used for smell radius; Better Ears does the per-zombie wall walk.
+// How shut-in a cell is. Smell and appliance noise no longer use a flat indoor cut:
+// Better Ears dampens each wall, window and shut door on the way to a zombie, and an open door does not.
 public static class HSIndoor
 {
     public static float SmellScale(World world, Vector3 at)

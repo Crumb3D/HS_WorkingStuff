@@ -92,6 +92,37 @@ public static class HSLaundryCraft
         return recipe != null && recipe.craftingArea == DryArea;
     }
 
+    static readonly FieldInfo shownRecipes = AccessTools.Field(typeof(XUiC_RecipeList), "recipes");
+
+    // Wash and dry stay on the washer and dryer. A workbench or a clothing search must not list them.
+    public static void KeepOnlyThisStation(XUiC_RecipeList list)
+    {
+        if (list == null || shownRecipes == null)
+            return;
+        var recipes = shownRecipes.GetValue(list) as List<Recipe>;
+        if (recipes == null || recipes.Count == 0)
+            return;
+        string station = list.Workstation ?? "";
+        bool dryer = station == DryArea || station == "hsDryerVanilla";
+        bool washer = station == WashArea || station == "hsWasherVanilla";
+        if (washer || dryer)
+        {
+            recipes.RemoveAll(delegate (Recipe r) { return r == null || !IsLaundry(r) || IsDryer(r) != dryer; });
+            EntityPlayer player = list.xui != null && list.xui.playerUI != null ? list.xui.playerUI.entityPlayer : null;
+            if (player != null)
+            {
+                recipes.Sort(delegate (Recipe a, Recipe b)
+                {
+                    int ra = a != null && Holding(player, a.itemValueType) ? 0 : 1;
+                    int rb = b != null && Holding(player, b.itemValueType) ? 0 : 1;
+                    return ra.CompareTo(rb);
+                });
+            }
+            return;
+        }
+        recipes.RemoveAll(delegate (Recipe r) { return IsLaundry(r); });
+    }
+
     public static bool IsLaundry(TileEntityWorkstation te)
     {
         if (te == null)
@@ -177,6 +208,83 @@ public static class HSLaundryCraft
         return best;
     }
 
+    // Wash and dry take every dirty or wet piece you are wearing or carrying. Nothing has to be put in the machine first.
+    public static List<ItemValue> Collect(EntityPlayer player, bool dryer, float nowH)
+    {
+        var list = new List<ItemValue>();
+        if (player == null)
+            return list;
+        if (player.equipment != null)
+        {
+            int n = player.equipment.GetSlotCount();
+            for (int i = 0; i < n; i++)
+            {
+                ItemValue iv = player.equipment.GetSlotItem(i);
+                if (!Ready(iv, dryer, nowH))
+                    continue;
+                list.Add(iv.Clone());
+                HSInv.SetEquipSlot(player, i, ItemValue.None);
+            }
+        }
+        Pull(HSInv.GetBagStacks(player), dryer, nowH, list);
+        Pull(HSInv.GetToolStacks(player), dryer, nowH, list);
+        if (list.Count > 0)
+            HSInv.NotifyPlayer(player);
+        return list;
+    }
+
+    public static bool HasAny(EntityPlayer player, bool dryer, float nowH)
+    {
+        if (player == null)
+            return false;
+        if (player.equipment != null)
+        {
+            int n = player.equipment.GetSlotCount();
+            for (int i = 0; i < n; i++)
+                if (Ready(player.equipment.GetSlotItem(i), dryer, nowH))
+                    return true;
+        }
+        return Scan(HSInv.GetBagStacks(player), dryer, nowH) || Scan(HSInv.GetToolStacks(player), dryer, nowH);
+    }
+
+    static bool Ready(ItemValue iv, bool dryer, float nowH)
+    {
+        return HSLaundry.IsClothing(iv) && Amount(iv, dryer, nowH) > 0f;
+    }
+
+    static bool Scan(ItemStack[] stacks, bool dryer, float nowH)
+    {
+        if (stacks == null)
+            return false;
+        for (int i = 0; i < stacks.Length; i++)
+        {
+            if (stacks[i] == null || stacks[i].IsEmpty())
+                continue;
+            if (Ready(HSItem.Val(stacks[i]), dryer, nowH))
+                return true;
+        }
+        return false;
+    }
+
+    static void Pull(ItemStack[] stacks, bool dryer, float nowH, List<ItemValue> list)
+    {
+        if (stacks == null)
+            return;
+        for (int i = 0; i < stacks.Length; i++)
+        {
+            if (stacks[i] == null || stacks[i].IsEmpty())
+                continue;
+            ItemValue iv = HSItem.Val(stacks[i]);
+            if (!Ready(iv, dryer, nowH))
+                continue;
+            int n = HSItem.Count(stacks[i]);
+            for (int c = 0; c < n; c++)
+                list.Add(iv.Clone());
+            HSItem.SetVal(stacks[i], ItemValue.None);
+            HSItem.SetCount(stacks[i], 0);
+        }
+    }
+
     static void Consider(ItemStack[] stacks, int itemType, bool dryer, float nowH, ref ItemValue best, ref float bestAmt)
     {
         if (stacks == null)
@@ -191,7 +299,7 @@ public static class HSLaundryCraft
 
     static void Score(ItemValue iv, int itemType, bool dryer, float nowH, ref ItemValue best, ref float bestAmt)
     {
-        if (iv == null || iv.IsEmpty() || iv.GetItemId() != itemType || !HSLaundry.IsClothing(iv))
+        if (!SameType(iv, itemType) || !HSLaundry.IsClothing(iv))
             return;
         float amt = Amount(iv, dryer, nowH);
         if (amt <= 0f)
@@ -203,12 +311,103 @@ public static class HSLaundryCraft
         }
     }
 
+    // The craft list only looks in the bag. A dirty or wet piece you are wearing still counts for that row.
     public static bool HasUsable(EntityPlayer player, Recipe recipe)
     {
         if (player == null || !IsLaundry(recipe))
             return false;
         World world = GameManager.Instance != null ? GameManager.Instance.World : null;
         return Find(player, recipe.itemValueType, IsDryer(recipe), HSLaundry.NowHours(world)) != null;
+    }
+
+    public static bool Holding(EntityPlayer player, int itemType)
+    {
+        if (player == null)
+            return false;
+        if (player.equipment != null)
+        {
+            int n = player.equipment.GetSlotCount();
+            for (int i = 0; i < n; i++)
+                if (SameType(player.equipment.GetSlotItem(i), itemType))
+                    return true;
+        }
+        return StackHas(HSInv.GetBagStacks(player), itemType) || StackHas(HSInv.GetToolStacks(player), itemType);
+    }
+
+    public static int WornCount(EntityPlayer player, int itemType)
+    {
+        if (player == null || player.equipment == null)
+            return 0;
+        int n = 0;
+        int slots = player.equipment.GetSlotCount();
+        for (int i = 0; i < slots; i++)
+            if (SameType(player.equipment.GetSlotItem(i), itemType))
+                n++;
+        return n;
+    }
+
+    static readonly FieldInfo invXui = AccessTools.Field(typeof(XUiM_PlayerInventory), "xui");
+    static readonly FieldInfo invPlayer = AccessTools.Field(typeof(XUiM_PlayerInventory), "localPlayer");
+
+    public static bool LaundryWindowOpen(XUiM_PlayerInventory inv)
+    {
+        if (inv == null || invXui == null)
+            return false;
+        XUi xui = invXui.GetValue(inv) as XUi;
+        if (xui == null || xui.playerUI == null || xui.playerUI.windowManager == null)
+            return false;
+        return xui.playerUI.windowManager.IsWindowOpen("workstation_hsWasher");
+    }
+
+    public static EntityPlayer InventoryPlayer(XUiM_PlayerInventory inv)
+    {
+        if (inv == null || invPlayer == null)
+            return null;
+        return invPlayer.GetValue(inv) as EntityPlayer;
+    }
+
+    public static int WornForUi(XUiM_PlayerInventory inv, ItemValue iv)
+    {
+        if (!LaundryWindowOpen(inv) || !HSLaundry.IsClothing(iv) || iv.ItemClass == null)
+            return 0;
+        return WornCount(InventoryPlayer(inv), iv.ItemClass.Id);
+    }
+
+    public static int WornForUi(XUiM_PlayerInventory inv, int itemId)
+    {
+        if (!LaundryWindowOpen(inv))
+            return 0;
+        return WornCount(InventoryPlayer(inv), itemId);
+    }
+
+    static bool StackHas(ItemStack[] stacks, int itemType)
+    {
+        if (stacks == null)
+            return false;
+        for (int i = 0; i < stacks.Length; i++)
+        {
+            if (stacks[i] == null || stacks[i].IsEmpty())
+                continue;
+            if (SameType(HSItem.Val(stacks[i]), itemType))
+                return true;
+        }
+        return false;
+    }
+
+    static bool SameType(ItemValue iv, int itemType)
+    {
+        if (iv == null || iv.IsEmpty() || iv.ItemClass == null)
+            return false;
+        if (iv.ItemClass.Id == itemType)
+            return true;
+        return iv.GetItemId() == itemType;
+    }
+
+    public static bool SameItem(ItemValue a, ItemValue b)
+    {
+        if (a == null || b == null || a.IsEmpty() || b.IsEmpty() || a.ItemClass == null || b.ItemClass == null)
+            return false;
+        return a.ItemClass.Id == b.ItemClass.Id || a.GetItemId() == b.GetItemId();
     }
 
     public static ItemValue Take(EntityPlayer player, int itemType, bool dryer, float nowH)
@@ -336,6 +535,9 @@ public static class HSLaundryCraft
         }
         XUiC_CraftingQueue q = group.GetChildByType<XUiC_CraftingQueue>();
         BindQueue(q);
+        // Only the piece you picked, and only as many as the craft count. Never the whole outfit.
+        if (count > 20)
+            count = 20;
         bool any = false;
         for (int i = 0; i < count; i++)
         {
@@ -344,15 +546,15 @@ public static class HSLaundryCraft
             {
                 if (!any)
                     GameManager.ShowTooltip(player, dryer
-                        ? HSLoc.Get("hsDryerEmpty", "Nothing wet to dry")
-                        : HSLoc.Get("hsWasherEmpty", "Nothing to wash: put clothes or armour in first"));
+                        ? HSLoc.Get("hsDryerEmpty", "Nothing you're wearing or carrying is wet")
+                        : HSLoc.Get("hsWasherEmpty", "Nothing you're wearing or carrying needs a wash"));
                 break;
             }
             if (!dryer)
                 HSWorkingStuffNet.SendWater(HSWorkingStuffNet.Laundry, pos, player);
             float time = SecondsFor(taken.ItemClass, taken, dryer, nowH);
             var one = new Recipe();
-            one.itemValueType = recipe.itemValueType;
+            one.itemValueType = taken.ItemClass != null ? taken.ItemClass.Id : recipe.itemValueType;
             one.count = 1;
             one.craftingArea = recipe.craftingArea;
             one.craftingTime = time;
@@ -424,7 +626,7 @@ public static class HSLaundryCraft
 
     public static ItemValue TakeOutput(int itemType)
     {
-        if (pendingOut == null || pendingOut.GetItemId() != itemType)
+        if (pendingOut == null || !SameType(pendingOut, itemType))
             return null;
         ItemValue iv = pendingOut;
         pendingOut = null;
@@ -575,6 +777,62 @@ public static class HSPatchLaundryHasItems
     }
 }
 
+// The ingredient number is bag plus toolbelt. Add the piece that is on the player while a washer or dryer is open.
+[HarmonyPatch(typeof(XUiM_PlayerInventory), "GetItemCount", new[] { typeof(ItemValue) })]
+public static class HSPatchLaundryCountValue
+{
+    static void Postfix(XUiM_PlayerInventory __instance, ItemValue _itemValue, ref int __result)
+    {
+        __result += HSLaundryCraft.WornForUi(__instance, _itemValue);
+    }
+}
+
+[HarmonyPatch(typeof(XUiM_PlayerInventory), "GetItemCountWithMods")]
+public static class HSPatchLaundryCountMods
+{
+    static void Postfix(XUiM_PlayerInventory __instance, ItemValue _itemValue, ref int __result)
+    {
+        __result += HSLaundryCraft.WornForUi(__instance, _itemValue);
+    }
+}
+
+[HarmonyPatch(typeof(XUiM_PlayerInventory), "GetItemCount", new[] { typeof(int) })]
+public static class HSPatchLaundryCountId
+{
+    static void Postfix(XUiM_PlayerInventory __instance, int _itemId, ref int __result)
+    {
+        __result += HSLaundryCraft.WornForUi(__instance, _itemId);
+    }
+}
+
+[HarmonyPatch(typeof(XUiM_PlayerInventory), "HasItems")]
+public static class HSPatchLaundryHasStacks
+{
+    static void Postfix(XUiM_PlayerInventory __instance, IList<ItemStack> _itemStacks, int _multiplier, ref bool __result)
+    {
+        if (__result || _itemStacks == null || !HSLaundryCraft.LaundryWindowOpen(__instance))
+            return;
+        EntityPlayer player = HSLaundryCraft.InventoryPlayer(__instance);
+        if (player == null)
+            return;
+        int mult = _multiplier < 1 ? 1 : _multiplier;
+        for (int i = 0; i < _itemStacks.Count; i++)
+        {
+            ItemStack s = _itemStacks[i];
+            if (s == null || s.IsEmpty())
+                continue;
+            ItemValue iv = HSItem.Val(s);
+            if (!HSLaundry.IsClothing(iv) || iv.ItemClass == null)
+                return;
+            int need = HSItem.Count(s) * mult;
+            // Bag/toolbelt already failed. Only the worn copies of this same piece count, never "any clothing".
+            if (HSLaundryCraft.WornCount(player, iv.ItemClass.Id) < need)
+                return;
+        }
+        __result = true;
+    }
+}
+
 [HarmonyPatch(typeof(XUiC_WorkstationWindowGroup), "CraftingRequirementsValid")]
 public static class HSPatchLaundryReq
 {
@@ -627,7 +885,8 @@ public static class HSPatchLaundryStackOut
         ItemValue have = HSItem.Val(_itemStack);
         if (_itemStack == null || _itemStack.IsEmpty() || have == null)
             return;
-        ItemValue iv = HSLaundryCraft.TakeOutput(have.GetItemId());
+        int id = have.ItemClass != null ? have.ItemClass.Id : have.GetItemId();
+        ItemValue iv = HSLaundryCraft.TakeOutput(id);
         if (iv != null)
             _itemStack = new ItemStack(iv, 1);
     }
@@ -659,7 +918,7 @@ public static class HSPatchLaundryClientOut
             ItemValue have = HSItem.Val(slots[i]);
             if (slots[i] == null || slots[i].IsEmpty() || have == null)
                 continue;
-            if (have.GetItemId() != leftover.GetItemId())
+            if (!HSLaundryCraft.SameItem(have, leftover))
                 continue;
             slots[i] = new ItemStack(leftover, 1);
             grid.SetSlots(slots);
@@ -701,5 +960,41 @@ public static class HSPatchLaundryCategory
                 return false;
         }
         return true;
+    }
+}
+
+[HarmonyPatch(typeof(XUiC_RecipeList), "GetRecipeData")]
+public static class HSPatchLaundryList
+{
+    static void Postfix(XUiC_RecipeList __instance)
+    {
+        HSLaundryCraft.KeepOnlyThisStation(__instance);
+    }
+}
+
+[HarmonyPatch(typeof(XUiC_RecipeList), "SetRecipeDataByIngredientStack")]
+public static class HSPatchLaundryListIngredient
+{
+    static void Postfix(XUiC_RecipeList __instance)
+    {
+        HSLaundryCraft.KeepOnlyThisStation(__instance);
+    }
+}
+
+[HarmonyPatch(typeof(XUiC_RecipeList), "SetRecipeDataByItems")]
+public static class HSPatchLaundryListItems
+{
+    static void Postfix(XUiC_RecipeList __instance)
+    {
+        HSLaundryCraft.KeepOnlyThisStation(__instance);
+    }
+}
+
+[HarmonyPatch(typeof(XUiC_RecipeList), "SetRecipeDataByItem")]
+public static class HSPatchLaundryListItem
+{
+    static void Postfix(XUiC_RecipeList __instance)
+    {
+        HSLaundryCraft.KeepOnlyThisStation(__instance);
     }
 }

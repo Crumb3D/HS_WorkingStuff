@@ -39,6 +39,8 @@ public static class HSWorkingStuffNet
     public const byte CircuitAsk = 30;
     public const byte Toilet = 31;
     public const byte Salvage = 32;
+    public const byte ShareSync = 33;
+    public const byte LightLink = 34;
 
     public static bool IsAuthority
     {
@@ -155,6 +157,36 @@ public static class HSWorkingStuffNet
         ToClients(Pkg().OfText(CircuitSync, -1, panel, packed, text));
     }
 
+    public static void SendLight(Vector3i sw, Vector3i light, EntityPlayer player)
+    {
+        string text = HSLights.Text(light);
+        if (IsAuthority)
+        {
+            HSLights.Link(sw, text);
+            return;
+        }
+        if (player == null)
+            return;
+        ToServer(Pkg().OfText(LightLink, player.entityId, sw, 0, text));
+    }
+
+    public static void BroadcastShare(Vector3i pos, string text)
+    {
+        if (!IsAuthority)
+            return;
+        ToClients(Pkg().OfText(ShareSync, -1, pos, 0, text));
+    }
+
+    public static void SendShareTo(int entityId, Vector3i pos, string text)
+    {
+        if (!IsAuthority)
+            return;
+        var cm = ConnectionManager.Instance;
+        if (cm == null || !cm.IsServer)
+            return;
+        cm.SendPackage(Pkg().OfText(ShareSync, -1, pos, 0, text), true, entityId);
+    }
+
     public static void SendCircuitTo(int entityId, Vector3i panel, int packed, string text)
     {
         if (!IsAuthority)
@@ -237,24 +269,23 @@ public static class HSWorkingStuffNet
         else if (kind == SinkWash)
         {
             HSWater.Taps taps = HSWater.FindTaps(world, pos);
-            bool hot = taps.Hot.Ok;
-            HSWater.Source src = hot ? taps.Hot : taps.Cold;
-            if (!src.Ok)
+            HSWater.Source src = taps.Hot;
+            bool hot = src.Ok && HSWater.TakeFromSource(ref src, 1);
+            if (!hot)
             {
-                Tell(player, HSWater.ColdReason(taps));
-                return;
-            }
-            if (!HSWater.TakeFromSource(ref src, 1))
-            {
-                Tell(player, HSWater.ColdReason(taps));
-                return;
+                src = taps.Cold;
+                if (!src.Ok || !HSWater.TakeFromSource(ref src, 1))
+                {
+                    Tell(player, HSWater.ColdReason(taps));
+                    return;
+                }
             }
             if (hot)
                 HSBoiler.HotDraw(taps.HeaterPos);
             if (!src.Infinite)
                 BroadcastTank(src.TankPos);
             if (player.Buffs != null)
-                player.Buffs.AddBuff(HSLaundry.SinkWashBuff);
+                player.Buffs.AddBuff(hot ? HSLaundry.SinkWashBuff : HSLaundry.SinkWashColdBuff);
             return;
         }
         else if (kind == Wash)
@@ -263,25 +294,33 @@ public static class HSWorkingStuffNet
             if (shower == null)
                 return;
             HSWater.Taps taps = HSWater.FindTaps(world, pos);
-            HSWater.Source src = taps.Hot;
-            if (!src.Ok)
-            {
-                Tell(player, HSWater.HotReason(taps));
-                return;
-            }
             int jars = shower.Jars;
-            if (!HSWater.TakeFromSource(ref src, jars))
+            HSWater.Source src = taps.Hot;
+            bool hot = src.Ok && HSWater.TakeFromSource(ref src, jars);
+            if (!hot)
             {
-                Tell(player, HSLoc.Format("hsWashShort", "Not enough hot water: a wash needs {0} jars", jars));
-                return;
+                src = taps.Cold;
+                if (!src.Ok || !HSWater.TakeFromSource(ref src, jars))
+                {
+                    Tell(player, HSLoc.Format("hsWashShort", "Not enough water: a wash needs {0} jars. Hot water cleans more", jars));
+                    return;
+                }
             }
-            HSBoiler.HotDraw(taps.HeaterPos);
+            if (hot)
+                HSBoiler.HotDraw(taps.HeaterPos);
             if (!src.Infinite)
                 BroadcastTank(src.TankPos);
-            HSWash.Apply(player, shower.IsBath);
-            Tell(player, shower.IsBath
-                ? HSLoc.Get("hsWashBath", "Bathed: all of your body smell is gone, and nothing smells on you for 20 minutes")
-                : HSLoc.Get("hsWashShower", "Showered: nearly all of your body smell is gone, and nothing smells on you for 10 minutes"));
+            if (hot)
+                HSWash.Apply(player, shower.IsBath);
+            else
+                HSWash.ApplyCold(player, shower.IsBath);
+            Tell(player, hot
+                ? (shower.IsBath
+                    ? HSLoc.Get("hsWashBath", "Bathed: all of your body smell is gone, and nothing smells on you for 20 minutes")
+                    : HSLoc.Get("hsWashShower", "Showered: nearly all of your body smell is gone, and nothing smells on you for 10 minutes"))
+                : (shower.IsBath
+                    ? HSLoc.Get("hsWashColdBath", "Cold bath: about half your body smell is gone, and nothing smells on you for 10 minutes")
+                    : HSLoc.Get("hsWashColdShower", "Cold shower: about half your body smell is gone, and nothing smells on you for 5 minutes")));
             return;
         }
         else if (kind == RainInstall || kind == RainRemove)
@@ -303,9 +342,15 @@ public static class HSWorkingStuffNet
         }
         else if (kind == TankPour || kind == TankPourAll)
         {
-            ok = HSWater.PourIntoTank(player, pos, kind == TankPourAll);
+            int poured = HSWater.PourIntoTank(player, pos, kind == TankPourAll);
+            ok = poured > 0;
             if (ok)
+            {
                 BroadcastTank(pos);
+                var tank = HSWater.GetTank(pos);
+                Tell(player, HSLoc.Format("hsTankPoured", "Poured {0} in. The tank holds {1} of {2}",
+                    poured, tank.Units, HSWorkingStuffSettings.TankCapacity));
+            }
         }
         else if (kind == TankFill || kind == TankFillAll)
         {
@@ -339,13 +384,19 @@ public static class HSWorkingStuffNet
         }
         else if (kind == PipeRemove)
         {
-            int n = HSPipeNet.RemoveRun(pos);
+            int[] shapes = new int[3];
+            int n = HSPipeNet.RemoveRun(pos, shapes);
             if (n <= 0)
                 return;
-            ItemValue iv = ItemClass.GetItem("hsPipeStraight");
-            if (iv != null && !iv.IsEmpty())
-                HSWater.GiveOrDrop(player, new ItemStack(iv, n));
-            Tell(player, HSLoc.Format("hsPipeRemoved", "Took up {0} pipes", n));
+            for (int s = 0; s < shapes.Length && s < HSPipeTool.PipeItems.Length; s++)
+            {
+                if (shapes[s] <= 0)
+                    continue;
+                ItemValue iv = ItemClass.GetItem(HSPipeTool.PipeItems[s]);
+                if (iv != null && !iv.IsEmpty())
+                    HSWater.GiveOrDrop(player, new ItemStack(iv, shapes[s]));
+            }
+            Tell(player, HSLoc.Format("hsPipeTook", "Took up {0} straight, {1} corners and {2} joints", shapes[0], shapes[1], shapes[2]));
             HSInv.NotifyPlayer(player);
             return;
         }
@@ -571,6 +622,18 @@ public abstract class NetPackageHSWorkingStuffCore : NetPackage
             {
                 if (!HSWorkingStuffNet.IsAuthority)
                     HSCircuits.ApplySync(pos, units, text);
+                return;
+            }
+            if (kind == HSWorkingStuffNet.ShareSync)
+            {
+                if (!HSWorkingStuffNet.IsAuthority)
+                    HSShare.ApplySync(pos, text);
+                return;
+            }
+            if (kind == HSWorkingStuffNet.LightLink)
+            {
+                if (HSWorkingStuffNet.IsAuthority)
+                    HSLights.Link(pos, text);
                 return;
             }
             if (world == null)

@@ -35,6 +35,60 @@ public static class HSPlugs
         return world != null && IsLightSwitch(world.GetBlock(pos).Block);
     }
 
+    public static bool Glass(Block block)
+    {
+        if (block == null)
+            return false;
+        string n = block.GetBlockName();
+        string id = block.blockMaterial != null ? block.blockMaterial.id : null;
+        return Has(n, "glass") || Has(n, "window") || Has(id, "glass") || Has(id, "window");
+    }
+
+    static bool Has(string s, string bit)
+    {
+        return !string.IsNullOrEmpty(s) && s.ToLowerInvariant().IndexOf(bit) >= 0;
+    }
+
+    // A cable may hug any solid that is not a window. Glass does not count, so a lead goes round a window.
+    public static bool CableWall(World world, Vector3i p)
+    {
+        if (world == null)
+            return false;
+        BlockValue bv = world.GetBlock(p);
+        return !bv.isair && !bv.ischild && bv.Block != null && !Glass(bv.Block);
+    }
+
+    // A socket or switch only sits on a real wall: a solid cube or the ground, not glass and not an appliance.
+    public static bool PlaceWall(World world, Vector3i p)
+    {
+        if (world == null)
+            return false;
+        BlockValue bv = world.GetBlock(p);
+        if (bv.isair || bv.ischild || bv.Block == null || bv.Block.shape == null)
+            return false;
+        Block b = bv.Block;
+        if (Glass(b) || b.HasTileEntity)
+            return false;
+        if (b.shape.IsSolidCube || b.shape.IsTerrain())
+            return true;
+        return (b.shape.getFacesDrawnFullBitfield(bv) & 63) == 63;
+    }
+
+    public static bool AgainstWall(WorldBase world, Vector3i pos, BlockValue bv)
+    {
+        World w = world as World;
+        if (w == null || bv.Block == null || bv.Block.shape == null)
+            return false;
+        // The plate's back is local -Z, against the wall. The preview rotation is not always set yet, so a cell that touches a real wall on any side is enough.
+        Vector3 into = bv.Block.shape.GetRotation(bv) * Vector3.back;
+        int x = into.x > 0.5f ? 1 : into.x < -0.5f ? -1 : 0;
+        int z = into.z > 0.5f ? 1 : into.z < -0.5f ? -1 : 0;
+        if ((x != 0 || z != 0) && PlaceWall(w, pos + new Vector3i(x, 0, z)))
+            return true;
+        return PlaceWall(w, pos + new Vector3i(1, 0, 0)) || PlaceWall(w, pos + new Vector3i(-1, 0, 0))
+            || PlaceWall(w, pos + new Vector3i(0, 0, 1)) || PlaceWall(w, pos + new Vector3i(0, 0, -1));
+    }
+
     static bool Onward(Block parent, Block child)
     {
         return parent != null && child != null
@@ -321,14 +375,20 @@ public static class HSPlugs
                 line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             }
             line.sharedMaterial = r.sharedMaterial;
-            const int n = 12;
-            float sag = 0.04f + 0.06f * Vector3.Distance(a, b);
-            line.positionCount = n + 1;
-            for (int k = 0; k <= n; k++)
+            World w = world as World;
+            Vector3i socketPos = te.ToWorldPos();
+            List<Vector3> pts = w != null ? HSHifiPlayer.LeadPoints(w, socketPos, childPos, a, b) : null;
+            if (pts == null || pts.Count < 2)
             {
-                float s = k / (float)n;
-                Vector3 p = Vector3.Lerp(a, b, s) + Vector3.down * (sag * 4f * s * (1f - s));
-                line.SetPosition(k, model.InverseTransformPoint(p));
+                line.positionCount = 2;
+                line.SetPosition(0, model.InverseTransformPoint(a));
+                line.SetPosition(1, model.InverseTransformPoint(a));
+            }
+            else
+            {
+                line.positionCount = pts.Count;
+                for (int k = 0; k < pts.Count; k++)
+                    line.SetPosition(k, model.InverseTransformPoint(pts[k]));
             }
         }
     }
@@ -638,6 +698,12 @@ public static class HSPatchSocketPlugs
 // The rocker flicks: "<Model>_SwOn*" / "_SwOff*" children swap with the switch, "_Lamp*" lights when on and powered.
 public class BlockHSWallSwitch : BlockSwitch
 {
+    public override bool CanPlaceBlockAt(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, bool _bOmitCollideCheck = false)
+    {
+        return base.CanPlaceBlockAt(_world, _blockPos, _blockValue, _bOmitCollideCheck)
+            && HSPlugs.AgainstWall(_world, _blockPos, _blockValue);
+    }
+
     public override void OnBlockAdded(WorldBase world, Chunk _chunk, Vector3i _blockPos, BlockValue _blockValue, PlatformUserIdentifierAbs _addedByPlayer)
     {
         base.OnBlockAdded(world, _chunk, _blockPos, _blockValue, _addedByPlayer);
@@ -769,6 +835,12 @@ public class BlockHSWallSwitch : BlockSwitch
 // US outlet: always live, no switch, like the vanilla relay.
 public class BlockHSWallRelay : BlockPowered
 {
+    public override bool CanPlaceBlockAt(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, bool _bOmitCollideCheck = false)
+    {
+        return base.CanPlaceBlockAt(_world, _blockPos, _blockValue, _bOmitCollideCheck)
+            && HSPlugs.AgainstWall(_world, _blockPos, _blockValue);
+    }
+
     public override void OnBlockEntityTransformAfterActivated(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, BlockEntityData _ebcd)
     {
         base.OnBlockEntityTransformAfterActivated(_world, _blockPos, _blockValue, _ebcd);

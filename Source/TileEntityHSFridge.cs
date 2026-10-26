@@ -109,6 +109,6 @@ public class TileEntityHSFridge : TileEntityPoweredBlock, IHSFridgeInv
     public string OldestLabel()
     {
         EnsureItems();
-        return HSFridgeInv.OldestLabel(items);
+        return HSFridgeInv.OldestLabel(this, items);
     }
 }

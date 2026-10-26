@@ -190,6 +190,53 @@ class Piece:
 
 # ---------------------------------------------------------------- pieces
 
+def water_pump():
+    """Floor-standing petrol water pump: skid, engine, fuel tank, pump volute, suction and discharge flanges."""
+    p = Piece("HSWaterPump")
+    # steel skid / base plate
+    p.box("HS_Dark", (0, 0, 0.03), (0.62, 0.52, 0.06))
+    p.box("HS_Grey", (0, 0, 0.065), (0.58, 0.48, 0.012))
+    for x, y in ((-0.24, -0.18), (0.24, -0.18), (-0.24, 0.18), (0.24, 0.18)):
+        p.rod("HS_Dark", (x, y, 0.012), 0.028, 0.024, "Z", 12)
+    # petrol engine block (rear)
+    p.box("HS_Grey", (0, 0.12, 0.26), (0.34, 0.28, 0.28))
+    p.box("HS_Dark", (0, 0.12, 0.26), (0.36, 0.30, 0.04))
+    # cylinder head fins
+    for i in range(7):
+        a = -0.12 + i * 0.24 / 6
+        p.box("HS_Dark", (a, 0.12, 0.40), (0.014, 0.26, 0.10))
+    # recoil starter housing
+    p.rod("HS_Chrome", (0, 0.28, 0.30), 0.07, 0.04, "Y", 20)
+    p.rod("HS_Dark", (0, 0.30, 0.30), 0.03, 0.02, "Y", 12)
+    # red fuel tank on top
+    p.box("HS_Red", (0, 0.10, 0.52), (0.30, 0.22, 0.14))
+    p.box("HS_Dark", (0, 0.10, 0.595), (0.28, 0.20, 0.02))
+    p.rod("HS_Chrome", (0.08, 0.10, 0.61), 0.025, 0.03, "Z", 12)
+    # exhaust muffler
+    p.rod("HS_Dark", (-0.22, 0.12, 0.30), 0.04, 0.12, "X", 14)
+    p.rod("HS_Grey", (-0.28, 0.12, 0.30), 0.035, 0.06, "X", 14)
+    # pump volute (front)
+    p.rod("HS_Chrome", (0, -0.12, 0.28), 0.16, 0.18, "Y", 28)
+    p.rod("HS_Grey", (0, -0.12, 0.28), 0.17, 0.04, "Y", 28)
+    p.rod("HS_Chrome", (0, -0.02, 0.28), 0.05, 0.08, "Y", 16)
+    # discharge flange up (to house pipes)
+    p.rod("HS_Chrome", (0, -0.12, 0.48), 0.045, 0.22, "Z", 16)
+    p.rod("HS_Grey", (0, -0.12, 0.58), 0.07, 0.03, "Z", 16)
+    p.box("HS_Dark", (0, -0.12, 0.595), (0.14, 0.14, 0.02))
+    for a in range(4):
+        ang = math.radians(45 + 90 * a)
+        p.rod("HS_Dark", (0.055 * math.cos(ang), -0.12 + 0.055 * math.sin(ang), 0.595), 0.008, 0.02, "Z", 8)
+    # suction flange toward water (front / -Y)
+    p.rod("HS_Chrome", (0, -0.28, 0.22), 0.05, 0.16, "Y", 16)
+    p.rod("HS_Grey", (0, -0.36, 0.22), 0.075, 0.03, "Y", 16)
+    p.box("HS_Dark", (0, -0.38, 0.22), (0.15, 0.02, 0.15))
+    p.rod("HS_Chrome", (0.14, -0.12, 0.36), 0.02, 0.04, "X", 10)
+    p.box("HS_Dark", (-0.02, -0.205, 0.34), (0.10, 0.004, 0.04))
+    p.box("HS_Display", (-0.02, -0.208, 0.34), (0.08, 0.002, 0.028))
+    p.collider((0, 0, 0.34), (0.64, 0.78, 0.70))
+    return p
+
+
 def combi_boiler():
     """Wall-hung UK combi boiler: white case, control strip along the bottom, pipes down, flue into the wall."""
     p = Piece("HSCombiBoiler")
@@ -1362,6 +1409,45 @@ def _drape(s, mat, x, y, z, w, h, band=None):
             s.box(band, (x, y + side * 0.0125, z - h + 0.05), (w, 0.006, 0.03))
 
 
+def chopping_board():
+    """Thick wooden board for a counter: juice groove and a handle with a finger hole. Origin is the counter top."""
+    p = Piece("HSChoppingBoard")
+    p.box("HS_Wood", (0, 0.04, 0.022), (0.72, 0.48, 0.044))
+    p.box("HS_Wood", (0, -0.26, 0.022), (0.24, 0.14, 0.044))
+    # Juice groove set into the top.
+    p.box("HS_Dark", (0, -0.12, 0.046), (0.56, 0.012, 0.008))
+    p.box("HS_Dark", (0, 0.20, 0.046), (0.56, 0.012, 0.008))
+    p.box("HS_Dark", (-0.28, 0.04, 0.046), (0.012, 0.32, 0.008))
+    p.box("HS_Dark", (0.28, 0.04, 0.046), (0.012, 0.32, 0.008))
+    p.rod("HS_Dark", (0, -0.26, 0.022), 0.032, 0.05, "Z", 12)
+    p.collider((0, -0.02, 0.16), (0.78, 0.66, 0.32))
+    return p
+
+
+def drying_rack():
+    """Standing wooden meat rack, one block. Bars and hooks. Meat goes in the container, so the mesh stays empty."""
+    p = Piece("HSDryingRack")
+    wood = "HS_Wood"
+    for x in (-0.30, 0.30):
+        for y in (-0.16, 0.16):
+            p.rod(wood, (x, y, 0.46), 0.018, 0.92, "Z", 8)
+            p.box("HS_Dark", (x, y, 0.012), (0.05, 0.05, 0.024))
+        p.rod(wood, (x, 0, 0.90), 0.014, 0.32, "Y", 8)
+        p.rod(wood, (x, 0, 0.10), 0.014, 0.32, "Y", 8)
+    for y in (-0.16, 0.16):
+        p.rod(wood, (0, y, 0.90), 0.014, 0.60, "X", 8)
+        p.rod(wood, (0, y, 0.10), 0.014, 0.60, "X", 8)
+    for y, z in ((-0.06, 0.76), (0.0, 0.60), (0.06, 0.44)):
+        p.rod("HS_Chrome", (0, y, z), 0.007, 0.56, "X", 10)
+        for x in (-0.16, 0.0, 0.16):
+            p.seg("HS_Chrome", (x, y, z), (x, y - 0.015, z - 0.045), 0.0035, segs=6)
+            p.seg("HS_Chrome", (x, y - 0.015, z - 0.045), (x, y + 0.01, z - 0.055), 0.0035, segs=6)
+    for y in (-0.08, 0.0, 0.08):
+        p.box(wood, (0, y, 0.24), (0.52, 0.028, 0.012))
+    p.collider((0, 0, 0.5), (0.9, 0.7, 1.0))
+    return p
+
+
 def clothes_airer():
     """Gullwing clothes airer (MultiBlockDim 2,1,1): white-coated rails on an A-frame, wings dropped a little."""
     p = Piece("HSClothesAirer")
@@ -1403,11 +1489,11 @@ def icon_pegs():
     return p
 
 
-PIECES = [combi_boiler, panel_radiator, chest_freezer, split_air_con, ceiling_air_con, wall_thermometer,
+PIECES = [water_pump, combi_boiler, panel_radiator, chest_freezer, split_air_con, ceiling_air_con, wall_thermometer,
           washing_machine, tumble_dryer, fridge_freezer,
           socket_uk_single, socket_uk_double, socket_us_single, socket_us_double, light_switch_uk, light_switch_us, cooker_switch_uk, range_outlet_us,
           kettle, toaster, wheat_1, wheat_2, wheat_3, tv_stand, tv_wall, hifi, hifi_speaker, hifi_speaker_wall, mug_placed, consumer_unit_uk, breaker_panel_us,
-          washing_line, clothes_airer]
+          washing_line, clothes_airer, chopping_board, drying_rack]
 
 ICON_PIECES = [icon_mug, icon_mug_bag_pj, icon_mug_bag_yorkie, icon_mug_tea_pj, icon_mug_tea_yorkie, icon_mug_coffee, icon_tea_pj, icon_tea_yorkie,
                icon_wheat, icon_flour, icon_dough, icon_loaf, icon_slice, icon_toast, icon_wheat_seed,

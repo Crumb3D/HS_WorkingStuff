@@ -86,7 +86,7 @@
 			<property name="Material" value="Morganic"/>
 			<property name="Stacknumber" value="10"/>
 			<property name="EconomicValue" value="60"/>
-			<property name="SpoilDays" value="5"/>
+			<property name="SpoilDays" value="3"/>
 			<property name="UnlockedBy" value="craftingFood,perkMasterChef"/>
 			<property name="DescriptionKey" value="hsBreadLoafDesc"/>
 			<property name="SoundPickup" value="cornbread_grab"/>
@@ -350,124 +350,124 @@
 	</append>
 
 	<append xpath="/items/item[@name='foodRawMeat']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodRawMeatBundle']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodEgg']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodEggBoiled']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodCharredMeat']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodGrilledMeat']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodBoiledMeat']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodBaconAndEggs']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodCornOnTheCob']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodBakedPotato']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodCropBlueberries']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodCropCorn']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodCropGraceCorn']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodCropPotato']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodCropMushrooms']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodCropMushroomsRadiated']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodCropYuccaFruit']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodCropPumpkin']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodMeatStew']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodSteakAndPotato']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodVegetableStew']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodSpaghetti']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodHoboStew']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodGumboStew']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodShepardsPie']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodBlueberryPie']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodPumpkinPie']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodPumpkinCheesecake']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodPumpkinBread']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodCornBread']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodShamSandwich']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodChickenWings']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodChickenNuggets']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodFishTacos']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodChiliDog']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodHoneyGlazedSham']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodHoneyBrisket']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodShamChowder']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodTunaFishGravyToast']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodAshChickenStew']">
-		<property name="SpoilDays" value="7" />
+		<property name="SpoilDays" value="3" />
 	</append>
 	<append xpath="/items/item[@name='foodRoadrunnerChickenJerky']">
 		<property name="SpoilDays" value="21" />

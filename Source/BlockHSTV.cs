@@ -314,6 +314,7 @@ public class HSTVScreen : MonoBehaviour
     Renderer screen;
     Material offMat;
     Material onMat;
+    Material darkMat;
     string playing;
     string failed;
     string state;
@@ -339,7 +340,7 @@ public class HSTVScreen : MonoBehaviour
     void Refresh()
     {
         World world = GameManager.Instance != null ? GameManager.Instance.World : null;
-        if (world == null)
+        if (world == null || !EnsureParts())
             return;
         BlockValue bv = world.GetBlock(Pos);
         string file = null;
@@ -430,6 +431,11 @@ public class HSTVScreen : MonoBehaviour
             return false;
         }
         offMat = screen.sharedMaterial;
+        darkMat = new Material(offMat);
+        darkMat.SetColor("_Color", Color.black);
+        darkMat.SetColor("_EmissionColor", Color.black);
+        darkMat.DisableKeyword("_EMISSION");
+        screen.sharedMaterial = darkMat;
         frame = new RenderTexture(854, 480, 0);
         frame.Create();
         onMat = new Material(offMat);
@@ -498,13 +504,11 @@ public class HSTVScreen : MonoBehaviour
 
     void StopVideo()
     {
-        if (playing == null)
-            return;
         playing = null;
         if (player != null)
             player.Stop();
-        if (screen != null)
-            screen.sharedMaterial = offMat;
+        if (screen != null && darkMat != null)
+            screen.sharedMaterial = darkMat;
     }
 
     void OnDestroy()
@@ -515,5 +519,7 @@ public class HSTVScreen : MonoBehaviour
             frame.Release();
         if (onMat != null)
             Destroy(onMat);
+        if (darkMat != null)
+            Destroy(darkMat);
     }
 }

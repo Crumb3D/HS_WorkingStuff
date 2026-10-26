@@ -104,7 +104,15 @@ public static class HSPatchTooltip
 {
     static void Postfix(XUiC_ItemStack __instance, ref string _value, string _bindingName)
     {
-        if (_bindingName != "tooltip" || __instance == null)
+        if (__instance == null)
+            return;
+        if (_bindingName == "itemname" && HSFrozen.IsFrozen(HSItem.Val(__instance.itemStack)))
+        {
+            if (!string.IsNullOrEmpty(_value) && _value.IndexOf("Frozen ") != 0)
+                _value = HSLoc.Format("hsFrozenName", "Frozen {0}", _value);
+            return;
+        }
+        if (_bindingName != "tooltip")
             return;
         string extra;
         try

@@ -3,7 +3,10 @@
 		<lootcontainer name="hsCooler" count="0" size="6,2" sound_open="UseActions/open_cooler" sound_close="UseActions/close_cooler" loot_quality_template="qualBaseTemplate">
 			<item name="cobweb"/>
 		</lootcontainer>
-		<lootcontainer name="hsDrying" count="0" size="6,2" sound_open="UseActions/crate_wood_open" sound_close="UseActions/crate_wood_close" loot_quality_template="qualBaseTemplate">
+		<lootcontainer name="hsDrying" count="0" size="6,2" sound_open="UseActions/open_chest" sound_close="UseActions/close_chest" loot_quality_template="qualBaseTemplate">
+			<item name="cobweb"/>
+		</lootcontainer>
+		<lootcontainer name="hsChopping" count="0" size="4,2" sound_open="UseActions/open_chest" sound_close="UseActions/close_chest" loot_quality_template="qualBaseTemplate">
 			<item name="cobweb"/>
 		</lootcontainer>
 		<lootcontainer name="hsCompost" count="0" size="6,2" sound_open="UseActions/open_garbage" sound_close="UseActions/close_garbage" loot_quality_template="qualBaseTemplate">

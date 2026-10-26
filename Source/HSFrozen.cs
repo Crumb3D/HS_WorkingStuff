@@ -102,10 +102,62 @@ public static class HSFrozen
 
     public static float ColdNow(ItemValue iv, ulong now, ulong last)
     {
+        return ColdNow(iv, now, last, RoomRate);
+    }
+
+    public static float ColdNow(ItemValue iv, ulong now, ulong last, float lossPerTick)
+    {
         float c = GetCold(iv);
-        if (now > last)
-            c -= (now - last) * RoomRate;
+        if (now > last && lossPerTick > 0f)
+            c -= (now - last) * lossPerTick;
         return Mathf.Max(0f, c);
+    }
+
+    public const string MetaBin = "hsBin";
+
+    // 0 inventory or chopping board, 1 fridge, 2 chest freezer, 3 fridge-freezer compartment.
+    public static void Mark(ItemValue iv, float rate, float cold)
+    {
+        if (iv == null)
+            return;
+        int bin = 0;
+        if (cold > 0.7f)
+            bin = 2;
+        else if (cold > 0f)
+            bin = 3;
+        else if (rate < 0.7f && rate > 0.25f)
+            bin = 1;
+        else if (rate < 0.2f && rate > 0.05f)
+            bin = 3;
+        else if (rate <= 0.05f && rate > 0f)
+            bin = 2;
+        iv.SetMetadata(MetaBin, bin);
+    }
+
+    public static int Bin(ItemValue iv)
+    {
+        int b;
+        if (iv != null && iv.TryGetMetadata(MetaBin, out b))
+            return b;
+        return 0;
+    }
+
+    public static float SpoilRate(ItemValue iv)
+    {
+        switch (Bin(iv))
+        {
+            case 1: return HSWorkingStuffSettings.FridgeMultiplier;
+            case 2: return HSWorkingStuffSettings.FreezerMultiplier;
+            case 3: return HSWorkingStuffSettings.FridgeFreezerMultiplier;
+            default: return 1f;
+        }
+    }
+
+    static float LossFor(int bin)
+    {
+        if (bin == 1)
+            return FridgeRate;
+        return RoomRate;
     }
 
     public static bool IsFrozen(ItemValue iv)
@@ -176,22 +228,31 @@ public static class HSFrozen
         return n;
     }
 
-    public static string TooltipLine(ItemStack stack)
+    public static string TooltipLine(ItemStack stack, ulong now)
     {
         ItemValue iv = HSItem.Val(stack);
         if (!IsFrozen(iv))
             return null;
-        float h = HoursToThaw(iv);
+        int bin = Bin(iv);
+        if (bin == 2 || bin == 3)
+        {
+            float days = HSSpoil.CalendarDays(iv, now, SpoilRate(iv));
+            return HSLoc.Format("hsFrozenKeeps", "Frozen. Spoils in {0} days", days.ToString("0.0"));
+        }
+        float loss = LossFor(bin);
+        float h = ColdNow(iv, now, HSSpoil.LastTick(iv, now), loss) / Mathf.Max(0.01f, loss) / TicksPerHour;
+        float then = HSSpoil.CalendarDays(iv, now, bin == 1 ? HSWorkingStuffSettings.FridgeMultiplier : 1f);
+        string thenDays = then.ToString("0.0");
         if (h < 1f)
-            return HSLoc.Format("hsFrozenMins", "Frozen: thaws in {0} min at room temperature", Mathf.Max(1, Mathf.CeilToInt(h * 60f)));
-        return HSLoc.Format("hsFrozenHours", "Frozen: thaws in {0}h at room temperature", h.ToString("0.0"));
+            return HSLoc.Format("hsFrozenThenMins", "Frozen. Defrosts in {0} min, then spoils in {1} days", Mathf.Max(1, Mathf.CeilToInt(h * 60f)), thenDays);
+        return HSLoc.Format("hsFrozenThenHours", "Frozen. Defrosts in {0}h, then spoils in {1} days", h.ToString("0.0"), thenDays);
     }
 
     public static void TellFrozen(EntityAlive who)
     {
         var p = who as EntityPlayerLocal;
         if (p != null)
-            GameManager.ShowTooltip(p, HSLoc.Get("hsFrozenNoEat", "It's frozen solid. Let it thaw, or defrost it in a microwave."));
+            GameManager.ShowTooltip(p, HSLoc.Get("hsFrozenNoEat", "It's frozen solid. Let it thaw, or defrost it at a microwave, cooker, campfire or grill."));
     }
 
     static System.Reflection.FieldInfo invStackF, invEntityF;
@@ -225,6 +286,89 @@ public static class HSFrozen
     {
         World world = GameManager.Instance != null ? GameManager.Instance.World : null;
         return world != null ? world.worldTime : 0UL;
+    }
+
+    // Campfire, cooker and grill stand in for a chopping board: the game has no chopping board.
+    public static bool IsPrepStation(Block block)
+    {
+        if (block == null || block is BlockHSMicrowave)
+            return false;
+        string n = block.GetBlockName();
+        if (string.IsNullOrEmpty(n))
+            return false;
+        if (n == "campfire" || n.StartsWith("hsStove"))
+            return true;
+        return n.IndexOf("Grill") >= 0;
+    }
+
+    public static bool PrepReady(Block block, Vector3i pos)
+    {
+        if (block == null)
+            return false;
+        string n = block.GetBlockName();
+        if (n != null && n.StartsWith("hsStove"))
+            return HSStovePower.IsPowered(pos);
+        return true;
+    }
+
+    public static BlockActivationCommand[] WithDefrost(BlockActivationCommand[] cmds, bool enabled)
+    {
+        if (cmds == null)
+            cmds = new BlockActivationCommand[0];
+        for (int i = 0; i < cmds.Length; i++)
+        {
+            if (cmds[i].text == "hsdefrost")
+            {
+                cmds[i].enabled = enabled;
+                return cmds;
+            }
+        }
+        var all = new BlockActivationCommand[cmds.Length + 1];
+        System.Array.Copy(cmds, all, cmds.Length);
+        all[cmds.Length] = new BlockActivationCommand("hsdefrost", "campfire", enabled);
+        return all;
+    }
+
+    public static void DoDefrost(EntityPlayerLocal player, bool ready)
+    {
+        if (player == null)
+            return;
+        if (!ready)
+        {
+            GameManager.ShowTooltip(player, HSLoc.Get("hsDefrostNoPower", "No power: wire this cooker to defrost"));
+            return;
+        }
+        int n = ThawPlayer(player);
+        if (n == 0)
+        {
+            GameManager.ShowTooltip(player, HSLoc.Get("hsDefrostNone", "Nothing frozen on you"));
+            return;
+        }
+        player.PlayOneShot("campfire_complete_item");
+        GameManager.ShowTooltip(player, HSLoc.Format("hsDefrosted", "Defrosted {0} frozen food", n));
+    }
+}
+
+[HarmonyPatch(typeof(BlockWorkstation), "GetBlockActivationCommands")]
+public static class HSPatchPrepDefrost
+{
+    static void Postfix(BlockWorkstation __instance, Vector3i _blockPos, ref BlockActivationCommand[] __result)
+    {
+        if (!HSWorkingStuffSettings.EnableFreezing || !HSFrozen.IsPrepStation(__instance))
+            return;
+        __result = HSFrozen.WithDefrost(__result, HSFrozen.PrepReady(__instance, _blockPos));
+    }
+}
+
+[HarmonyPatch(typeof(BlockWorkstation), "OnBlockActivated", new System.Type[] { typeof(string), typeof(WorldBase), typeof(Vector3i), typeof(BlockValue), typeof(EntityPlayerLocal) })]
+public static class HSPatchPrepDefrostUse
+{
+    static bool Prefix(BlockWorkstation __instance, string _commandName, Vector3i _blockPos, EntityPlayerLocal _player)
+    {
+        if (_commandName != "hsdefrost" || !HSFrozen.IsPrepStation(__instance))
+            return true;
+        HSFrozen.DoDefrost(_player, HSFrozen.PrepReady(__instance, _blockPos));
+        return false;
     }
 }
 
@@ -283,5 +427,34 @@ public static class HSPatchFrozenCraft
                 return;
             }
         }
+    }
+}
+
+// Frozen and fresh of the same food stay in separate stacks.
+[HarmonyPatch(typeof(ItemStack), "CanStackWith", new System.Type[] { typeof(ItemStack), typeof(bool) })]
+public static class HSPatchFrozenStack
+{
+    static void Postfix(ItemStack __instance, ItemStack _other, ref bool __result)
+    {
+        if (!__result || __instance == null || _other == null)
+            return;
+        if (HSFrozen.IsFrozen(HSItem.Val(__instance)) != HSFrozen.IsFrozen(HSItem.Val(_other)))
+            __result = false;
+    }
+}
+
+[HarmonyPatch(typeof(ItemStack), "StackTransferCount")]
+public static class HSPatchFrozenMove
+{
+    static bool Prefix(ItemStack __instance, ItemStack _other, ref int __result)
+    {
+        if (__instance == null || _other == null)
+            return true;
+        if (HSFrozen.IsFrozen(HSItem.Val(__instance)) != HSFrozen.IsFrozen(HSItem.Val(_other)))
+        {
+            __result = 0;
+            return false;
+        }
+        return true;
     }
 }

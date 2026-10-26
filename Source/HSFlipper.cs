@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using HarmonyLib;
 
 // House-flipper: open/empty/broken POI furniture repairs shut into empty
 // player storage, not an unsearched loot ping and not a filled crate.
@@ -275,5 +276,40 @@ public static class HSFlipper
             return false;
         BlockValue bv = Block.GetBlockValue(name);
         return !bv.isair && bv.Block != null;
+    }
+}
+
+// Vanilla smashes an emptied medicine cabinet (and any loot list marked destroy-on-empty) back to the
+// open broken model when the window closes. A cabinet the player repaired is their storage, so it stays shut.
+[HarmonyPatch(typeof(TEFeatureStorage), "ShouldDestroyOnClose")]
+public static class HSPatchLootStay
+{
+    static void Postfix(TEFeatureStorage __instance, ref bool __result)
+    {
+        if (!__result || __instance == null || !Owned(__instance))
+            return;
+        __result = false;
+    }
+
+    static bool Owned(TEFeatureStorage te)
+    {
+        PropertyInfo storage = te.GetType().GetProperty("bPlayerStorage");
+        if (storage != null)
+        {
+            object v = storage.GetValue(te, null);
+            if (v is bool && (bool)v)
+                return true;
+        }
+        PropertyInfo gridProp = te.GetType().GetProperty("ItemGrid");
+        if (gridProp == null)
+            return false;
+        object grid = gridProp.GetValue(te, null);
+        if (grid == null)
+            return false;
+        PropertyInfo owned = grid.GetType().GetProperty("PlayerOwned");
+        if (owned == null)
+            return false;
+        object o = owned.GetValue(grid, null);
+        return o is bool && (bool)o;
     }
 }

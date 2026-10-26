@@ -183,10 +183,45 @@ public static class HSWater
         return n == IntakeName || n == PumpName;
     }
 
+    // Pump runs on its own engines and fuel (generator bank). On = pumping.
     public static bool PumpPowered(World world, Vector3i pos)
     {
-        var te = world != null ? world.GetTileEntity(pos) as TileEntityPowered : null;
-        return te != null && te.IsPowered;
+        var te = world != null ? world.GetTileEntity(pos) as TileEntityPowerSource : null;
+        return te != null && te.IsOn;
+    }
+
+    public static string PumpPrompt(World world, Vector3i pos)
+    {
+        bool water = world != null && TouchesWater(world, pos);
+        string waterLine = water
+            ? HSLoc.Get("hsPumpHasWater", "Water: lake / river next to it")
+            : HSLoc.Get("hsPumpNoWater", "Place next to a lake, river or stream");
+
+        var catches = new List<Vector3i>();
+        var tanks = new List<Vector3i>();
+        if (world != null)
+            ReachFromIntake(world, pos, catches, tanks);
+        string pipeLine;
+        if (catches.Count > 0 && tanks.Count > 0)
+            pipeLine = HSLoc.Get("hsPumpPipedBoth", "Piped to a rain catch and a tank");
+        else if (catches.Count > 0)
+            pipeLine = HSLoc.Get("hsPumpPipedCatch", "Piped to a rain catch");
+        else if (tanks.Count > 0)
+            pipeLine = HSLoc.Get("hsPumpPipedTank", "Piped to a tank");
+        else
+            pipeLine = HSLoc.Get("hsPumpNotPiped", "Not piped to a rain catch or tank");
+
+        string runLine;
+        if (!water)
+            runLine = HSLoc.Get("hsPumpIdleNoWater", "Idle: no water to pump");
+        else if (!PumpPowered(world, pos))
+            runLine = HSLoc.Get("hsPumpIdleOff", "Idle: put in engines and fuel, then turn it on");
+        else if (catches.Count == 0 && tanks.Count == 0)
+            runLine = HSLoc.Get("hsPumpRunningNoPipe", "Running: needs a pipe to a rain catch or tank");
+        else
+            runLine = HSLoc.Get("hsPumpRunning", "Pumping");
+
+        return waterLine + "\n" + pipeLine + "\n" + runLine;
     }
 
     // Passive flange intake, or a powered pump, both must sit next to water.

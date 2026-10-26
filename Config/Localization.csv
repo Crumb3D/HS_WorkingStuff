@@ -19,7 +19,7 @@ hsPipeToolDesc,items,Item,,,,"Lays water pipe for you. Hold E: New Water System 
 hsWaterIntake,blocks,Block,,,,Water Intake
 hsWaterIntakeDesc,blocks,Block,,,,"Simple flange on the bank. Prefer the Water Pump for powered lake feed. Pipe to a sink for unlimited murky water."
 hsWaterPump,blocks,Block,,,,Water Pump
-hsWaterPumpDesc,blocks,Block,,,,"Place next to a lake, river or stream and wire it to a generator or battery bank (10W). While powered it pumps murky water into a piped rain catch or tank. A rain catch with a dew filter cleans it; a tank gets murky water for toilets and the like. Aim the Pipe Tool at the water with a pump on you to place it on the bank."
+hsWaterPumpDesc,blocks,Block,,,,"Place next to a lake, river or stream. Open it like a generator bank: put in small engines and petrol, then turn it on. While running it pumps murky water into a piped rain catch or tank. A rain catch with a dew filter cleans it; a tank gets murky water for toilets and the like. Aim the Pipe Tool at the water with a pump on you to place it on the bank."
 hsWaterTank,blocks,Block,,,,Water Tank
 hsWaterTankDesc,blocks,Block,,,,"Holds 40 jars of water. It does not collect on its own: pipe a rain catch into it, pipe a lake intake for murky water, or pour jars and buckets in. Pipe it on to a sink for the cold tap, and through a combi boiler for the hot tap."
 hsRainCatch,blocks,Block,,,,Rain Catch

@@ -8,6 +8,13 @@ using UnityEngine;
 // workstation (its particles), so it is left alone.
 public class BlockHSKettle : BlockHSStove
 {
+    public override bool CanPlaceBlockAt(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, bool _bOmitCollideCheck = false)
+    {
+        if (HSShare.OnSocket(_world, _blockPos))
+            return base.CanPlaceBlockAt(_world, _blockPos, _blockValue, true);
+        return base.CanPlaceBlockAt(_world, _blockPos, _blockValue, _bOmitCollideCheck);
+    }
+
     readonly BlockActivationCommand[] kettleCmds = new BlockActivationCommand[]
     {
         new BlockActivationCommand("hskettlefill", "water", false),

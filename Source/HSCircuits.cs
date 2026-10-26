@@ -286,9 +286,9 @@ public static class HSCircuits
     {
         bool breaker;
         int amps = HeldAmps(player, out breaker);
-        if (amps <= 0)
+        if (amps <= 0 || !breaker)
         {
-            GameManager.ShowTooltip(player, HSLoc.Get("hsPanelHoldFuse", "Hold a fuse or a breaker to fit it"));
+            GameManager.ShowTooltip(player, HSLoc.Get("hsPanelHoldFuse", "Hold a breaker to fit it. 5A, 15A, 30A or 45A"));
             return;
         }
         Circuit c = GetOrAdd(panel, child);
@@ -539,7 +539,7 @@ public static class HSCircuits
         if (kind == HSWorkingStuffNet.CircuitFit)
         {
             c.Amps = arg & 0xFF;
-            c.Breaker = (arg & 0x100) != 0;
+            c.Breaker = c.Amps > 0;
             c.State = c.Amps > 0 ? On : Empty;
             c.Over = 0f;
         }
@@ -704,6 +704,7 @@ public static class HSCircuits
     {
         panels.Clear();
         dirty = false;
+        bool converted = false;
         try
         {
             string path = FilePath();
@@ -725,6 +726,13 @@ public static class HSCircuits
                 c.Amps = amps;
                 c.Breaker = f[3] == "1";
                 c.State = state & 3;
+                if (c.Amps > 0 && !c.Breaker)
+                {
+                    c.Breaker = true;
+                    if (c.State == Blown)
+                        c.State = Off;
+                    converted = true;
+                }
                 c.Name = Clean(f[5]);
                 tracked.Add(HSWater.Key(panel));
             }
@@ -732,6 +740,11 @@ public static class HSCircuits
         catch (Exception e)
         {
             Log.Warning("[HSWorkingStuff] Could not read circuits: " + e.Message);
+        }
+        if (converted)
+        {
+            dirty = true;
+            Save();
         }
     }
 
@@ -810,10 +823,10 @@ public class HSPanelView : MonoBehaviour
             HSCircuits.Circuit c = i < wires.Count ? HSCircuits.Find(Pos, wires[i]) : null;
             bool fitted = c != null && c.Amps > 0;
             string w = "W" + i;
-            Show(w + "Fuse", fitted && !c.Breaker && c.State != HSCircuits.Blown);
-            Show(w + "Blown", fitted && !c.Breaker && c.State == HSCircuits.Blown);
-            Show(w + "On", fitted && c.Breaker && c.State == HSCircuits.On);
-            Show(w + "Off", fitted && c.Breaker && c.State != HSCircuits.On);
+            Show(w + "Fuse", false);
+            Show(w + "Blown", false);
+            Show(w + "On", fitted && c.State == HSCircuits.On);
+            Show(w + "Off", fitted && c.State != HSCircuits.On);
         }
     }
 }

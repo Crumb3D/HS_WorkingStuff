@@ -470,3 +470,44 @@ public static class HSPatchStoveChunkTe
         __result = HSStovePower.TryPowerTe(__result.ToWorldPos(), __result);
     }
 }
+
+// The cooker is the campfire without the fuel, and a fifth faster. The microwave is another 30% off that.
+[HarmonyPatch(typeof(XUiM_Recipes), "GetRecipeCraftTime")]
+[HarmonyPriority(Priority.Last)]
+public static class HSPatchCookSpeed
+{
+    public const float Stove = 0.8f;
+    public const float Microwave = 0.56f;
+
+    static void Postfix(XUi xui, Recipe _recipe, ref float __result)
+    {
+        if (__result <= 0f || _recipe == null || HSLaundryCraft.IsLaundry(_recipe))
+            return;
+        float scale = Scale(xui);
+        if (scale < 0.99f)
+            __result *= scale;
+    }
+
+    static float Scale(XUi xui)
+    {
+        if (xui == null)
+            return 1f;
+        List<XUiC_WorkstationWindowGroup> groups = xui.GetChildrenByType<XUiC_WorkstationWindowGroup>();
+        if (groups == null)
+            return 1f;
+        for (int i = 0; i < groups.Count; i++)
+        {
+            XUiC_WorkstationWindowGroup group = groups[i];
+            if (group == null || group.WindowGroup == null || !group.WindowGroup.isShowing)
+                continue;
+            if (group.WorkstationData == null || group.WorkstationData.TileEntity == null)
+                continue;
+            Block block = group.WorkstationData.TileEntity.blockValue.Block;
+            if (block is BlockHSMicrowave)
+                return Microwave;
+            if (block != null && block.GetType() == typeof(BlockHSStove))
+                return Stove;
+        }
+        return 1f;
+    }
+}

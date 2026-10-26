@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
@@ -151,9 +152,72 @@ public static class HSNeeds
         return HSWorkingStuffSettings.EnableNeeds && Get(p, BowelCVar) >= MinUse;
     }
 
+    public static int BladderPct(EntityPlayer p)
+    {
+        return Mathf.RoundToInt(Get(p, BladderCVar));
+    }
+
     public static bool IsTree(Block block)
     {
         return block != null && block.HasAnyFastTags(TreeTag);
+    }
+
+    // Look at a trunk: Press (E) to Pee (57%). Grey when the bladder is not full enough.
+    public static string TreePrompt(EntityAlive focusing)
+    {
+        if (!HSWorkingStuffSettings.EnableNeeds)
+            return null;
+        var local = focusing as EntityPlayerLocal;
+        if (local == null)
+            return null;
+        string key = ActivateKey(local);
+        int pct = BladderPct(local);
+        string text = HSLoc.Format("hsTreePeePrompt", "Press {0} to Pee ({1}%)", key, pct);
+        if (!NeedsPee(local))
+            text = "[808080]" + text + "[-]";
+        return text;
+    }
+
+    static string ActivateKey(EntityPlayerLocal local)
+    {
+        try
+        {
+            object input = local != null ? (object)local.playerInput : null;
+            if (input == null)
+                return "(E)";
+            string a = BindingMarkup(Prop(input, "Activate"));
+            object permanent = Prop(input, "PermanentActions");
+            string b = BindingMarkup(Prop(permanent, "Activate"));
+            if (!string.IsNullOrEmpty(a) || !string.IsNullOrEmpty(b))
+                return a + b;
+        }
+        catch { }
+        return "(E)";
+    }
+
+    static object Prop(object obj, string name)
+    {
+        if (obj == null)
+            return null;
+        var p = obj.GetType().GetProperty(name);
+        return p != null ? p.GetValue(obj, null) : null;
+    }
+
+    static string BindingMarkup(object action)
+    {
+        if (action == null)
+            return "";
+        try
+        {
+            var m = action.GetType().GetMethod("GetBindingXuiMarkupString", Type.EmptyTypes);
+            if (m == null)
+                return "";
+            return m.Invoke(action, null) as string ?? "";
+        }
+        catch
+        {
+            return "";
+        }
     }
 
     public static void FromDrink(EntityPlayerLocal p)
@@ -266,7 +330,9 @@ public static class HSNeeds
     {
         Relieve(p, BladderCVar, PeeBuff);
         HSLaundry.SoilWorn(p, true);
-        AddSmell(p, 8f);
+        float start = HSWorkingStuffSettings.BodySmellStartHours;
+        float full = Mathf.Max(start + 1f, HSWorkingStuffSettings.BodySmellFullHours);
+        HSLaundry.StinkAtLeast(p, start + (full - start) * 0.5f);
         PlayOn(p, "hsStream");
         GameManager.ShowTooltip(p, HSLoc.Get("hsAccidentPee", "You wet yourself. Your clothes are soaked and you smell"));
     }
@@ -275,16 +341,9 @@ public static class HSNeeds
     {
         Relieve(p, BowelCVar, PooBuff);
         HSLaundry.SoilWorn(p, false);
-        AddSmell(p, 24f);
+        HSLaundry.StinkAtLeast(p, HSWorkingStuffSettings.BodySmellFullHours);
         PlayOn(p, "hsSoilDry");
         GameManager.ShowTooltip(p, HSLoc.Get("hsAccidentPoo", "You didn't make it. Your clothes are filthy and you smell"));
-    }
-
-    static void AddSmell(EntityPlayerLocal p, float hours)
-    {
-        if (p == null || p.Buffs == null || !HSWorkingStuffSettings.EnableBodySmell)
-            return;
-        p.Buffs.SetCustomVar(HSLaundry.BodyCVar, p.Buffs.GetCustomVar(HSLaundry.BodyCVar) + hours);
     }
 
     public static float DirtyNearby(EntityPlayer p)
@@ -665,16 +724,15 @@ public static class HSNeeds
     }
 }
 
-// A tree trunk grows a Pee command while you need one. Poo is never offered.
+// A tree trunk always offers Pee. The radial greys it when you do not need one. Poo is never offered.
 [HarmonyPatch(typeof(Block), "HasBlockActivationCommands")]
 public static class HSPatchTreePeeHas
 {
-    static void Postfix(Block __instance, EntityAlive _entityFocusing, ref bool __result)
+    static void Postfix(Block __instance, ref bool __result)
     {
-        if (__result || !HSNeeds.IsTree(__instance))
+        if (__result || !HSWorkingStuffSettings.EnableNeeds || !HSNeeds.IsTree(__instance))
             return;
-        if (HSNeeds.NeedsPee(_entityFocusing as EntityPlayer))
-            __result = true;
+        __result = true;
     }
 }
 
@@ -683,14 +741,30 @@ public static class HSPatchTreePeeCmds
 {
     static void Postfix(Block __instance, EntityAlive _entityFocusing, ref BlockActivationCommand[] __result)
     {
-        if (!HSNeeds.IsTree(__instance) || !HSNeeds.NeedsPee(_entityFocusing as EntityPlayer))
+        if (!HSWorkingStuffSettings.EnableNeeds || !HSNeeds.IsTree(__instance))
             return;
         int n = __result != null ? __result.Length : 0;
         var all = new BlockActivationCommand[n + 1];
         for (int i = 0; i < n; i++)
             all[i] = __result[i];
-        all[n] = new BlockActivationCommand("hspee", "water", true);
+        all[n] = new BlockActivationCommand(
+            HSNeeds.NeedsPee(_entityFocusing as EntityPlayer) ? "hspee" : "hsneedpee",
+            "water", true);
         __result = all;
+    }
+}
+
+[HarmonyPatch(typeof(Block), "GetActivationText")]
+public static class HSPatchTreePeeText
+{
+    static void Postfix(Block __instance, EntityAlive _entityFocusing, ref string __result)
+    {
+        if (!HSNeeds.IsTree(__instance))
+            return;
+        string prompt = HSNeeds.TreePrompt(_entityFocusing);
+        if (string.IsNullOrEmpty(prompt))
+            return;
+        __result = prompt;
     }
 }
 
@@ -699,7 +773,14 @@ public static class HSPatchTreePeeRun
 {
     static bool Prefix(Block __instance, string _commandName, Vector3i _blockPos, EntityPlayerLocal _player)
     {
-        if (_commandName != "hspee" || !HSNeeds.IsTree(__instance))
+        if (!HSNeeds.IsTree(__instance))
+            return true;
+        if (_commandName == "hsneedpee")
+        {
+            GameManager.ShowTooltip(_player, HSLoc.Get("hsNeedNone", "You don't need to go"));
+            return false;
+        }
+        if (_commandName != "hspee")
             return true;
         HSNeeds.TreePee(_player, _blockPos);
         return false;

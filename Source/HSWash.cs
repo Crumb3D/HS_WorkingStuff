@@ -7,19 +7,32 @@ public static class HSWash
 {
     public const string ShowerBuff = "buffHSWashed";
     public const string BathBuff = "buffHSWashedBath";
+    public const string ColdShowerBuff = "buffHSWashedCold";
+    public const string ColdBathBuff = "buffHSWashedColdBath";
 
     public static void Apply(EntityPlayer player, bool bath)
     {
+        Add(player, bath ? BathBuff : ShowerBuff);
+    }
+
+    public static void ApplyCold(EntityPlayer player, bool bath)
+    {
+        Add(player, bath ? ColdBathBuff : ColdShowerBuff);
+    }
+
+    static void Add(EntityPlayer player, string buff)
+    {
         if (player == null || player.Buffs == null)
             return;
-        player.Buffs.AddBuff(bath ? BathBuff : ShowerBuff);
+        player.Buffs.AddBuff(buff);
         player.Stealth.SetSmellRadiusTarget(-1, false, false);
     }
 
     public static bool IsWashed(EntityPlayer player)
     {
         return player != null && player.Buffs != null
-            && (player.Buffs.HasBuff(ShowerBuff) || player.Buffs.HasBuff(BathBuff));
+            && (player.Buffs.HasBuff(ShowerBuff) || player.Buffs.HasBuff(BathBuff)
+                || player.Buffs.HasBuff(ColdShowerBuff) || player.Buffs.HasBuff(ColdBathBuff));
     }
 }
 
@@ -94,8 +107,9 @@ public static class HSPatchWashedSmell
         return false;
     }
 
-    // Body odour and dirty clothes, on top of what you carry. Indoors and closed doors cut it;
-    // an open door or window nearby leaks smell outside. Rain or water hides it.
+    // Body odour and dirty clothes sit on the vanilla smell radius (the same one meat uses).
+    // Rain or water still hides it. Walls, windows and shut doors dampen it per zombie in Better Ears;
+    // an open door on that side does not.
     static void Postfix(PlayerStealth __instance)
     {
         try
@@ -106,20 +120,9 @@ public static class HSPatchWashedSmell
                 return;
             if (__instance.smellWet >= 3f || __instance.smellWetRate >= 0.01f)
                 return;
-            float indoor = HSIndoor.SmellScale(world, local.position);
-            bool enclosed = indoor < 0.99f;
-            if (enclosed && !__instance.smellSheltered)
-            {
-                __instance.smellRadiusTarget *= indoor;
-                __instance.smellSheltered = true;
-            }
             float extra = HSLaundry.SmellRadius(local);
             if (extra < 1f)
                 return;
-            if (enclosed)
-                extra *= indoor;
-            else if (__instance.smellSheltered)
-                extra *= 0.2f;
             if (extra > __instance.smellRadiusTarget)
                 __instance.smellRadiusTarget = extra;
         }

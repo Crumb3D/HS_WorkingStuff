@@ -14,16 +14,20 @@ public static class HSLaundry
     public const string BodyCVar = "hsBodySmell";
     public const string BodyMetresCVar = ".hsSmellBodyM";
     public const string ClothesMetresCVar = ".hsSmellClothesM";
+    public const string DirtPctCVar = ".hsDirtPct";
     public const string WetHoursCVar = ".hsWetHours";
     public const string SmellyBuff = "buffHSSmelly";
     public const string DirtyBuff = "buffHSDirtyClothes";
     public const string WetBuff = "buffHSWetClothes";
     // Short marker the server puts on a player who washed up at a sink.
     public const string SinkWashBuff = "buffHSWashedSink";
+    public const string SinkWashColdBuff = "buffHSWashedSinkCold";
 
     static ulong lastTick;
     static float nextTick;
-    static bool sinkSeen, showerSeen, bathSeen, inWater, soaking;
+    static Vector3 lastPos;
+    static bool hasPos;
+    static bool sinkSeen, sinkColdSeen, showerSeen, bathSeen, coldSeen, inWater, soaking;
     // World hour before which another quick (sink / lakeside) wash, or a new soak in water, does nothing.
     static float quickUntil, soakUntil;
     static float soakStart, soakTarget;
@@ -51,7 +55,8 @@ public static class HSLaundry
     {
         lastTick = 0UL;
         nextTick = 0f;
-        sinkSeen = showerSeen = bathSeen = inWater = soaking = false;
+        hasPos = false;
+        sinkSeen = sinkColdSeen = showerSeen = bathSeen = coldSeen = inWater = soaking = false;
         quickUntil = soakUntil = soakStart = soakTarget = 0f;
         runs.Clear();
     }
@@ -93,13 +98,13 @@ public static class HSLaundry
         return p.Buffs.GetCustomVar(BodyCVar);
     }
 
-    static void QuickWash(EntityPlayerLocal p, string key, string text)
+    static void QuickWash(EntityPlayerLocal p, string key, string text, float portion = 1f)
     {
         World world = GameManager.Instance.World;
-        float body = Mathf.Max(0f, Body(p) - QuickWashHours());
+        float body = Mathf.Max(0f, Body(p) - QuickWashHours() * portion);
         p.Buffs.SetCustomVar(BodyCVar, body);
         quickUntil = NowHours(world) + 1f;
-        int rinsed = RinseWorn(p, HSWorkingStuffSettings.WaterWashClothes);
+        int rinsed = RinseWorn(p, HSWorkingStuffSettings.WaterWashClothes * portion);
         if (rinsed > 0)
             GameManager.ShowTooltip(p, HSLoc.Get(key + "Clothes", text + ", and a bit of dirt off your clothes"));
         else
@@ -242,24 +247,33 @@ public static class HSLaundry
         lastTick = now;
         try
         {
+            float body = 0f;
             if (HSWorkingStuffSettings.EnableBodySmell)
             {
                 bool sink = p.Buffs.HasBuff(SinkWashBuff);
+                bool sinkCold = p.Buffs.HasBuff(SinkWashColdBuff);
                 bool shower = p.Buffs.HasBuff(HSWash.ShowerBuff);
                 bool bath = p.Buffs.HasBuff(HSWash.BathBuff);
+                bool coldWash = p.Buffs.HasBuff(HSWash.ColdShowerBuff) || p.Buffs.HasBuff(HSWash.ColdBathBuff);
                 if (sink && !sinkSeen)
                     QuickWash(p, "hsSinkWashed", "Washed up at the sink: about 5 m less smell");
-                float body = Body(p);
+                else if (sinkCold && !sinkColdSeen)
+                    QuickWash(p, "hsSinkWashedCold", "Washed up in cold water: about half as much smell off", 0.5f);
+                body = Body(p);
                 if (bath && !bathSeen)
                     body = 0f;
                 else if (shower && !showerSeen)
                     body *= Random.Range(0f, 0.1f);
+                else if (coldWash && !coldSeen)
+                    body *= 0.5f;
                 sinkSeen = sink;
+                sinkColdSeen = sinkCold;
                 showerSeen = shower;
                 bathSeen = bath;
+                coldSeen = coldWash;
                 body = Soak(p, body, hours, NowHours(world));
                 if (!HSWash.IsWashed(p) && !(soaking && inWater))
-                    body += hours;
+                    body += hours * (Sweating(p) ? 2f : 1f);
                 p.Buffs.SetCustomVar(BodyCVar, body);
                 p.Buffs.SetCustomVar(BodyMetresCVar, BodyMetresFromHours(body));
                 Toggle(p, SmellyBuff, body >= HSWorkingStuffSettings.BodySmellStartHours);
@@ -269,24 +283,33 @@ public static class HSLaundry
             bool dirty = false, wet = false;
             float clothesM = 0f;
             float wetHours = 0f;
+            float worst = 0f;
             if (HSWorkingStuffSettings.EnableLaundry && p.equipment != null)
             {
                 float nowH = NowHours(world);
                 float rate = 1f / Mathf.Max(1f, HSWorkingStuffSettings.ClothesDirtyHours);
+                float dirtHours = hours;
+                if (hours > 0f)
+                {
+                    dirtHours += hours * Mathf.Clamp(body / Mathf.Max(1f, HSWorkingStuffSettings.BodySmellStartHours), 0f, 2f);
+                    if (Moved(p) && FieldUnder(world, p))
+                        dirtHours += hours * 2f;
+                }
                 int n = p.equipment.GetSlotCount();
                 for (int i = 0; i < n; i++)
                 {
                     ItemValue iv = p.equipment.GetSlotItem(i);
                     if (!IsClothing(iv))
                         continue;
-                    if (hours > 0f)
-                        iv.SetMetadata(MetaDirt, Mathf.Min(1f, Dirt(iv) + hours * rate));
+                    if (dirtHours > 0f)
+                        iv.SetMetadata(MetaDirt, Mathf.Min(1f, Dirt(iv) + dirtHours * rate));
                     float d = Dirt(iv);
-                    if (d >= 0.5f)
-                    {
+                    if (d > worst)
+                        worst = d;
+                    if (d >= 0.2f)
                         dirty = true;
+                    if (d >= 0.5f)
                         clothesM += d * HSWorkingStuffSettings.DirtyClothesSmell;
-                    }
                     float w = Wetness(iv, nowH);
                     if (w > 0f)
                     {
@@ -295,6 +318,7 @@ public static class HSLaundry
                     }
                 }
             }
+            p.Buffs.SetCustomVar(DirtPctCVar, Mathf.Round(worst * 100f));
             p.Buffs.SetCustomVar(ClothesMetresCVar, clothesM);
             p.Buffs.SetCustomVar(WetHoursCVar, wetHours);
             Toggle(p, DirtyBuff, dirty);
@@ -310,6 +334,56 @@ public static class HSLaundry
             p.Buffs.AddBuff(buff);
         else if (!on && has)
             p.Buffs.RemoveBuff(buff);
+    }
+
+    // Running, or a body already hot, builds smell twice as fast.
+    static bool Sweating(EntityPlayerLocal p)
+    {
+        if (p.IsRunning)
+            return true;
+        return p.Buffs != null && p.Buffs.GetCustomVar("_coretemp") >= 80f;
+    }
+
+    static bool Moved(EntityPlayerLocal p)
+    {
+        Vector3 now = p.position;
+        bool moved = hasPos && (now - lastPos).sqrMagnitude > 0.35f;
+        lastPos = now;
+        hasPos = true;
+        return moved;
+    }
+
+    static bool FieldUnder(World world, EntityPlayerLocal p)
+    {
+        if (world == null || p.shelterPercent > 0.5f)
+            return false;
+        int x = Mathf.FloorToInt(p.position.x);
+        int y = Mathf.FloorToInt(p.position.y);
+        int z = Mathf.FloorToInt(p.position.z);
+        if (IsField(world.GetBlock(x, y, z)))
+            return true;
+        return y > 1 && IsField(world.GetBlock(x, y - 1, z));
+    }
+
+    static bool IsField(BlockValue bv)
+    {
+        Block block = bv.Block;
+        if (block == null || bv.isair || block.blockMaterial == null)
+            return false;
+        string id = block.blockMaterial.id;
+        string name = block.GetBlockName();
+        if (Has(id, "water") || Has(name, "water") || Has(id, "concrete") || Has(id, "asphalt") || Has(name, "asphalt"))
+            return false;
+        return Has(id, "dirt") || Has(id, "grass") || Has(id, "sand") || Has(id, "gravel") || Has(id, "snow")
+            || Has(id, "mud") || Has(id, "plant") || Has(id, "crop") || Has(id, "leaves") || Has(id, "clay")
+            || Has(name, "terrDirt") || Has(name, "terrGrass") || Has(name, "terrForest") || Has(name, "terrSand")
+            || Has(name, "terrGravel") || Has(name, "terrSnow") || Has(name, "planted") || Has(name, "crop")
+            || Has(name, "corn") || Has(name, "wheat") || Has(name, "mushroom") || Has(name, "hay");
+    }
+
+    static bool Has(string s, string part)
+    {
+        return !string.IsNullOrEmpty(s) && s.IndexOf(part, System.StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
     static float BodyMetresFromHours(float hours)
@@ -346,6 +420,16 @@ public static class HSLaundry
         if (r < 5f)
             return 0f;
         return Mathf.Min(r, 100f);
+    }
+
+    // An accident stinks now, the way carried meat does. Hours already worse than this are left alone.
+    public static void StinkAtLeast(EntityPlayerLocal p, float hours)
+    {
+        if (!HSWorkingStuffSettings.EnableBodySmell || p == null || p.Buffs == null || hours <= 0f)
+            return;
+        float cur = p.Buffs.GetCustomVar(BodyCVar);
+        if (cur < hours)
+            p.Buffs.SetCustomVar(BodyCVar, hours);
     }
 
     // An accident fills every piece you are wearing. A pee also soaks them.
@@ -405,6 +489,8 @@ public static class HSLaundry
         else
             state = HSLoc.Get("hsClothesClean", "Clean");
         string line = HSLoc.Format("hsClothesDirt", "{0}: {1}% dirty", state, Mathf.RoundToInt(dirt * 100f));
+        if (dirt >= 0.2f)
+            line += "\n" + HSLoc.Get("hsClothesNeedsWash", "Needs a wash. The Dirty Clothes icon is on");
         if (dirt >= 0.5f)
             line += "\n" + HSLoc.Get("hsClothesSmell", "Adds to your smell: wash it in a washing machine");
         float wet = Wetness(iv, nowH);
@@ -535,8 +621,8 @@ public static class HSLaundry
         if (Count(inv.Items, dryer, nowH) == 0)
         {
             HSWorkingStuffNet.Tell(player, dryer
-                ? HSLoc.Get("hsDryerEmpty", "Nothing wet to dry")
-                : HSLoc.Get("hsWasherEmpty", "Nothing to wash: put clothes or armour in first"));
+                ? HSLoc.Get("hsDryerEmpty", "Nothing you're wearing or carrying is wet")
+                : HSLoc.Get("hsWasherEmpty", "Nothing you're wearing or carrying needs a wash"));
             return false;
         }
         if (!dryer && HSWorkingStuffSettings.EnablePlumbing)

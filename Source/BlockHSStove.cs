@@ -24,6 +24,8 @@ public class BlockHSStove : BlockWorkstation
         if (_blockValue.ischild)
             return;
         HSStovePower.Attach(world, _chunk, _blockPos);
+        OwnWorkstation(world, _blockPos);
+        HSShare.Claim(world, _blockPos);
     }
 
     public override void OnBlockLoaded(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue)
@@ -34,6 +36,17 @@ public class BlockHSStove : BlockWorkstation
         Chunk chunk = _world != null ? _world.GetChunkFromWorldPos(_blockPos) as Chunk : null;
         RepairWorkstation(_world, chunk, _blockPos);
         HSStovePower.Attach(_world, chunk, _blockPos);
+        OwnWorkstation(_world, _blockPos);
+    }
+
+    // A repaired POI coffee maker, toaster or cooker is the player's. Pick up then shows on a land claim.
+    static void OwnWorkstation(WorldBase world, Vector3i pos)
+    {
+        if (!HSWorkingStuffNet.IsAuthority || world == null)
+            return;
+        TileEntityWorkstation te = world.GetTileEntity(pos) as TileEntityWorkstation;
+        if (te != null && !te.IsPlayerPlaced)
+            te.IsPlayerPlaced = true;
     }
 
     // Vanilla GetBlockActivationCommands reads the workstation tile entity without a null check (NRE in the hold-E radial).
@@ -68,13 +81,25 @@ public class BlockHSStove : BlockWorkstation
                 return cmds;
             }
         }
-        return base.GetBlockActivationCommands(_world, _blockValue, _blockPos, _entityFocusing);
+        BlockActivationCommand[] got = base.GetBlockActivationCommands(_world, _blockValue, _blockPos, _entityFocusing);
+        bool land = _world.IsMyLandProtectedBlock(_blockPos, _world.GetGameManager().GetPersistentLocalPlayer());
+        TileEntityWorkstation owned = _world.GetTileEntity(_blockPos) as TileEntityWorkstation;
+        if (land && owned != null && TakeDelay > 0f && got != null && got.Length > 1)
+        {
+            if (!owned.IsPlayerPlaced)
+                OwnWorkstation(_world, _blockPos);
+            got[1].enabled = true;
+        }
+        return got;
     }
 
     public override void OnBlockRemoved(WorldBase world, Chunk _chunk, Vector3i _blockPos, BlockValue _blockValue)
     {
         if (!_blockValue.ischild)
+        {
+            HSShare.QueueRestore(_blockPos);
             HSStovePower.Detach(world, _blockPos);
+        }
         base.OnBlockRemoved(world, _chunk, _blockPos, _blockValue);
     }
 
@@ -91,6 +116,8 @@ public class BlockHSStove : BlockWorkstation
             side.BlockTransform = _ebcd.transform;
         if (side != null)
             side.DrawWires();
+        if (HSShare.Small(this) && _ebcd != null)
+            HSShare.Attach(_ebcd.transform, _blockPos);
     }
 
     public override string GetActivationText(WorldBase _world, BlockValue _blockValue, Vector3i _blockPos, EntityAlive _entityFocusing)

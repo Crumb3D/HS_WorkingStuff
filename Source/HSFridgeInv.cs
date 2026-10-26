@@ -135,19 +135,24 @@ public static class HSFridgeInv
         }
     }
 
-    public static string OldestLabel(ItemStack[] items)
+    public static string OldestLabel(TileEntity te, ItemStack[] items)
     {
         if (items == null)
             return HSLoc.Get("hsFridgeEmptyFood", "No perishable food stored");
         World world = GameManager.Instance != null ? GameManager.Instance.World : null;
         ulong now = world != null ? world.worldTime : 0UL;
+        Block block = te != null ? te.blockValue.Block : null;
+        float rate = HSSpoil.RateForBlock(block, te);
+        bool split = HSFrozen.HasCompartment(block);
+        float coldSide = split ? HSSpoil.CompartmentRate(te) : rate;
         float best = 999f;
         for (int i = 0; i < items.Length; i++)
         {
             ItemValue iv = HSItem.Val(items[i]);
-            if (items[i].IsEmpty() || !HSSpoil.IsPerishable(iv))
+            if (items[i] == null || items[i].IsEmpty() || !HSSpoil.IsPerishable(iv))
                 continue;
-            float left = HSSpoil.RemainingDays(iv, now);
+            float r = split && i >= HSFrozen.CompartmentFrom ? coldSide : rate;
+            float left = HSSpoil.CalendarDays(iv, now, r);
             if (left < best)
                 best = left;
         }
@@ -200,7 +205,7 @@ public static class HSFridgeInv
 
         public string OldestLabel()
         {
-            return HSFridgeInv.OldestLabel(Items);
+            return HSFridgeInv.OldestLabel(te, Items);
         }
     }
 }
