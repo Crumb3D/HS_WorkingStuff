@@ -6,7 +6,7 @@ Flip a POI into a place you want to live in. Use the loos and taps you find whil
 
 A printable copy is `Handbook.html` in this mod folder (open in a browser, then Print / save as PDF).
 
-Works on 7 Days To Die **3.2 and 3.3**. Load this mod on the dedicated server and every client.
+Works on 7 Days To Die **3.2, 3.3 and 3.4**. Load this mod on the dedicated server and every client.
 
 ---
 
