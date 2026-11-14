@@ -1,15 +1,24 @@
 using System;
 
-// 3.2 and 3.3: Constants.cVersionInformation. Minor 20 = 3.2, Minor 30 = 3.3.
+// One DLL for every supported game. Detect the running 7DTD and pick the right API path.
+// Minor 20 = 3.2, 30 = 3.3, 40 = 3.4. Never drop an older release when adding a newer one.
 public static class HSGameVersion
 {
-    public static readonly string[] Supported = { "3.0", "3.1", "3.2", "3.3" };
+    public static readonly string[] Supported = { "3.0", "3.1", "3.2", "3.3", "3.4" };
 
     public static string Current { get; private set; }
 
+    // 3.2 (and older 3.x) use the compiled GetLength / field-shaped ItemStack path.
+    public static bool Is32
+    {
+        get { return Current == "3.2" || Current == "3.1" || Current == "3.0"; }
+    }
+
+    // 3.3 and 3.4 share the newer ItemStack / fridge / emitted net-package shapes.
+    // Keep the name Is33: existing call sites mean "modern API", not "exactly 3.3 only".
     public static bool Is33
     {
-        get { return Current == "3.3"; }
+        get { return Current == "3.3" || Current == "3.4"; }
     }
 
     public static bool AllowLoad(string logPrefix)
@@ -37,9 +46,11 @@ public static class HSGameVersion
                 + " (" + detail + "). Remove this folder from Mods or use a supported game version.");
             return false;
         }
+        string path = Is33
+            ? "Using 3.3/3.4 APIs (emitted net packages)."
+            : "Using 3.2 APIs (compiled GetLength packages).";
         Log.Out(logPrefix + " 7DTD " + game + " (" + detail + ") is on the supported list: "
-            + string.Join(", ", Supported) + "."
-            + (Is33 ? " Using emitted net packages." : " Using compiled GetLength packages."));
+            + string.Join(", ", Supported) + ". " + path);
         return true;
     }
 

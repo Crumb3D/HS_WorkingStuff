@@ -1,6 +1,12 @@
 # HS Working Stuff — Changelog
 
-Works on 7 Days To Die **3.2 and 3.3** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
+Works on 7 Days To Die **3.2, 3.3 and 3.4** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
+
+## 1.0.93
+
+- **Runs on 7DTD 3.4, and still on 3.2 and 3.3.** Same download. The mod was refusing to load Harmony on 3.4, so plugs in sockets and leads to appliances never drew. 3.2 keeps its own API path; 3.3 and 3.4 share the newer one.
+- **Sockets place on a wall with a floor under them.** Placement checks for a real wall beside the plate, not a floor piece in the cell.
+- **Sink pipes stay under the worktop.** The run no longer pokes up through the plughole when the cabinet cell is open air.
 
 ## 1.0.92
 

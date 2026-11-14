@@ -261,7 +261,7 @@ else {
 }
 
 powershell -NoProfile -File (Join-Path $Root "check_refs.ps1") -Dll $dll
-if ($LASTEXITCODE -ne 0) { Fail "DLL references a game member missing on 3.2 or 3.3" } else { Ok "game references resolve on 3.2 and 3.3" }
+if ($LASTEXITCODE -ne 0) { Fail "DLL references a game member missing on 3.2, 3.3 or 3.4" } else { Ok "game references resolve on supported 7DTD versions" }
 
 if ($fail -gt 0) {
     Write-Host ("{0} check(s) failed." -f $fail) -ForegroundColor Red

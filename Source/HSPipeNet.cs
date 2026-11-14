@@ -684,7 +684,6 @@ public static class HSPipeNet
     static int IntoFixtures(World world, Vector3i p, byte mask)
     {
         int into = 0;
-        bool inBlock = !world.GetBlock(p).isair;
         for (int d = 0; d < 6; d++)
         {
             if ((mask & (1 << d)) == 0)
@@ -695,7 +694,8 @@ public static class HSPipeNet
             BlockValue bv = world.GetBlock(n);
             if (bv.isair || !Open(bv))
                 continue;
-            if (d == 2 && inBlock && HSWater.IsSinkBlock(bv.Block))
+            // Never poke up through a sink / bath / toilet plughole — stop under the fixture even if the pipe cell is open air in the cabinet.
+            if (d == 2 && HSWater.IsSinkBlock(bv.Block))
                 continue;
             into |= 1 << d;
         }

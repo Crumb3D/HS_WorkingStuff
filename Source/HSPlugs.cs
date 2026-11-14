@@ -79,7 +79,7 @@ public static class HSPlugs
         World w = world as World;
         if (w == null || bv.Block == null || bv.Block.shape == null)
             return false;
-        // The plate's back is local -Z, against the wall. The preview rotation is not always set yet, so a cell that touches a real wall on any side is enough.
+        // The plate's back is local -Z, against the wall. Floor under the cell does not count — only a real wall beside it.
         Vector3 into = bv.Block.shape.GetRotation(bv) * Vector3.back;
         int x = into.x > 0.5f ? 1 : into.x < -0.5f ? -1 : 0;
         int z = into.z > 0.5f ? 1 : into.z < -0.5f ? -1 : 0;
@@ -87,6 +87,15 @@ public static class HSPlugs
             return true;
         return PlaceWall(w, pos + new Vector3i(1, 0, 0)) || PlaceWall(w, pos + new Vector3i(-1, 0, 0))
             || PlaceWall(w, pos + new Vector3i(0, 0, 1)) || PlaceWall(w, pos + new Vector3i(0, 0, -1));
+    }
+
+    // Wall plates need a real wall beside them. A floor piece or rug in this cell must not block them.
+    public static bool CanPlaceOnWall(WorldBase world, Vector3i pos, BlockValue bv, bool omitCollide,
+        System.Func<WorldBase, Vector3i, BlockValue, bool, bool> basePlace)
+    {
+        if (!AgainstWall(world, pos, bv))
+            return false;
+        return basePlace == null || basePlace(world, pos, bv, true);
     }
 
     static bool Onward(Block parent, Block child)
@@ -700,8 +709,8 @@ public class BlockHSWallSwitch : BlockSwitch
 {
     public override bool CanPlaceBlockAt(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, bool _bOmitCollideCheck = false)
     {
-        return base.CanPlaceBlockAt(_world, _blockPos, _blockValue, _bOmitCollideCheck)
-            && HSPlugs.AgainstWall(_world, _blockPos, _blockValue);
+        return HSPlugs.CanPlaceOnWall(_world, _blockPos, _blockValue, _bOmitCollideCheck,
+            (w, p, bv, omit) => base.CanPlaceBlockAt(w, p, bv, omit));
     }
 
     public override void OnBlockAdded(WorldBase world, Chunk _chunk, Vector3i _blockPos, BlockValue _blockValue, PlatformUserIdentifierAbs _addedByPlayer)
@@ -837,8 +846,8 @@ public class BlockHSWallRelay : BlockPowered
 {
     public override bool CanPlaceBlockAt(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, bool _bOmitCollideCheck = false)
     {
-        return base.CanPlaceBlockAt(_world, _blockPos, _blockValue, _bOmitCollideCheck)
-            && HSPlugs.AgainstWall(_world, _blockPos, _blockValue);
+        return HSPlugs.CanPlaceOnWall(_world, _blockPos, _blockValue, _bOmitCollideCheck,
+            (w, p, bv, omit) => base.CanPlaceBlockAt(w, p, bv, omit));
     }
 
     public override void OnBlockEntityTransformAfterActivated(WorldBase _world, Vector3i _blockPos, BlockValue _blockValue, BlockEntityData _ebcd)

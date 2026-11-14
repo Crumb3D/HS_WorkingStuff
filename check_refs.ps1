@@ -1,10 +1,12 @@
-# Resolve every game member HSWorkingStuff.dll references against the 3.2 and 3.3 game DLLs.
+# Resolve every game member HSWorkingStuff.dll references against every supported game DLL.
+# Keep 3.2 and 3.3 always; add 3.4 when that Managed folder exists. Never drop an older check.
 # A field on one version and a property on the other only fails at runtime, so it is caught here.
 param(
     [string]$Dll = (Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Path) "HSWorkingStuff.dll"),
     [string[]]$Managed = @(
         "C:\7DTD-Server\ServerFiles\7DaysToDieServer_Data\Managed",
-        "C:\7DTD-Server-3.3\ServerFiles\7DaysToDieServer_Data\Managed"),
+        "C:\7DTD-Server-3.3\ServerFiles\7DaysToDieServer_Data\Managed",
+        "C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die\7DaysToDie_Data\Managed"),
     [string]$Cecil = "C:\7DTD-Server-3.3\ServerFiles\Mods\0_TFP_Harmony\Mono.Cecil.dll"
 )
 $ErrorActionPreference = "Stop"
