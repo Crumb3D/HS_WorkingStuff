@@ -269,10 +269,12 @@ public static class HSFrozen
         if (!invResolved)
         {
             invResolved = true;
-            invStackF = AccessTools.Field(typeof(ItemInventoryData), "itemStack");
-            invEntityF = AccessTools.Field(typeof(ItemInventoryData), "holdingEntity");
-            invStackP = invStackF == null ? AccessTools.Property(typeof(ItemInventoryData), "itemStack") : null;
-            invEntityP = invEntityF == null ? AccessTools.Property(typeof(ItemInventoryData), "holdingEntity") : null;
+            // Fields on 3.2, properties on 3.3 and 3.4. GetField stays quiet when the member is the other kind.
+            const System.Reflection.BindingFlags inst = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+            invStackF = typeof(ItemInventoryData).GetField("itemStack", inst);
+            invEntityF = typeof(ItemInventoryData).GetField("holdingEntity", inst);
+            invStackP = invStackF == null ? typeof(ItemInventoryData).GetProperty("itemStack", inst) : null;
+            invEntityP = invEntityF == null ? typeof(ItemInventoryData).GetProperty("holdingEntity", inst) : null;
         }
         try
         {

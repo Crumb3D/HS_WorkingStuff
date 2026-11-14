@@ -2,6 +2,10 @@
 
 Works on 7 Days To Die **3.2, 3.3 and 3.4** with the same download. Install on the dedicated server and on every client, and keep them on the same version.
 
+## 1.0.94
+
+- **No warning when food is handled on 3.3 or 3.4.** The frozen-food check reads `itemStack` and `holdingEntity` without asking Harmony for the 3.2 fields.
+
 ## 1.0.93
 
 - **Runs on 7DTD 3.4, and still on 3.2 and 3.3.** Same download. The mod was refusing to load Harmony on 3.4, so plugs in sockets and leads to appliances never drew. 3.2 keeps its own API path; 3.3 and 3.4 share the newer one.

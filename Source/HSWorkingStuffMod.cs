@@ -18,7 +18,7 @@ public class HSWorkingStuffMod : IModApi
         ModEvents.PlayerSpawnedInWorld.RegisterHandler(OnSpawn);
         ModEvents.WorldShuttingDown.RegisterHandler(OnShutdown);
         ApplyHarmony();
-        Log.Out("[HSWorkingStuff] v1.0.93 one DLL for 7DTD 3.2, 3.3 and 3.4; plugs, cables, wall sockets, plumbing. Install on the host and on every client.");
+        Log.Out("[HSWorkingStuff] v1.0.94 one DLL for 7DTD 3.2, 3.3 and 3.4; plugs, cables, wall sockets, plumbing. Install on the host and on every client.");
     }
 
     static void ApplyHarmony()
